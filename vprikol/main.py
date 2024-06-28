@@ -189,3 +189,12 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return PlayersAPIResponse(**result.data)
+
+    async def generate_ss(self, commands: list, screen: bytes) -> bytes:
+        result = await get_bytes(url=f'{self.base_url}generate_ss', headers=self.headers,
+                                 params={'commands': commands}, post_data={'screen': screen})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return result.data

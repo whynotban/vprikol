@@ -23,9 +23,18 @@ async def post_json(url: str, params: Optional[Dict] = None, headers: Optional[D
             return Response(error=response_json, success=False)
 
 
-async def get_bytes(url: str, params: Optional[Dict] = None, headers: Optional[Dict] = None) -> Response:
+async def get_bytes(url: str, params: Optional[Dict] = None, headers: Optional[Dict] = None,
+                    post_data: dict[str, bytes] = None) -> Response:
     async with aiohttp.ClientSession(headers=headers) as session:
-        async with session.get(url, params=params) as response:
+
+        if not post_data:
+            async with session.get(url, params=params) as response:
+                response_data = await response.read()
+                if response.status == 200:
+                    return Response(data=response_data)
+                return Response(error=(await response.json()), success=False)
+
+        async with session.post(url, params=params, data=post_data) as response:
             response_data = await response.read()
             if response.status == 200:
                 return Response(data=response_data)
