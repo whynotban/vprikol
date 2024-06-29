@@ -1,6 +1,7 @@
 from typing import Optional, Dict
 
 import aiohttp
+from aiohttp import FormData
 
 from .model import Response
 
@@ -24,7 +25,7 @@ async def post_json(url: str, params: Optional[Dict] = None, headers: Optional[D
 
 
 async def get_bytes(url: str, params: Optional[Dict] = None, headers: Optional[Dict] = None,
-                    post_data: dict[str, bytes] = None) -> Response:
+                    post_data: FormData = None) -> Response:
     async with aiohttp.ClientSession(headers=headers) as session:
 
         if not post_data:

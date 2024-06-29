@@ -1,7 +1,9 @@
 import asyncio
 import time
+from io import BytesIO
 from typing import List, Literal, Optional, Union, Dict
 
+from aiohttp import FormData
 from pydantic import parse_obj_as, ValidationError
 
 from .api import get_json, post_json, get_bytes
@@ -190,10 +192,17 @@ class VprikolAPI:
 
         return PlayersAPIResponse(**result.data)
 
-    async def generate_ss(self, commands: list, screen: bytes, font: str = '/fonts/arialbd.ttf', text_top: bool = True) -> bytes:
+    async def generate_ss(self, commands: list, screen: Union[bytes, BytesIO], font: str = '/fonts/arialbd.ttf',
+                          text_top: bool = True) -> bytes:
+
+        if isinstance(screen, bytes):
+            screen = BytesIO(screen)
+
+        data = FormData()
+        data.add_field('screen', screen, filename='screen.png', content_type='application/octet-stream')
+
         result = await get_bytes(url=f'{self.base_url}generate_ss', headers=self.headers,
-                                 params={'commands': commands, 'font': font, 'text_top': int(text_top)},
-                                 post_data={'screen': screen})
+                                 params={'commands': commands, 'font': font, 'text_top': int(text_top)}, post_data=data)
 
         if not result.success:
             raise Exception(result.error)
