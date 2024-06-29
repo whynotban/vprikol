@@ -190,9 +190,10 @@ class VprikolAPI:
 
         return PlayersAPIResponse(**result.data)
 
-    async def generate_ss(self, commands: list, screen: bytes) -> bytes:
+    async def generate_ss(self, commands: list, screen: bytes, font: str = '/fonts/arialbd.ttf', text_top: bool = True) -> bytes:
         result = await get_bytes(url=f'{self.base_url}generate_ss', headers=self.headers,
-                                 params={'commands': commands}, post_data={'screen': screen})
+                                 params={'commands': commands, 'font': font, 'text_top': int(text_top)},
+                                 post_data={'screen': screen})
 
         if not result.success:
             raise Exception(result.error)
