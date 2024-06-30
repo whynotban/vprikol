@@ -57,14 +57,15 @@ class VprikolAPI:
                                 }
                                )
             result.data[fraction_id]['players'] = players
-            response[fraction_id] = MembersAPIResponse(
-                    **result.data[fraction_id]
-            )
+            result.data[fraction_id]['totalPlayers'] = result.data[fraction_id]['totalPlayers'] if result.data[fraction_id]['totalPlayers'] else 0
+            result.data[fraction_id]['isLeaderOnline'] = result.data[fraction_id]['isLeaderOnline'] if result.data[fraction_id]['isLeaderOnline'] is not None else False
+            result.data[fraction_id]['onlineUpdatedAt'] = result.data[fraction_id]['onlineUpdatedAt'] if 'onlineUpdatedAt' in result.data[fraction_id] else 0
+            result.data[fraction_id]['membersUpdatedAt'] = result.data[fraction_id]['membersUpdatedAt'] if 'membersUpdatedAt' in result.data[fraction_id] else 0
+            response[fraction_id] = MembersAPIResponse(**result.data[fraction_id])
 
         return response
 
-    async def get_player_information(self, server_id: int, nickname: str) -> Union[
-        PlayerInfoAPIResponse, PlayerInfoNotFound]:
+    async def get_player_information(self, server_id: int, nickname: str) -> Union[PlayerInfoAPIResponse, PlayerInfoNotFound]:
         task = await post_json(url=f'{self.base_url}find/createTask', headers=self.headers,
                                params={'server': server_id, 'nick': nickname}
                                )
