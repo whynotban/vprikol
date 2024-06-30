@@ -108,6 +108,7 @@ class PlayerInfoNotFound(APIErrorResponse):
 class RatingPlayerInfo(BaseModel):
     number: int
     name: str
+    lvl: Optional[int] = None
     is_online: bool = Field('isOnline')
 
 
