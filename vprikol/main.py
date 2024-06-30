@@ -58,6 +58,7 @@ class VprikolAPI:
                                )
             result.data[fraction_id]['players'] = players
             result.data[fraction_id]['totalPlayers'] = result.data[fraction_id]['totalPlayers'] if result.data[fraction_id]['totalPlayers'] else 0
+            result.data[fraction_id]['totalOnline'] = result.data[fraction_id]['totalOnline'] if result.data[fraction_id]['totalOnline'] else 0
             result.data[fraction_id]['isLeaderOnline'] = result.data[fraction_id]['isLeaderOnline'] if result.data[fraction_id]['isLeaderOnline'] is not None else False
             result.data[fraction_id]['onlineUpdatedAt'] = result.data[fraction_id]['onlineUpdatedAt'] if 'onlineUpdatedAt' in result.data[fraction_id] else 0
             result.data[fraction_id]['membersUpdatedAt'] = result.data[fraction_id]['membersUpdatedAt'] if 'membersUpdatedAt' in result.data[fraction_id] else 0
