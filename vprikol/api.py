@@ -35,7 +35,7 @@ async def get_bytes(url: str, params: Optional[Dict] = None, headers: Optional[D
                     return Response(result_data=response_data)
                 return Response(error=(await response.json()), success=False)
 
-        async with session.post(url, params=params, result_data=post_data) as response:
+        async with session.post(url, params=params, data=post_data) as response:
             response_data = await response.read()
             if response.status == 200:
                 return Response(result_data=response_data)

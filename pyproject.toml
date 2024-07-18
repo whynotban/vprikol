@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vprikol"
-version = "2.0"
+version = "2.1"
 description = ""
 authors = ["evans <szx@bk.ru>"]
 readme = "README.md"
