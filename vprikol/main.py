@@ -8,8 +8,7 @@ from pydantic import parse_obj_as
 from .api import get_json, get_bytes
 from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
                     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse,
-                    GenerateRPUsernameAPIResponse,
-                    FindPlayerInfoNotFound, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
+                    GenerateRPUsernameAPIResponse, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
                     TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse)
 
@@ -17,7 +16,7 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
 class VprikolAPI:
     def __init__(self, token: str, base_url: str = 'https://api.szx.su/'):
         if not token.startswith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'):
-            raise Exception('Токен передан неправильно.')
+            raise Exception('Вы указали некорректный авторизационный токен.')
         self.headers = {'Authorization': f'Bearer {token}'}
         self.base_url = base_url
 
@@ -99,9 +98,9 @@ class VprikolAPI:
                                   end_datetime: Optional[datetime.datetime] = None) -> PlayerSessionsAPIResponse:
         params = {'nickname': nickname, 'count': count, 'offset': offset, 'server_id': server_id}
         if start_datetime:
-            params['start_datetime'] = start_datetime
+            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
         if end_datetime:
-            params['end_datetime'] = end_datetime
+            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
         result = await get_json(url=f'{self.base_url}sessions', headers=self.headers, params=params)
 
         if not result.success:
@@ -164,9 +163,9 @@ class VprikolAPI:
                              requests_limit: int = 1000, requests_offset: int = 0) -> TokenStatCountsAPIResponse | TokenStatRequestsAPIResponse:
         params = {'response_type': response_type, 'requests_limit': requests_limit, 'requests_offset': requests_offset}
         if start_datetime:
-            params['start_datetime'] = start_datetime
+            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
         if end_datetime:
-            params['end_datetime'] = end_datetime
+            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
         if methods:
             params['methods'] = methods
         result = await get_json(url=f'{self.base_url}stat', headers=self.headers, params=params)
