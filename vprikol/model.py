@@ -71,9 +71,13 @@ class ServerStatusAPIResponse(BaseModel):
     server_label: str
     server_ip: str
     server_port: int
+    server_vk: Optional[str]
+    server_ds: Optional[str]
     online_players: int
     max_players: int
     is_closed: bool
+    main_admin_vk: Optional[str]
+    deputy_main_admin_vk: Optional[str]
     updated_at: datetime.datetime
 
 
