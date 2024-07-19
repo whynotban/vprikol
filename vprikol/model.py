@@ -106,6 +106,23 @@ class RatingPlayerInfo(BaseModel):
     family: Optional[str] = None
 
 
+class RatingPlayerInfoCrossServer(BaseModel):
+    ranking: int
+    nickname: str
+    value: Optional[Any]
+    az_coins: int
+    family: Optional[str] = None
+    server_id: int
+    server_label: str
+
+
+class RatingAPIResponseCrossServer(BaseModel):
+    server_id: int
+    server_label: str
+    updated_at: datetime.datetime
+    data: Dict[str, list[Optional[RatingPlayerInfoCrossServer]]]
+
+
 class RatingAPIResponse(BaseModel):
     server_id: int
     server_label: str

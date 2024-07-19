@@ -10,7 +10,8 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
                     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse,
                     GenerateRPUsernameAPIResponse, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
-                    TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse)
+                    TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
+                    RatingAPIResponseCrossServer)
 
 
 class VprikolAPI:
@@ -50,24 +51,23 @@ class VprikolAPI:
         if not result.success:
             raise Exception(result.error)
 
-        if isinstance(result.result_data, list):
-            return parse_obj_as(List[ServerStatusAPIResponse], result.result_data)
-
-        return [ServerStatusAPIResponse(**result.result_data)]
+        return parse_obj_as(List[ServerStatusAPIResponse], result.result_data)
 
     async def get_rating(self, server_id: int, rating_type: Literal["advocates", "combine_operators", "bus_drivers",
                                                                     "tractor_drivers", "catchers", "collectors",
-                                                                    "corn_pilots", "crypto_acs", "crypto_btc",
+                                                                    "corn_pilots", "crypto_asc", "crypto_btc",
                                                                     "electric_train_drivers", "lvl_families",
                                                                     "lvl_players", "mechanics", "richest", "outbids",
                                                                     "pilots", "sellers", "taxi_drivers", "tram_drivers",
-                                                                    "truckers", "cladmens"] = None) -> RatingAPIResponse:
+                                                                    "truckers", "cladmens"] = None) -> RatingAPIResponse | RatingAPIResponseCrossServer:
         params = {'rating_type': rating_type, 'server_id': server_id} if rating_type else {'server_id': server_id}
         result = await get_json(url=f'{self.base_url}rating', headers=self.headers, params=params)
 
         if not result.success:
             raise Exception(result.error)
-        return RatingAPIResponse(**result.result_data)
+        if server_id:
+            return RatingAPIResponse(**result.result_data)
+        return RatingAPIResponseCrossServer(**result.result_data)
 
     async def check_rp_nickname(self, first_name: Optional[str] = None,
                                 last_name: Optional[str] = None) -> CheckRPUsernameAPIResponse:
