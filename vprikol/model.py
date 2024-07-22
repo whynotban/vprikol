@@ -106,6 +106,7 @@ class RatingPlayerInfo(BaseModel):
     ranking: int
     nickname: str
     value: Optional[Any]
+    additional_value: Optional[Any]
     az_coins: int
     family: Optional[str] = None
 
@@ -114,6 +115,7 @@ class RatingPlayerInfoCrossServer(BaseModel):
     ranking: int
     nickname: str
     value: Optional[Any]
+    additional_value: Optional[Any]
     az_coins: int
     family: Optional[str] = None
     server_id: int
