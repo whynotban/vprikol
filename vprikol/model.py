@@ -169,7 +169,7 @@ class ServerMapAPIResponse(BaseModel):
 class AuctionInfo(BaseModel):
     active: bool
     minimal_bet: int
-    time_end: int
+    time_end: datetime.datetime
     start_price: int
 
 
@@ -181,7 +181,6 @@ class Coordinates(BaseModel):
 class EstateItemInfo(BaseModel):
     id: int
     name: Optional[str]
-    owner: Optional[str]
     auction: AuctionInfo
     coordinates: Coordinates
 
