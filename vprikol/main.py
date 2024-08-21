@@ -11,7 +11,8 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
                     GenerateRPUsernameAPIResponse, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
                     TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
-                    RatingAPIResponseCrossServer)
+                    RatingAPIResponseCrossServer, DeputiesAPIResponse, LeadersAPIResponse, PunishesAPIResponse,
+                    PunishType, InterviewsAPIResponse)
 
 
 class VprikolAPI:
@@ -192,3 +193,51 @@ class VprikolAPI:
             raise Exception(result.error.detail)
 
         return FindPlayerInfoAPIResponse(**result.result_data)
+
+    async def get_deputies(self, server_id: int) -> DeputiesAPIResponse:
+        result = await get_json(url=f'{self.base_url}deputies', headers=self.headers, params={'server_id': server_id})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return DeputiesAPIResponse(**result.result_data)
+
+    async def get_leaders(self, server_id: int) -> LeadersAPIResponse:
+        result = await get_json(url=f'{self.base_url}leaders', headers=self.headers, params={'server_id': server_id})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return LeadersAPIResponse(**result.result_data)
+
+    async def get_punishes(self, server_id: int,
+                           player_nickname: Optional[str] = None, admin_nickname: Optional[str] = None,
+                           start_datetime: Optional[datetime.datetime] = None,
+                           end_datetime: Optional[datetime.datetime] = None,
+                           punish_type: Optional[PunishType] = None,
+                           count: int = 1000, offset: int = 0) -> PunishesAPIResponse:
+        params = {'server_id': server_id, 'count': count, 'offset': offset}
+        if start_datetime:
+            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
+        if end_datetime:
+            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
+        if player_nickname:
+            params['player_nickname'] = player_nickname
+        if admin_nickname:
+            params['admin_nickname'] = admin_nickname
+        if punish_type:
+            params['punish_type'] = punish_type
+        result = await get_json(url=f'{self.base_url}punishes', headers=self.headers, params=params)
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PunishesAPIResponse(**result.result_data)
+
+    async def get_active_interviews(self, server_id: int) -> InterviewsAPIResponse:
+        result = await get_json(url=f'{self.base_url}interviews', headers=self.headers, params={'server_id': server_id})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return InterviewsAPIResponse(**result.result_data)

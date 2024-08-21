@@ -3,8 +3,12 @@ from typing import TypeVar, List, Optional, Dict, Generic, Union, Any, Literal
 from pydantic import BaseModel, Field
 
 DataT = TypeVar('DataT')
+
 Gender = Literal['male', 'female']
 Nation = Literal['russian', 'american', 'german', 'french', 'italian', 'japanese', 'latinos', 'swedish', 'danish', 'romanian']
+
+PunishType = Literal['kick', 'warn', 'warnoff', 'jail', 'jailoff', 'mute', 'muteoff', 'rmute', 'ban', 'banip', 'unjail',
+                     'unmute', 'unrmute', 'apunish', 'unapunish']
 
 
 class FastAPIErrorDetail(BaseModel):
@@ -169,7 +173,7 @@ class ServerMapAPIResponse(BaseModel):
 class AuctionInfo(BaseModel):
     active: bool
     minimal_bet: int
-    time_end: datetime.datetime
+    time_end: Optional[datetime.datetime]
     start_price: int
 
 
@@ -300,3 +304,64 @@ class FindPlayerInfoAPIResponse(BaseModel):
 class FindPlayerInfoNotFound(APIErrorResponse):
     pass
 
+
+class DeputyInfo(BaseModel):
+    fraction_id: int
+    fraction_label: str
+    nickname: str
+    ingame_id: int
+    phone_number: Optional[int]
+    afk: int
+
+
+class DeputiesAPIResponse(BaseModel):
+    server_id: int
+    server_label: str
+    updated_at: datetime.datetime
+    data: List[DeputyInfo]
+
+
+class LeaderInfo(BaseModel):
+    fraction_id: int
+    fraction_label: str
+    nickname: str
+    ingame_id: int
+    phone_number: Optional[int]
+    afk: int
+
+
+class LeadersAPIResponse(BaseModel):
+    server_id: int
+    server_label: str
+    updated_at: datetime.datetime
+    data: List[LeaderInfo]
+
+
+class PunishInfo(BaseModel):
+    punish_type: PunishType
+    player_nickname: str
+    admin_nickname: str
+    reason: str
+    full_string: str
+    created_at: datetime.datetime
+    expires_at: Optional[datetime.datetime]
+
+
+class PunishesAPIResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[PunishInfo]
+
+
+class InterviewInfo(BaseModel):
+    fraction_id: int
+    fraction_label: str
+    start_datetime: datetime.datetime
+    place: str
+
+
+class InterviewsAPIResponse(BaseModel):
+    server_id: int
+    server_label: str
+    updated_at: datetime.datetime
+    data: List[InterviewInfo]
