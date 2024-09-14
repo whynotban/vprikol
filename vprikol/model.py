@@ -24,7 +24,6 @@ class FastApiErrorResponse(BaseModel):
 class APIErrorResponse(BaseModel):
     error_code: int
     detail: str
-    queue_position: Optional[int] = None
 
 
 class Response(BaseModel, Generic[DataT]):
@@ -83,12 +82,6 @@ class ServerStatusAPIResponse(BaseModel):
     main_admin_vk: Optional[str]
     deputy_main_admin_vk: Optional[str]
     updated_at: datetime.datetime
-
-
-class CreatedFindTaskAPIResponse(BaseModel):
-    request_id: str
-    request_time: int
-    queue_position: int
 
 
 class PlayerInfo(BaseModel):

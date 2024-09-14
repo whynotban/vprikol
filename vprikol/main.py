@@ -179,9 +179,13 @@ class VprikolAPI:
         elif response_type == 'requests':
             return TokenStatRequestsAPIResponse(**result.result_data)
 
-    async def find_player(self, server_id: int, nickname: str) -> Union[FindPlayerInfoAPIResponse, FindPlayerInfoNotFound]:
-        result = await get_json(url=f'{self.base_url}find', headers=self.headers,
-                                params={'server_id': server_id, 'nickname': nickname})
+    async def find_player(self, server_id: int, nickname: str, recaptcha_token: Optional[str] = None) -> Union[FindPlayerInfoAPIResponse, FindPlayerInfoNotFound]:
+
+        params = {'server_id': server_id, 'nickname': nickname}
+        if recaptcha_token:
+            params['recaptcha_token'] = recaptcha_token
+
+        result = await get_json(url=f'{self.base_url}find', headers=self.headers, params=params)
 
         if not result.success:
             raise Exception(result.error)
