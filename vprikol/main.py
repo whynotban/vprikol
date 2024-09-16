@@ -141,8 +141,10 @@ class VprikolAPI:
         return PlayersAPIResponse(**result.result_data)
 
     async def generate_ss(self, commands: list, screen: Union[bytes, BytesIO], font: str = '/fonts/arialbd.ttf',
-                          text_top: bool = True) -> bytes:
+                          text_top: bool = True, text_size: float = 0.95, commands_colors=None) -> bytes:
 
+        if not commands_colors:
+            commands_colors = {}
         if isinstance(screen, bytes):
             screen = BytesIO(screen)
 
@@ -150,7 +152,9 @@ class VprikolAPI:
         data.add_field('screen', screen, filename='screen.png', content_type='application/octet-stream')
 
         result = await get_bytes(url=f'{self.base_url}generate_ss', headers=self.headers,
-                                 params={'commands': commands, 'font': font, 'text_top': int(text_top)}, post_data=data)
+                                 params={'commands': commands, 'font': font, 'text_top': int(text_top),
+                                         'commands_colors': str(commands_colors), 'text_size': text_size},
+                                 post_data=data)
 
         if not result.success:
             raise Exception(result.error)
