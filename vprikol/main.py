@@ -60,7 +60,7 @@ class VprikolAPI:
                                                                     "electric_train_drivers", "lvl_families",
                                                                     "lvl_players", "mechanics", "richest", "outbids",
                                                                     "pilots", "sellers", "taxi_drivers", "tram_drivers",
-                                                                    "truckers", "cladmens"] = None) -> RatingAPIResponse | RatingAPIResponseCrossServer:
+                                                                    "truckers", "cladmens", "admins"] = None) -> RatingAPIResponse | RatingAPIResponseCrossServer:
         params = {'rating_type': rating_type, 'server_id': server_id} if rating_type else {'server_id': server_id}
         result = await get_json(url=f'{self.base_url}rating', headers=self.headers, params=params)
 
