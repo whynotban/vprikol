@@ -336,6 +336,7 @@ class PunishInfo(BaseModel):
     admin_nickname: str
     reason: str
     full_string: str
+    active: bool
     created_at: datetime.datetime
     expires_at: Optional[datetime.datetime]
 
