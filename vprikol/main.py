@@ -12,7 +12,7 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
                     TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
                     RatingAPIResponseCrossServer, DeputiesAPIResponse, LeadersAPIResponse, PunishesAPIResponse,
-                    PunishType, InterviewsAPIResponse)
+                    PunishType, InterviewsAPIResponse, AiSSAPIResponse)
 
 
 class VprikolAPI:
@@ -160,6 +160,14 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return result.result_data
+
+    async def generate_aiss(self, theme: str) -> AiSSAPIResponse:
+        result = await get_json(url=f'{self.base_url}aiss', headers=self.headers, params={'theme': theme})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return AiSSAPIResponse(**result.result_data)
 
     async def get_token_stat(self, methods: Optional[List[Union[str, int]]] = None,
                              start_datetime: Optional[datetime.datetime] = None,

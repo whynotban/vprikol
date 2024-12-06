@@ -359,3 +359,7 @@ class InterviewsAPIResponse(BaseModel):
     server_label: str
     updated_at: datetime.datetime
     data: List[InterviewInfo]
+
+
+class AiSSAPIResponse(BaseModel):
+    answer: List[str]
