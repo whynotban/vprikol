@@ -118,10 +118,19 @@ class VprikolAPI:
 
         return ServerMapAPIResponse(**result.result_data)
 
-    async def get_estate(self, server_id: int, nickname: Optional[str] = None) -> PlayerEstateAPIResponse:
+    async def get_estate(self, server_id: int, nickname: Optional[str] = None,
+                         estate_type: Literal["houses", "businesses"] = None,
+                         first_interval_id: Optional[int] = None,
+                         last_interval_id: Optional[int] = None) -> PlayerEstateAPIResponse:
         params = {'server_id': server_id}
         if nickname:
             params['nickname'] = nickname
+        if estate_type:
+            params['estate_type'] = estate_type
+        if first_interval_id:
+            params['first_interval_id'] = first_interval_id
+        if last_interval_id:
+            params['last_interval_id'] = last_interval_id
         result = await get_json(url=f'{self.base_url}estate', headers=self.headers, params=params)
 
         if not result.success:
