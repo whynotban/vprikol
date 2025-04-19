@@ -262,6 +262,7 @@ class TokenStatRequestsAPIResponse(BaseModel):
 class FindPlayerInfoAPIResponse(BaseModel):
     server_id: int
     server_label: str
+    account_id: int
     nickname: str
     health: int
     hunger: int
