@@ -1,12 +1,10 @@
 import datetime
 from io import BytesIO
 from typing import List, Literal, Optional, Union
-
 from aiohttp import FormData
 from pydantic import parse_obj_as
-
 from .api import get_json, get_bytes
-from .model import (MembersAPIResponse, PlayerInfoAPIResponse,
+from .model import (MembersAPIResponse, PlayerInfoAPIResponse, FindPlayerResponse,
                     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse,
                     GenerateRPUsernameAPIResponse, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
@@ -197,7 +195,7 @@ class VprikolAPI:
 
         if response_type == 'counts':
             return TokenStatCountsAPIResponse(**result.result_data)
-        elif response_type == 'requests':
+        else:
             return TokenStatRequestsAPIResponse(**result.result_data)
 
     async def find_player(self, server_id: int, nickname: str, recaptcha_token: Optional[str] = None) -> Union[FindPlayerInfoAPIResponse, FindPlayerInfoNotFound]:
@@ -266,3 +264,19 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return InterviewsAPIResponse(**result.result_data)
+
+    async def find_player_beta(self, server_id: int, nickname: str) -> Union[FindPlayerResponse, FindPlayerInfoNotFound]:
+        params = {'server_id': server_id, 'nickname': nickname}
+        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
+        result = await get_json(url='https://apitest.szx.su/player/find', headers=self.headers, params=params)
+
+        if not result.success:
+            raise Exception(result.error)
+
+        if result.error and result.error.error_code == 404:
+            return FindPlayerInfoNotFound(**result.error.dict())
+
+        if result.error and result.error.error_code in [500, 502, 503]:
+            raise Exception(result.error.detail)
+
+        return FindPlayerResponse(**result.result_data)

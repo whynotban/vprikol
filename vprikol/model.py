@@ -364,3 +364,85 @@ class InterviewsAPIResponse(BaseModel):
 
 class AiSSAPIResponse(BaseModel):
     answer: List[str]
+
+
+class IndividualAccounts(BaseModel):
+    account_1: Optional[int] = Field(None, alias='1')
+    account_2: Optional[int] = Field(None, alias='2')
+    account_3: Optional[int] = Field(None, alias='3')
+    account_4: Optional[int] = Field(None, alias='4')
+    account_5: Optional[int] = Field(None, alias='5')
+    account_6: Optional[int] = Field(None, alias='6')
+
+
+class PlayerFraction(BaseModel):
+    fraction_id: Optional[int]
+    fraction_label: Optional[str]
+    rank_number: Optional[int]
+    rank_label: Optional[str]
+
+
+class PlayerGeneral(BaseModel):
+    account_id: int
+    nickname: str
+    gender: str
+    skin_id: int
+    played_hours: int
+    phone_number: Optional[int]
+    health: int
+    hunger: int
+    max_hunger: int
+    drug_addict_lvl: int
+    marriage: Optional[str]
+    job_label: str
+
+
+class PlayerMoney(BaseModel):
+    az_coins: int
+    total_money: int
+    cash: int
+    bank_balance: int
+    deposit: int
+    have_bank_card: bool
+    charity_money: int
+    phone_balance: int
+    individual_accounts: IndividualAccounts
+
+
+class PlayerPunishes(BaseModel):
+    law_count: int
+    wanted_lvl: int
+    warns_count: int
+
+
+class PlayerVIP(BaseModel):
+    vip_lvl: int
+    vip_label: str
+    vip_expiration_date: Optional[datetime.datetime]
+    have_addition_vip: bool
+    addition_vip_expiration_date: Optional[datetime.datetime]
+
+
+class PlayerLvl(BaseModel):
+    level: int = Field(..., alias='lvl')
+    current_xp: int
+    max_xp: int
+
+
+class ServerInfo(BaseModel):
+    server_id: int
+    server_label: str
+
+
+class FindPlayerResponse(BaseModel):
+    server: ServerInfo
+    general: PlayerGeneral
+    fraction: PlayerFraction
+    money: PlayerMoney
+    lvl: PlayerLvl
+    punishes: PlayerPunishes
+    vip_info: PlayerVIP
+
+    class Config:
+        from_attributes = True
+        populate_by_name = True
