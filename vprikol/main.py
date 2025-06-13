@@ -10,7 +10,7 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse, FindPlayerRespons
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
                     TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
                     RatingAPIResponseCrossServer, DeputiesAPIResponse, LeadersAPIResponse, PunishesAPIResponse,
-                    PunishType, InterviewsAPIResponse, AiSSAPIResponse)
+                    PunishType, InterviewsAPIResponse, AiSSAPIResponse, PlayerOnlineAPIResponse)
 
 
 class VprikolAPI:
@@ -280,3 +280,18 @@ class VprikolAPI:
             raise Exception(result.error.detail)
 
         return FindPlayerResponse(**result.result_data)
+
+    async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> PlayerOnlineAPIResponse:
+        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
+        params = {'server_id': server_id, 'nickname': nickname}
+        if date_from:
+            params['date_from'] = date_from.isoformat() + '+03:00'
+        if date_to:
+            params['date_to'] = date_to.isoformat() + '+03:00'
+        result = await get_json(url='https://apitest.szx.su/player/online', headers=self.headers, params=params)
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PlayerOnlineAPIResponse(**result.result_data)
+

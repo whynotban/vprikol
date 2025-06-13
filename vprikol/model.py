@@ -446,3 +446,18 @@ class FindPlayerResponse(BaseModel):
     class Config:
         from_attributes = True
         populate_by_name = True
+
+
+class OnlineEntry(BaseModel):
+    date: datetime.date
+    hours: int
+    minutes: int
+    seconds: int
+
+
+class PlayerOnlineAPIResponse(BaseModel):
+    online: List[OnlineEntry]
+    have_active_session: bool
+    active_session_login_at: Optional[datetime.datetime]
+    last_login_at: Optional[datetime.datetime]
+    last_logout_at: Optional[datetime.datetime]
