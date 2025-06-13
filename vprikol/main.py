@@ -285,9 +285,9 @@ class VprikolAPI:
         self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
         params = {'server_id': server_id, 'nickname': nickname}
         if date_from:
-            params['date_from'] = date_from.isoformat() + '+03:00'
+            params['date_from'] = date_from.isoformat()
         if date_to:
-            params['date_to'] = date_to.isoformat() + '+03:00'
+            params['date_to'] = date_to.isoformat()
         result = await get_json(url='https://apitest.szx.su/player/online', headers=self.headers, params=params)
 
         if not result.success:
