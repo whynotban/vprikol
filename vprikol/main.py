@@ -10,7 +10,7 @@ from .model import (MembersAPIResponse, PlayerInfoAPIResponse, FindPlayerRespons
                     PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
                     TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
                     RatingAPIResponseCrossServer, DeputiesAPIResponse, LeadersAPIResponse, PunishesAPIResponse,
-                    PunishType, InterviewsAPIResponse, AiSSAPIResponse, PlayerOnlineAPIResponse)
+                    PunishType, InterviewsAPIResponse, AiSSAPIResponse, PlayerOnlineAPIResponse, MembersAPIBetaResponse)
 
 
 class VprikolAPI:
@@ -20,8 +20,8 @@ class VprikolAPI:
         self.headers = {'Authorization': f'Bearer {token}'}
         self.base_url = base_url
 
-    async def get_members(self, server_id: int,
-                          fraction_ids: Optional[Union[int, List[int]]] = None) -> MembersAPIResponse:
+
+    async def get_members(self, server_id: int, fraction_ids: Optional[Union[int, List[int]]] = None) -> MembersAPIResponse:
         params = {'server_id': server_id}
         if fraction_ids:
             params['fraction_ids'] = fraction_ids
@@ -31,6 +31,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return MembersAPIResponse(**result.result_data)
+
 
     async def get_player_information(self, server_id: int, nickname: Optional[str] = None) -> Union[PlayerInfoAPIResponse]:
         params = {'server_id': server_id}
@@ -43,6 +44,7 @@ class VprikolAPI:
 
         return PlayerInfoAPIResponse(**result.result_data)
 
+
     async def get_server_status(self, server_id: Optional[int] = None) -> List[ServerStatusAPIResponse]:
         params = {'server_id': server_id} if server_id else None
         result = await get_json(url=f'{self.base_url}status', headers=self.headers, params=params)
@@ -51,6 +53,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return parse_obj_as(List[ServerStatusAPIResponse], result.result_data)
+
 
     async def get_rating(self, server_id: int, rating_type: Literal["advocates", "combine_operators", "bus_drivers",
                                                                     "tractor_drivers", "catchers", "collectors",
@@ -68,8 +71,8 @@ class VprikolAPI:
             return RatingAPIResponse(**result.result_data)
         return RatingAPIResponseCrossServer(**result.result_data)
 
-    async def check_rp_nickname(self, first_name: Optional[str] = None,
-                                last_name: Optional[str] = None) -> CheckRPUsernameAPIResponse:
+
+    async def check_rp_nickname(self, first_name: Optional[str] = None, last_name: Optional[str] = None) -> CheckRPUsernameAPIResponse:
         params = {}
         if first_name:
             params['first_name'] = first_name
@@ -82,6 +85,7 @@ class VprikolAPI:
 
         return CheckRPUsernameAPIResponse(**result.result_data)
 
+
     async def generate_rp_nickname(self, gender: Gender = 'male', nation: Nation = 'american',
                                    count: int = 1) -> GenerateRPUsernameAPIResponse:
         result = await get_json(url=f'{self.base_url}rpnick', headers=self.headers,
@@ -91,6 +95,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return GenerateRPUsernameAPIResponse(**result.result_data)
+
 
     async def get_player_sessions(self, server_id: int, nickname: str, count: int = 1000, offset: int = 0,
                                   start_datetime: Optional[datetime.datetime] = None,
@@ -107,19 +112,18 @@ class VprikolAPI:
 
         return PlayerSessionsAPIResponse(**result.result_data)
 
+
     async def get_server_map(self, server_id: int, only_ghetto: bool = False) -> ServerMapAPIResponse:
-        result = await get_json(url=f'{self.base_url}map', headers=self.headers,
-                                params={'server_id': server_id, 'only_ghetto': int(only_ghetto)})
+        result = await get_json(url=f'{self.base_url}map', headers=self.headers, params={'server_id': server_id, 'only_ghetto': int(only_ghetto)})
 
         if not result.success:
             raise Exception(result.error)
 
         return ServerMapAPIResponse(**result.result_data)
 
-    async def get_estate(self, server_id: int, nickname: Optional[str] = None,
-                         estate_type: Literal["houses", "businesses"] = None,
-                         first_interval_id: Optional[int] = None,
-                         last_interval_id: Optional[int] = None) -> PlayerEstateAPIResponse:
+
+    async def get_estate(self, server_id: int, nickname: Optional[str] = None, estate_type: Literal["houses", "businesses"] = None,
+                         first_interval_id: Optional[int] = None, last_interval_id: Optional[int] = None) -> PlayerEstateAPIResponse:
         params = {'server_id': server_id}
         if nickname:
             params['nickname'] = nickname
@@ -136,6 +140,7 @@ class VprikolAPI:
 
         return PlayerEstateAPIResponse(**result.result_data)
 
+
     async def get_players(self, server_id: int, nicknames: Optional[List[Union[str, int]]] = None) -> PlayersAPIResponse:
         params = {'server_id': server_id}
         if nicknames:
@@ -146,6 +151,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return PlayersAPIResponse(**result.result_data)
+
 
     async def generate_ss(self, commands: list, screen: Union[bytes, BytesIO], font: str = '/fonts/arialbd.ttf',
                           text_top: bool = True, text_size: float = 0.95, commands_colors=None) -> bytes:
@@ -168,6 +174,7 @@ class VprikolAPI:
 
         return result.result_data
 
+
     async def generate_aiss(self, theme: str) -> AiSSAPIResponse:
         result = await get_json(url=f'{self.base_url}aiss', headers=self.headers, params={'theme': theme})
 
@@ -175,6 +182,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return AiSSAPIResponse(**result.result_data)
+
 
     async def get_token_stat(self, methods: Optional[List[Union[str, int]]] = None,
                              start_datetime: Optional[datetime.datetime] = None,
@@ -198,6 +206,7 @@ class VprikolAPI:
         else:
             return TokenStatRequestsAPIResponse(**result.result_data)
 
+
     async def find_player(self, server_id: int, nickname: str, recaptcha_token: Optional[str] = None) -> Union[FindPlayerInfoAPIResponse, FindPlayerInfoNotFound]:
 
         params = {'server_id': server_id, 'nickname': nickname}
@@ -217,6 +226,7 @@ class VprikolAPI:
 
         return FindPlayerInfoAPIResponse(**result.result_data)
 
+
     async def get_deputies(self, server_id: int) -> DeputiesAPIResponse:
         result = await get_json(url=f'{self.base_url}deputies', headers=self.headers, params={'server_id': server_id})
 
@@ -225,6 +235,7 @@ class VprikolAPI:
 
         return DeputiesAPIResponse(**result.result_data)
 
+
     async def get_leaders(self, server_id: int) -> LeadersAPIResponse:
         result = await get_json(url=f'{self.base_url}leaders', headers=self.headers, params={'server_id': server_id})
 
@@ -232,6 +243,7 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return LeadersAPIResponse(**result.result_data)
+
 
     async def get_punishes(self, server_id: int,
                            player_nickname: Optional[str] = None, admin_nickname: Optional[str] = None,
@@ -257,6 +269,7 @@ class VprikolAPI:
 
         return PunishesAPIResponse(**result.result_data)
 
+
     async def get_active_interviews(self, server_id: int) -> InterviewsAPIResponse:
         result = await get_json(url=f'{self.base_url}interviews', headers=self.headers, params={'server_id': server_id})
 
@@ -264,6 +277,22 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return InterviewsAPIResponse(**result.result_data)
+
+
+    async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> PlayerOnlineAPIResponse:
+        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
+        params = {'server_id': server_id, 'nickname': nickname}
+        if date_from:
+            params['date_from'] = date_from.isoformat()
+        if date_to:
+            params['date_to'] = date_to.isoformat()
+        result = await get_json(url='https://apitest.szx.su/player/online', headers=self.headers, params=params)
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PlayerOnlineAPIResponse(**result.result_data)
+
 
     async def find_player_beta(self, server_id: int, nickname: str) -> Union[FindPlayerResponse, FindPlayerInfoNotFound]:
         params = {'server_id': server_id, 'nickname': nickname}
@@ -281,17 +310,13 @@ class VprikolAPI:
 
         return FindPlayerResponse(**result.result_data)
 
-    async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> PlayerOnlineAPIResponse:
+
+    async def get_members_beta(self, server_id: int, fraction_id: int) -> MembersAPIBetaResponse:
         self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
-        params = {'server_id': server_id, 'nickname': nickname}
-        if date_from:
-            params['date_from'] = date_from.isoformat()
-        if date_to:
-            params['date_to'] = date_to.isoformat()
-        result = await get_json(url='https://apitest.szx.su/player/online', headers=self.headers, params=params)
+        params = {'server_id': server_id, 'fraction_id': fraction_id}
+        result = await get_json(url='https://apitest.szx.su/fraction/members', headers=self.headers, params=params)
 
         if not result.success:
             raise Exception(result.error)
 
-        return PlayerOnlineAPIResponse(**result.result_data)
-
+        return MembersAPIBetaResponse(**result.result_data)

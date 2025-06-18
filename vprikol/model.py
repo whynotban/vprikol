@@ -461,3 +461,18 @@ class PlayerOnlineAPIResponse(BaseModel):
     active_session_login_at: Optional[datetime.datetime]
     last_login_at: Optional[datetime.datetime]
     last_logout_at: Optional[datetime.datetime]
+
+
+class MembersAPIBetaResponse(BaseModel):
+    server_id: int
+    fraction_id: int
+    server_label: str
+    fraction_label: str
+    total_players: int
+    total_online: int
+    leader_nickname: Optional[str]
+    is_leader_online: bool
+    online_updated_at: datetime.datetime
+    members_updated_at: datetime.datetime
+    online_record: MembersAPIRecord
+    players: List[MembersAPIPlayer]
