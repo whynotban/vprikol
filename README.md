@@ -3,12 +3,12 @@
 ## Установка
 
 ```sh
-pip install -U vprikol
+pip install vprikol -U
 ```
 
 ## Документация
 
-https://docs.szx.su
+https://apitest.szx.su/docs
 
 ## Поддержка
 
