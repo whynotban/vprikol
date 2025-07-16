@@ -1,322 +1,160 @@
 import datetime
-from io import BytesIO
-from typing import List, Literal, Optional, Union
-from aiohttp import FormData
+from typing import List, Optional, Union, Literal
 from pydantic import parse_obj_as
-from .api import get_json, get_bytes
-from .model import (MembersAPIResponse, PlayerInfoAPIResponse, FindPlayerResponse,
-                    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse,
-                    GenerateRPUsernameAPIResponse, PlayerSessionsAPIResponse, PlayerEstateAPIResponse,
-                    PlayersAPIResponse, Gender, Nation, ServerMapAPIResponse, TokenStatCountsAPIResponse,
-                    TokenStatRequestsAPIResponse, FindPlayerInfoNotFound, FindPlayerInfoAPIResponse,
-                    RatingAPIResponseCrossServer, DeputiesAPIResponse, LeadersAPIResponse, PunishesAPIResponse,
-                    PunishType, InterviewsAPIResponse, AiSSAPIResponse, PlayerOnlineAPIResponse, MembersAPIBetaResponse)
+
+from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse, FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse,
+                     RequestStatsResponse, LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType, BotDetectionResponse, CheckRpManualOverridesListResponse)
+from . import api
 
 
 class VprikolAPI:
-    def __init__(self, token: str, base_url: str = 'https://api.szx.su/'):
-        if not token.startswith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'):
-            raise Exception('Вы указали некорректный авторизационный токен.')
-        self.headers = {'Authorization': f'Bearer {token}'}
+    def __init__(self, token: Optional[str] = None, base_url: str = "https://apitest.szx.su/"):
         self.base_url = base_url
+        self.headers = {}
+        if token:
+            self.headers["VP-API-Token"] = token
 
+    async def get_token_information(self, token_id: Union[int, Literal["current", "all", "deactivated"]] = "current") -> Union[TokenResponse, List[TokenResponse]]:
+        response_json = await api.get_json(self.base_url, f"token/{token_id}", self.headers)
+        if isinstance(response_json, list):
+            return parse_obj_as(List[TokenResponse], response_json)
+        return TokenResponse.parse_obj(response_json)
 
-    async def get_members(self, server_id: int, fraction_ids: Optional[Union[int, List[int]]] = None) -> MembersAPIResponse:
-        params = {'server_id': server_id}
-        if fraction_ids:
-            params['fraction_ids'] = fraction_ids
-        result = await get_json(url=f'{self.base_url}members', headers=self.headers, params=params)
+    async def get_server_status(self, server_id: int) -> ServerStatusResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "status", self.headers, params=params)
+        return ServerStatusResponse.parse_obj(response_json)
 
-        if not result.success:
-            raise Exception(result.error)
+    async def get_rating(self, server_id: int, rating_type: RatingType) -> RatingResponse:
+        params = {"server_id": str(server_id), "rating_type": rating_type.value}
+        response_json = await api.get_json(self.base_url, "rating", self.headers, params=params)
+        return RatingResponse.parse_obj(response_json)
 
-        return MembersAPIResponse(**result.result_data)
-
-
-    async def get_player_information(self, server_id: int, nickname: Optional[str] = None) -> Union[PlayerInfoAPIResponse]:
-        params = {'server_id': server_id}
+    async def get_estate(self, server_id: int, estate_type: Optional[EstateType] = None, nickname: Optional[str] = None, min_id: Optional[int] = None, max_id: Optional[int] = None) -> EstateResponse:
+        params = {"server_id": str(server_id)}
+        if estate_type:
+            params["type"] = estate_type.value
         if nickname:
-            params['nickname'] = nickname
-        result = await get_json(url=f'{self.base_url}players', headers=self.headers, params=params)
+            params["nickname"] = nickname
+        if min_id is not None:
+            params["min_id"] = str(min_id)
+        if max_id is not None:
+            params["max_id"] = str(max_id)
 
-        if not result.success:
-            raise Exception(result.error)
+        response_json = await api.get_json(self.base_url, "estate", self.headers, params=params)
+        return EstateResponse.parse_obj(response_json)
 
-        return PlayerInfoAPIResponse(**result.result_data)
-
-
-    async def get_server_status(self, server_id: Optional[int] = None) -> List[ServerStatusAPIResponse]:
-        params = {'server_id': server_id} if server_id else None
-        result = await get_json(url=f'{self.base_url}status', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return parse_obj_as(List[ServerStatusAPIResponse], result.result_data)
-
-
-    async def get_rating(self, server_id: int, rating_type: Literal["advocates", "combine_operators", "bus_drivers",
-                                                                    "tractor_drivers", "catchers", "collectors",
-                                                                    "corn_pilots", "crypto_asc", "crypto_btc",
-                                                                    "electric_train_drivers", "lvl_families",
-                                                                    "lvl_players", "mechanics", "richest", "outbids",
-                                                                    "pilots", "sellers", "taxi_drivers", "tram_drivers",
-                                                                    "truckers", "cladmens", "admins"] = None) -> RatingAPIResponse | RatingAPIResponseCrossServer:
-        params = {'rating_type': rating_type, 'server_id': server_id} if rating_type else {'server_id': server_id}
-        result = await get_json(url=f'{self.base_url}rating', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-        if server_id:
-            return RatingAPIResponse(**result.result_data)
-        return RatingAPIResponseCrossServer(**result.result_data)
-
-
-    async def check_rp_nickname(self, first_name: Optional[str] = None, last_name: Optional[str] = None) -> CheckRPUsernameAPIResponse:
+    async def check_rp_nickname(self, first_name: Optional[str] = None, last_name: Optional[str] = None) -> CheckRpResponse:
         params = {}
         if first_name:
-            params['first_name'] = first_name
+            params["first_name"] = first_name
         if last_name:
-            params['last_name'] = last_name
-        result = await get_json(url=f'{self.base_url}checkrp', headers=self.headers, params=params)
+            params["last_name"] = last_name
 
-        if not result.success:
-            raise Exception(result.error)
+        response_json = await api.get_json(self.base_url, "checkrp", self.headers, params=params)
+        return CheckRpResponse.parse_obj(response_json)
 
-        return CheckRPUsernameAPIResponse(**result.result_data)
+    async def generate_rp_nickname(self, gender: str, nation: str) -> RpNickResponse:
+        params = {"gender": gender, "nation": nation}
+        response_json = await api.get_json(self.base_url, "rpnick", self.headers, params=params)
+        return RpNickResponse.parse_obj(response_json)
 
+    async def get_leaders(self, server_id: int) -> LeadersResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "ingame/leaders", self.headers, params=params)
+        return LeadersResponse.parse_obj(response_json)
 
-    async def generate_rp_nickname(self, gender: Gender = 'male', nation: Nation = 'american',
-                                   count: int = 1) -> GenerateRPUsernameAPIResponse:
-        result = await get_json(url=f'{self.base_url}rpnick', headers=self.headers,
-                                params={'gender': gender, 'nation': nation, 'count': count})
+    async def get_deputies(self, server_id: int) -> LeadersResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "ingame/deputies", self.headers, params=params)
+        return LeadersResponse.parse_obj(response_json)
 
-        if not result.success:
-            raise Exception(result.error)
+    async def get_interviews(self, server_id: int) -> InterviewsResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "ingame/interviews", self.headers, params=params)
+        return InterviewsResponse.parse_obj(response_json)
 
-        return GenerateRPUsernameAPIResponse(**result.result_data)
+    async def get_players(self, server_id: int) -> PlayersResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "ingame/players", self.headers, params=params)
+        return PlayersResponse.parse_obj(response_json)
 
+    async def get_server_map(self, server_id: int, only_ghetto: bool = False) -> MapResponse:
+        params = {"server_id": str(server_id), "only_ghetto": str(only_ghetto).lower()}
+        response_json = await api.get_json(self.base_url, "ingame/map", self.headers, params=params)
+        return MapResponse.parse_obj(response_json)
 
-    async def get_player_sessions(self, server_id: int, nickname: str, count: int = 1000, offset: int = 0,
-                                  start_datetime: Optional[datetime.datetime] = None,
-                                  end_datetime: Optional[datetime.datetime] = None) -> PlayerSessionsAPIResponse:
-        params = {'nickname': nickname, 'count': count, 'offset': offset, 'server_id': server_id}
-        if start_datetime:
-            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
-        if end_datetime:
-            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
-        result = await get_json(url=f'{self.base_url}sessions', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return PlayerSessionsAPIResponse(**result.result_data)
-
-
-    async def get_server_map(self, server_id: int, only_ghetto: bool = False) -> ServerMapAPIResponse:
-        result = await get_json(url=f'{self.base_url}map', headers=self.headers, params={'server_id': server_id, 'only_ghetto': int(only_ghetto)})
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return ServerMapAPIResponse(**result.result_data)
-
-
-    async def get_estate(self, server_id: int, nickname: Optional[str] = None, estate_type: Literal["houses", "businesses"] = None,
-                         first_interval_id: Optional[int] = None, last_interval_id: Optional[int] = None) -> PlayerEstateAPIResponse:
-        params = {'server_id': server_id}
-        if nickname:
-            params['nickname'] = nickname
-        if estate_type:
-            params['estate_type'] = estate_type
-        if first_interval_id:
-            params['first_interval_id'] = first_interval_id
-        if last_interval_id:
-            params['last_interval_id'] = last_interval_id
-        result = await get_json(url=f'{self.base_url}estate', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return PlayerEstateAPIResponse(**result.result_data)
-
-
-    async def get_players(self, server_id: int, nicknames: Optional[List[Union[str, int]]] = None) -> PlayersAPIResponse:
-        params = {'server_id': server_id}
-        if nicknames:
-            params['nicknames'] = nicknames
-        result = await get_json(url=f'{self.base_url}players', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return PlayersAPIResponse(**result.result_data)
-
-
-    async def generate_ss(self, commands: list, screen: Union[bytes, BytesIO], font: str = '/fonts/arialbd.ttf',
-                          text_top: bool = True, text_size: float = 0.95, commands_colors=None) -> bytes:
-
-        if not commands_colors:
-            commands_colors = {}
-        if isinstance(screen, bytes):
-            screen = BytesIO(screen)
-
-        data = FormData()
-        data.add_field('screen', screen, filename='screen.png', content_type='application/octet-stream')
-
-        result = await get_bytes(url=f'{self.base_url}generate_ss', headers=self.headers,
-                                 params={'commands': commands, 'font': font, 'text_top': int(text_top),
-                                         'commands_colors': str(commands_colors), 'text_size': text_size},
-                                 post_data=data)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return result.result_data
-
-
-    async def generate_aiss(self, theme: str) -> AiSSAPIResponse:
-        result = await get_json(url=f'{self.base_url}aiss', headers=self.headers, params={'theme': theme})
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return AiSSAPIResponse(**result.result_data)
-
-
-    async def get_token_stat(self, methods: Optional[List[Union[str, int]]] = None,
-                             start_datetime: Optional[datetime.datetime] = None,
-                             end_datetime: Optional[datetime.datetime] = None,
-                             response_type: Literal['counts', 'requests'] = 'counts',
-                             requests_limit: int = 1000, requests_offset: int = 0) -> TokenStatCountsAPIResponse | TokenStatRequestsAPIResponse:
-        params = {'response_type': response_type, 'requests_limit': requests_limit, 'requests_offset': requests_offset}
-        if start_datetime:
-            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
-        if end_datetime:
-            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
-        if methods:
-            params['methods'] = methods
-        result = await get_json(url=f'{self.base_url}stat', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        if response_type == 'counts':
-            return TokenStatCountsAPIResponse(**result.result_data)
-        else:
-            return TokenStatRequestsAPIResponse(**result.result_data)
-
-
-    async def find_player(self, server_id: int, nickname: str, recaptcha_token: Optional[str] = None) -> Union[FindPlayerInfoAPIResponse, FindPlayerInfoNotFound]:
-
-        params = {'server_id': server_id, 'nickname': nickname}
-        if recaptcha_token:
-            params['recaptcha_token'] = recaptcha_token
-
-        result = await get_json(url=f'{self.base_url}find', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        if result.error and result.error.error_code == 422:
-            return FindPlayerInfoNotFound(**result.error.dict())
-
-        if result.error and result.error.error_code in [500, 502, 503]:
-            raise Exception(result.error.detail)
-
-        return FindPlayerInfoAPIResponse(**result.result_data)
-
-
-    async def get_deputies(self, server_id: int) -> DeputiesAPIResponse:
-        result = await get_json(url=f'{self.base_url}deputies', headers=self.headers, params={'server_id': server_id})
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return DeputiesAPIResponse(**result.result_data)
-
-
-    async def get_leaders(self, server_id: int) -> LeadersAPIResponse:
-        result = await get_json(url=f'{self.base_url}leaders', headers=self.headers, params={'server_id': server_id})
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return LeadersAPIResponse(**result.result_data)
-
-
-    async def get_punishes(self, server_id: int,
-                           player_nickname: Optional[str] = None, admin_nickname: Optional[str] = None,
-                           start_datetime: Optional[datetime.datetime] = None,
-                           end_datetime: Optional[datetime.datetime] = None,
-                           punish_type: Optional[PunishType] = None,
-                           count: int = 1000, offset: int = 0) -> PunishesAPIResponse:
-        params = {'server_id': server_id, 'count': count, 'offset': offset}
-        if start_datetime:
-            params['start_datetime'] = start_datetime.isoformat() + '+03:00'
-        if end_datetime:
-            params['end_datetime'] = end_datetime.isoformat() + '+03:00'
-        if player_nickname:
-            params['player_nickname'] = player_nickname
-        if admin_nickname:
-            params['admin_nickname'] = admin_nickname
-        if punish_type:
-            params['punish_type'] = punish_type
-        result = await get_json(url=f'{self.base_url}punishes', headers=self.headers, params=params)
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return PunishesAPIResponse(**result.result_data)
-
-
-    async def get_active_interviews(self, server_id: int) -> InterviewsAPIResponse:
-        result = await get_json(url=f'{self.base_url}interviews', headers=self.headers, params={'server_id': server_id})
-
-        if not result.success:
-            raise Exception(result.error)
-
-        return InterviewsAPIResponse(**result.result_data)
-
-
-    async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> PlayerOnlineAPIResponse:
-        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
-        params = {'server_id': server_id, 'nickname': nickname}
+    async def get_token_requests_history(self, token_id: Union[int, Literal["current"]] = "current", limit: int = 50, request_start_id: Optional[int] = None,
+                                         date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
+                                         api_method: Optional[str] = None, ip_address: Optional[str] = None) -> RequestLogResponse:
+        params = {"limit": str(limit)}
+        if request_start_id is not None:
+            params["request_start_id"] = str(request_start_id)
         if date_from:
-            params['date_from'] = date_from.isoformat()
+            params["date_from"] = date_from.isoformat()
         if date_to:
-            params['date_to'] = date_to.isoformat()
-        result = await get_json(url='https://apitest.szx.su/player/online', headers=self.headers, params=params)
+            params["date_to"] = date_to.isoformat()
+        if api_method:
+            params["api_method"] = api_method
+        if ip_address:
+            params["ip_address"] = ip_address
 
-        if not result.success:
-            raise Exception(result.error)
+        response_json = await api.get_json(self.base_url, f"token/{token_id}/requests", self.headers, params=params)
+        return RequestLogResponse.parse_obj(response_json)
 
-        return PlayerOnlineAPIResponse(**result.result_data)
+    async def get_token_requests_stats(self, token_id: Union[int, Literal["current"]] = "current",
+                                       date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
+                                       api_method: Optional[str] = None, ip_address: Optional[str] = None) -> RequestStatsResponse:
+        params = {}
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
+        if api_method:
+            params["api_method"] = api_method
+        if ip_address:
+            params["ip_address"] = ip_address
 
+        response_json = await api.get_json(self.base_url, f"token/{token_id}/requests/stats", self.headers, params=params)
+        return RequestStatsResponse.parse_obj(response_json)
 
-    async def find_player_beta(self, server_id: int, nickname: str) -> Union[FindPlayerResponse, FindPlayerInfoNotFound]:
-        params = {'server_id': server_id, 'nickname': nickname}
-        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
-        result = await get_json(url='https://apitest.szx.su/player/find', headers=self.headers, params=params)
+    async def find_player(self, server_id: int, nickname: str) -> FindPlayerResponse:
+        params = {"server_id": str(server_id), "nickname": nickname}
+        response_json = await api.get_json(self.base_url, "player/find", self.headers, params=params)
+        return FindPlayerResponse.parse_obj(response_json)
 
-        if not result.success:
-            raise Exception(result.error)
+    async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> OnlineResponse:
+        params = {"server_id": str(server_id), "nickname": nickname}
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
 
-        if result.error and result.error.error_code == 404:
-            return FindPlayerInfoNotFound(**result.error.dict())
+        response_json = await api.get_json(self.base_url, "player/online", self.headers, params=params)
+        return OnlineResponse.parse_obj(response_json)
 
-        if result.error and result.error.error_code in [500, 502, 503]:
-            raise Exception(result.error.detail)
+    async def get_fraction_members(self, server_id: int, fraction_id: int) -> MembersResponse:
+        params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
+        response_json = await api.get_json(self.base_url, "fraction/members", self.headers, params=params)
+        return MembersResponse.parse_obj(response_json)
 
-        return FindPlayerResponse(**result.result_data)
+    async def get_manual_checkrp_overrides(self) -> CheckRpManualOverridesListResponse:
+        response_json = await api.get_json(self.base_url, "internal/checkrp/overrides", self.headers)
+        return CheckRpManualOverridesListResponse.parse_obj(response_json)
 
+    async def get_current_ip(self) -> str:
+        return await api.get_json(self.base_url, "internal/ip", self.headers)
 
-    async def get_members_beta(self, server_id: int, fraction_id: int) -> MembersAPIBetaResponse:
-        self.headers['VP-API-Token'] = self.headers['Authorization'].split('Bearer ')[1]
-        params = {'server_id': server_id, 'fraction_id': fraction_id}
-        result = await get_json(url='https://apitest.szx.su/fraction/members', headers=self.headers, params=params)
+    async def list_disabled_methods(self) -> List[str]:
+        response_json = await api.get_json(self.base_url, "internal/disabled-methods", self.headers)
+        return parse_obj_as(List[str], response_json)
 
-        if not result.success:
-            raise Exception(result.error)
+    async def detect_bots(self, server_id: int, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> BotDetectionResponse:
+        params = {"server_id": str(server_id)}
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
 
-        return MembersAPIBetaResponse(**result.result_data)
+        response_json = await api.get_json(self.base_url, "internal/detect-bots", self.headers, params=params)
+        return BotDetectionResponse.parse_obj(response_json)
