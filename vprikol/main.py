@@ -167,6 +167,18 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, "internal/checkrp/overrides", self.headers)
         return CheckRpManualOverridesListResponse.parse_obj(response_json)
 
+    async def confirm_rp_name(self, value_type: Literal["firstname", "surname"], value: str) -> None:
+        params = {"type": value_type, "value": value}
+        await api.post_empty(self.base_url, "internal/checkrp/confirm", self.headers, params=params)
+
+    async def deny_rp_name(self, value_type: Literal["firstname", "surname"], value: str) -> None:
+        params = {"type": value_type, "value": value}
+        await api.post_empty(self.base_url, "internal/checkrp/deny", self.headers, params=params)
+
+    async def reset_rp_name(self, value_type: Literal["firstname", "surname"], value: str) -> None:
+        params = {"type": value_type, "value": value}
+        await api.delete_empty(self.base_url, "internal/checkrp/reset", self.headers, params=params)
+
     async def get_current_ip(self) -> str:
         return await api.get_json(self.base_url, "internal/ip", self.headers)
 

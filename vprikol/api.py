@@ -42,3 +42,14 @@ async def post_form(base_url: str, path: str, headers: Dict, data: aiohttp.FormD
 async def delete_json(base_url: str, path: str, headers: Dict, params: Optional[Dict] = None) -> Any:
     async with aiohttp.ClientSession(headers=headers) as session:
         return await _request(session, "DELETE", f"{base_url}{path}", params=params)
+
+
+async def post_empty(base_url: str, endpoint: str, headers: Dict[str, str], params: Optional[Dict[str, Any]] = None) -> None:
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.post(base_url + endpoint, params=params) as response:
+            response.raise_for_status()
+
+async def delete_empty(base_url: str, endpoint: str, headers: Dict[str, str], params: Optional[Dict[str, Any]] = None) -> None:
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.delete(base_url + endpoint, params=params) as response:
+            response.raise_for_status()
