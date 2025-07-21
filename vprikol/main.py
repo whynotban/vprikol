@@ -1,16 +1,20 @@
 import datetime
-from typing import List, Optional, Union, Literal
+import json
+import aiohttp
+from typing import List, Optional, Union, Literal, Dict
 from pydantic import parse_obj_as
 
-from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse, FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse,
-                     RequestStatsResponse, LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType, BotDetectionResponse, CheckRpManualOverridesListResponse)
+from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
+                     FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
+                     LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
+                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont)
 from . import api
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://apitest.szx.su/"):
         self.base_url = base_url
-        self.headers = {}
+        self.headers = {"User-Agent": "vprikol-python-lib"}
         if token:
             self.headers["VP-API-Token"] = token
 
@@ -58,6 +62,27 @@ class VprikolAPI:
         params = {"gender": gender, "nation": nation}
         response_json = await api.get_json(self.base_url, "rpnick", self.headers, params=params)
         return RpNickResponse.parse_obj(response_json)
+
+    async def generate_ss(self, screen: bytes, commands: List[str], text_top: bool = True, font: SSFont = SSFont.ARIALBD,
+                          text_size: float = 0.95, commands_colors: Optional[Dict[str, str]] = None) -> bytes:
+        form_data = aiohttp.FormData()
+        form_data.add_field("screen", screen, filename="screen.png", content_type="image/png")
+
+        for command in commands:
+            form_data.add_field("commands", command)
+
+        form_data.add_field("text_top", str(text_top).lower())
+        form_data.add_field("font", font.value)
+        form_data.add_field("text_size", str(text_size))
+        form_data.add_field("commands_colors", json.dumps(commands_colors) if commands_colors else "{}")
+
+        response_bytes = await api.post_form(self.base_url, "ss", self.headers, data=form_data)
+        return response_bytes
+
+    async def generate_ai_situation(self, theme_prompt: str) -> AIResponse:
+        params = {"theme_prompt": theme_prompt}
+        response_json = await api.post_json(self.base_url, "ai/situation", self.headers, params=params)
+        return AIResponse.parse_obj(response_json)
 
     async def get_leaders(self, server_id: int) -> LeadersResponse:
         params = {"server_id": str(server_id)}

@@ -370,3 +370,25 @@ class CheckrRpManualOverrideEntry(BaseModel):
 class CheckRpManualOverridesListResponse(BaseModel):
     names: List[CheckrRpManualOverrideEntry]
     surnames: List[CheckrRpManualOverrideEntry]
+
+
+class AIResponse(BaseModel):
+    lines: List[str]
+
+
+class SSFont(str, Enum):
+    ARIALBD = "arialbd.ttf"
+    ARIALBDI = "arialbdi.ttf"
+    BITTERBD = "bitterbd.ttf"
+    BITTERBDI = "bitterbdi.ttf"
+    MONTSERRATBD = "montserratbd.ttf"
+    MONTSERRATBDI = "montserratbdi.ttf"
+    NUNITOBD = "nunitobd.ttf"
+    NUNITOBDI = "nunitobdi.ttf"
+    OPENSANSBD = "opensansbd.ttf"
+    OPENSANSBDI = "opensansbdi.ttf"
+    UBUNTUBD = "ubuntubd.ttf"
+    UBUNTUBDI = "ubuntubdi.ttf"
+    ROBOTOBD = "robotobd.ttf"
+    ROBOTOBDI = "robotobdi.ttf"
+    SF_PRO_DISPLAY_BOLD = "SF-Pro-Display-Bold.otf"
