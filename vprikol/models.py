@@ -34,6 +34,24 @@ class EstateType(str, Enum):
     BUSINESSES = "businesses"
 
 
+class SSFont(str, Enum):
+    ARIAL_BOLD = 'arialbd.ttf'
+    ARIAL_BOLD_ITALIC = 'arialbdi.ttf'
+    BITTER_BOLD = 'bitterbd.ttf'
+    BITTER_BOLD_ITALIC = 'bitterbdi.ttf'
+    MONTSERRAT_BOLD = 'montserratbd.ttf'
+    MONTSERRAT_BOLD_ITALIC = 'montserratbdi.ttf'
+    NUNITO_BOLD = 'nunitobd.ttf'
+    NUNITO_BOLD_ITALIC = 'nunitobdi.ttf'
+    OPENSANS_BOLD = 'opensansbd.ttf'
+    OPENSANS_BOLD_ITALIC = 'opensansbdi.ttf'
+    UBUNTU_BOLD = 'ubuntubd.ttf'
+    UBUNTU_BOLD_ITALIC = 'ubuntubdi.ttf'
+    ROBOTO_BOLD = 'robotobd.ttf'
+    ROBOTO_BOLD_ITALIC = 'robotobdi.ttf'
+    SF_PRO_DISPLAY_BOLD = 'SF-Pro-Display-Bold.otf'
+
+
 class ValidationError(BaseModel):
     loc: List[Union[str, int]]
     msg: str
@@ -161,6 +179,17 @@ class PlayerVIP(BaseModel):
     addition_vip_expiration_date: Optional[datetime.datetime]
 
 
+class PlayerFamilyInfo(BaseModel):
+    family_id: int
+    family_name: Optional[str]
+
+
+class PlayerRatingEntry(BaseModel):
+    rating_type: RatingType
+    position: int
+    value: Any
+
+
 class FindPlayerResponse(BaseModel):
     server: ServerInfo
     general: PlayerGeneral
@@ -169,6 +198,8 @@ class FindPlayerResponse(BaseModel):
     lvl: PlayerLvl
     punishes: PlayerPunishes
     vip_info: PlayerVIP
+    family: Optional[PlayerFamilyInfo] = None
+    ratings: List[PlayerRatingEntry] = []
 
 
 class MembersPlayer(BaseModel):
@@ -223,8 +254,8 @@ class RatingPlayer(BaseModel):
     position: int
     nickname: str
     value: Any
-    server_id: int
-    server_label: str
+    server_id: Optional[int] = None
+    server_label: Optional[str] = None
     additional_value: Optional[Any] = None
     az_coins: Optional[int] = None
     family: Optional[str] = None
@@ -348,8 +379,11 @@ class MapResponse(BaseModel):
     server_id: int
     server_label: str
     updated_at: datetime.datetime
-    image: str
+    image: str = Field(..., alias="image", description="Карта сервера в формате base64")
     territories_count: TerritoriesCount
+
+    class Config:
+        populate_by_name = True
 
 
 class BotAccount(BaseModel):
@@ -376,19 +410,31 @@ class AIResponse(BaseModel):
     lines: List[str]
 
 
-class SSFont(str, Enum):
-    ARIALBD = "arialbd.ttf"
-    ARIALBDI = "arialbdi.ttf"
-    BITTERBD = "bitterbd.ttf"
-    BITTERBDI = "bitterbdi.ttf"
-    MONTSERRATBD = "montserratbd.ttf"
-    MONTSERRATBDI = "montserratbdi.ttf"
-    NUNITOBD = "nunitobd.ttf"
-    NUNITOBDI = "nunitobdi.ttf"
-    OPENSANSBD = "opensansbd.ttf"
-    OPENSANSBDI = "opensansbdi.ttf"
-    UBUNTUBD = "ubuntubd.ttf"
-    UBUNTUBDI = "ubuntubdi.ttf"
-    ROBOTOBD = "robotobd.ttf"
-    ROBOTOBDI = "robotobdi.ttf"
-    SF_PRO_DISPLAY_BOLD = "SF-Pro-Display-Bold.otf"
+class FamilyMember(BaseModel):
+    account_id: int
+    nickname: str
+    family_rank: int
+    quests: int
+    warns: int
+    is_online: bool
+    ingame_id: Optional[int] = None
+    is_leader: bool
+    is_deputy: bool
+    last_login_at: datetime.datetime
+
+
+class FamilyResponse(BaseModel):
+    server_id: int
+    server_label: str
+    family_id: int
+    name: Optional[str]
+    lvl: Optional[int]
+    flag_id: Optional[int] = None
+    leader_nickname: Optional[str] = None
+    is_leader_online: bool
+    total_members_count: int
+    online_members_count: int
+    total_deputies_count: int
+    online_deputies_count: int
+    members: List[FamilyMember]
+    updated_at: datetime.datetime

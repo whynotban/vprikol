@@ -7,7 +7,7 @@ from pydantic import parse_obj_as
 from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
-                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont)
+                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont, FamilyResponse, FamilyMember)
 from . import api
 
 
@@ -63,7 +63,7 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, "rpnick", self.headers, params=params)
         return RpNickResponse.parse_obj(response_json)
 
-    async def generate_ss(self, screen: bytes, commands: List[str], text_top: bool = True, font: SSFont = SSFont.ARIALBD,
+    async def generate_ss(self, screen: bytes, commands: List[str], text_top: bool = True, font: SSFont = SSFont.ARIAL_BOLD,
                           text_size: float = 0.95, commands_colors: Optional[Dict[str, str]] = None) -> bytes:
         form_data = aiohttp.FormData()
         form_data.add_field("screen", screen, filename="screen.png", content_type="image/png")
@@ -203,3 +203,23 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "internal/detect-bots", self.headers, params=params)
         return BotDetectionResponse.parse_obj(response_json)
+
+    async def get_family_by_id(self, server_id: int, family_id: int) -> FamilyResponse:
+        params = {"server_id": str(server_id), "family_id": str(family_id)}
+        response_json = await api.get_json(self.base_url, "family", self.headers, params=params)
+        return FamilyResponse.parse_obj(response_json)
+
+    async def get_family_members(self, server_id: int, family_id: int) -> List[FamilyMember]:
+        params = {"server_id": str(server_id), "family_id": str(family_id)}
+        response_json = await api.get_json(self.base_url, "family/members", self.headers, params=params)
+        return parse_obj_as(List[FamilyMember], response_json)
+
+    async def find_family(self, server_id: int, nickname: Optional[str] = None, name: Optional[str] = None) -> FamilyResponse:
+        params = {"server_id": str(server_id)}
+        if nickname:
+            params["nickname"] = nickname
+        if name:
+            params["name"] = name
+
+        response_json = await api.get_json(self.base_url, "family/find", self.headers, params=params)
+        return FamilyResponse.parse_obj(response_json)
