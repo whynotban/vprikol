@@ -186,6 +186,14 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, "internal/disabled-methods", self.headers)
         return parse_obj_as(List[str], response_json)
 
+    async def disable_method(self, method_name: str) -> None:
+        params = {"method_name": method_name}
+        await api.post_empty(self.base_url, "internal/disabled-methods", self.headers, params=params)
+
+    async def enable_method(self, method_name: str) -> None:
+        params = {"method_name": method_name}
+        await api.delete_empty(self.base_url, "internal/disabled-methods", self.headers, params=params)
+
     async def detect_bots(self, server_id: int, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> BotDetectionResponse:
         params = {"server_id": str(server_id)}
         if date_from:
