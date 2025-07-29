@@ -2,7 +2,7 @@ import datetime
 import json
 import aiohttp
 from typing import List, Optional, Union, Literal, Dict
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
@@ -21,18 +21,18 @@ class VprikolAPI:
     async def get_token_information(self, token_id: Union[int, Literal["current", "all", "deactivated"]] = "current") -> Union[TokenResponse, List[TokenResponse]]:
         response_json = await api.get_json(self.base_url, f"token/{token_id}", self.headers)
         if isinstance(response_json, list):
-            return parse_obj_as(List[TokenResponse], response_json)
-        return TokenResponse.parse_obj(response_json)
+            return TypeAdapter(List[TokenResponse]).validate_python(response_json)
+        return TokenResponse.model_validate(response_json)
 
     async def get_server_status(self, server_id: int) -> ServerStatusResponse:
         params = {"server_id": str(server_id)}
         response_json = await api.get_json(self.base_url, "status", self.headers, params=params)
-        return ServerStatusResponse.parse_obj(response_json)
+        return ServerStatusResponse.model_validate(response_json)
 
     async def get_rating(self, server_id: int, rating_type: RatingType) -> RatingResponse:
         params = {"server_id": str(server_id), "rating_type": rating_type.value}
         response_json = await api.get_json(self.base_url, "rating", self.headers, params=params)
-        return RatingResponse.parse_obj(response_json)
+        return RatingResponse.model_validate(response_json)
 
     async def get_estate(self, server_id: int, estate_type: Optional[EstateType] = None, nickname: Optional[str] = None, min_id: Optional[int] = None, max_id: Optional[int] = None) -> EstateResponse:
         params = {"server_id": str(server_id)}
@@ -46,7 +46,7 @@ class VprikolAPI:
             params["max_id"] = str(max_id)
 
         response_json = await api.get_json(self.base_url, "estate", self.headers, params=params)
-        return EstateResponse.parse_obj(response_json)
+        return EstateResponse.model_validate(response_json)
 
     async def check_rp_nickname(self, first_name: Optional[str] = None, last_name: Optional[str] = None) -> CheckRpResponse:
         params = {}
@@ -56,12 +56,12 @@ class VprikolAPI:
             params["last_name"] = last_name
 
         response_json = await api.get_json(self.base_url, "checkrp", self.headers, params=params)
-        return CheckRpResponse.parse_obj(response_json)
+        return CheckRpResponse.model_validate(response_json)
 
     async def generate_rp_nickname(self, gender: str, nation: str) -> RpNickResponse:
         params = {"gender": gender, "nation": nation}
         response_json = await api.get_json(self.base_url, "rpnick", self.headers, params=params)
-        return RpNickResponse.parse_obj(response_json)
+        return RpNickResponse.model_validate(response_json)
 
     async def generate_ss(self, screen: bytes, commands: List[str], text_top: bool = True, font: SSFont = SSFont.ARIAL_BOLD,
                           text_size: float = 0.95, commands_colors: Optional[Dict[str, str]] = None) -> bytes:
@@ -82,32 +82,32 @@ class VprikolAPI:
     async def generate_ai_situation(self, theme_prompt: str) -> AIResponse:
         params = {"theme_prompt": theme_prompt}
         response_json = await api.post_json(self.base_url, "ai/situation", self.headers, params=params)
-        return AIResponse.parse_obj(response_json)
+        return AIResponse.model_validate(response_json)
 
     async def get_leaders(self, server_id: int) -> LeadersResponse:
         params = {"server_id": str(server_id)}
         response_json = await api.get_json(self.base_url, "ingame/leaders", self.headers, params=params)
-        return LeadersResponse.parse_obj(response_json)
+        return LeadersResponse.model_validate(response_json)
 
     async def get_deputies(self, server_id: int) -> LeadersResponse:
         params = {"server_id": str(server_id)}
         response_json = await api.get_json(self.base_url, "ingame/deputies", self.headers, params=params)
-        return LeadersResponse.parse_obj(response_json)
+        return LeadersResponse.model_validate(response_json)
 
     async def get_interviews(self, server_id: int) -> InterviewsResponse:
         params = {"server_id": str(server_id)}
         response_json = await api.get_json(self.base_url, "ingame/interviews", self.headers, params=params)
-        return InterviewsResponse.parse_obj(response_json)
+        return InterviewsResponse.model_validate(response_json)
 
     async def get_players(self, server_id: int) -> PlayersResponse:
         params = {"server_id": str(server_id)}
         response_json = await api.get_json(self.base_url, "ingame/players", self.headers, params=params)
-        return PlayersResponse.parse_obj(response_json)
+        return PlayersResponse.model_validate(response_json)
 
     async def get_server_map(self, server_id: int, only_ghetto: bool = False) -> MapResponse:
         params = {"server_id": str(server_id), "only_ghetto": str(only_ghetto).lower()}
         response_json = await api.get_json(self.base_url, "ingame/map", self.headers, params=params)
-        return MapResponse.parse_obj(response_json)
+        return MapResponse.model_validate(response_json)
 
     async def get_token_requests_history(self, token_id: Union[int, Literal["current"]] = "current", limit: int = 50, request_start_id: Optional[int] = None,
                                          date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
@@ -125,7 +125,7 @@ class VprikolAPI:
             params["ip_address"] = ip_address
 
         response_json = await api.get_json(self.base_url, f"token/{token_id}/requests", self.headers, params=params)
-        return RequestLogResponse.parse_obj(response_json)
+        return RequestLogResponse.model_validate(response_json)
 
     async def get_token_requests_stats(self, token_id: Union[int, Literal["current"]] = "current",
                                        date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
@@ -141,12 +141,12 @@ class VprikolAPI:
             params["ip_address"] = ip_address
 
         response_json = await api.get_json(self.base_url, f"token/{token_id}/requests/stats", self.headers, params=params)
-        return RequestStatsResponse.parse_obj(response_json)
+        return RequestStatsResponse.model_validate(response_json)
 
     async def find_player(self, server_id: int, nickname: str) -> FindPlayerResponse:
         params = {"server_id": str(server_id), "nickname": nickname}
         response_json = await api.get_json(self.base_url, "player/find", self.headers, params=params)
-        return FindPlayerResponse.parse_obj(response_json)
+        return FindPlayerResponse.model_validate(response_json)
 
     async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> OnlineResponse:
         params = {"server_id": str(server_id), "nickname": nickname}
@@ -156,16 +156,16 @@ class VprikolAPI:
             params["date_to"] = date_to.isoformat()
 
         response_json = await api.get_json(self.base_url, "player/online", self.headers, params=params)
-        return OnlineResponse.parse_obj(response_json)
+        return OnlineResponse.model_validate(response_json)
 
     async def get_fraction_members(self, server_id: int, fraction_id: int) -> MembersResponse:
         params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
         response_json = await api.get_json(self.base_url, "fraction/members", self.headers, params=params)
-        return MembersResponse.parse_obj(response_json)
+        return MembersResponse.model_validate(response_json)
 
     async def get_manual_checkrp_overrides(self) -> CheckRpManualOverridesListResponse:
         response_json = await api.get_json(self.base_url, "internal/checkrp/overrides", self.headers)
-        return CheckRpManualOverridesListResponse.parse_obj(response_json)
+        return CheckRpManualOverridesListResponse.model_validate(response_json)
 
     async def confirm_rp_name(self, value_type: Literal["firstname", "surname"], value: str) -> None:
         params = {"type": value_type, "value": value}
@@ -184,7 +184,7 @@ class VprikolAPI:
 
     async def list_disabled_methods(self) -> List[str]:
         response_json = await api.get_json(self.base_url, "internal/disabled-methods", self.headers)
-        return parse_obj_as(List[str], response_json)
+        return TypeAdapter(List[str]).validate_python(response_json)
 
     async def disable_method(self, method_name: str) -> None:
         params = {"method_name": method_name}
@@ -202,17 +202,17 @@ class VprikolAPI:
             params["date_to"] = date_to.isoformat()
 
         response_json = await api.get_json(self.base_url, "internal/detect-bots", self.headers, params=params)
-        return BotDetectionResponse.parse_obj(response_json)
+        return BotDetectionResponse.model_validate(response_json)
 
     async def get_family_by_id(self, server_id: int, family_id: int) -> FamilyResponse:
         params = {"server_id": str(server_id), "family_id": str(family_id)}
         response_json = await api.get_json(self.base_url, "family", self.headers, params=params)
-        return FamilyResponse.parse_obj(response_json)
+        return FamilyResponse.model_validate(response_json)
 
     async def get_family_members(self, server_id: int, family_id: int) -> List[FamilyMember]:
         params = {"server_id": str(server_id), "family_id": str(family_id)}
         response_json = await api.get_json(self.base_url, "family/members", self.headers, params=params)
-        return parse_obj_as(List[FamilyMember], response_json)
+        return TypeAdapter(List[FamilyMember]).validate_python(response_json)
 
     async def find_family(self, server_id: int, nickname: Optional[str] = None, name: Optional[str] = None) -> FamilyResponse:
         params = {"server_id": str(server_id)}
@@ -222,4 +222,4 @@ class VprikolAPI:
             params["name"] = name
 
         response_json = await api.get_json(self.base_url, "family/find", self.headers, params=params)
-        return FamilyResponse.parse_obj(response_json)
+        return FamilyResponse.model_validate(response_json)
