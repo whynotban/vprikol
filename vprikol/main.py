@@ -218,3 +218,46 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "family/find", self.headers, params=params)
         return FamilyResponse.model_validate(response_json)
+
+    async def create_token(self, project_label: str, service: bool = False, disabled_logs: bool = False, subscription_days: Optional[int] = None) -> TokenResponse:
+        body = {"project_label": project_label, "service": service, "disabled_logs": disabled_logs, "subscription_days": subscription_days}
+        response_json = await api.post_json(self.base_url, "internal/token", self.headers, body=body)
+        return TokenResponse.model_validate(response_json)
+
+    async def update_token(self, token_id: int, project_label: Optional[str] = None, activated: Optional[bool] = None, service: Optional[bool] = None,
+                           disabled_logs: Optional[bool] = None, add_subscription_days: Optional[int] = None) -> TokenResponse:
+        body = {}
+        if project_label is not None:
+            body["project_label"] = project_label
+        if activated is not None:
+            body["activated"] = activated
+        if service is not None:
+            body["service"] = service
+        if disabled_logs is not None:
+            body["disabled_logs"] = disabled_logs
+        if add_subscription_days is not None:
+            body["add_subscription_days"] = add_subscription_days
+
+        response_json = await api.put_json(self.base_url, f"internal/token/{token_id}", self.headers, body=body)
+        return TokenResponse.model_validate(response_json)
+
+    async def delete_token(self, token_id: int) -> None:
+        await api.delete_empty(self.base_url, f"internal/token/{token_id}", self.headers)
+
+    async def reissue_token(self, token_id: int) -> TokenResponse:
+        response_json = await api.post_json(self.base_url, f"internal/token/{token_id}/reissue", self.headers)
+        return TokenResponse.model_validate(response_json)
+
+    async def find_tokens_by_ip(self, ip_address: str) -> List[TokenResponse]:
+        response_json = await api.get_json(self.base_url, f"internal/token/find-by-ip/{ip_address}", self.headers)
+        return TypeAdapter(List[TokenResponse]).validate_python(response_json)
+
+    async def get_overall_requests_stats(self, date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> RequestStatsResponse:
+        params = {}
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
+
+        response_json = await api.get_json(self.base_url, "internal/requests/stats", self.headers, params=params)
+        return RequestStatsResponse.model_validate(response_json)
