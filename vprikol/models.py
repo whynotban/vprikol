@@ -1,7 +1,7 @@
 import datetime
 from enum import Enum
 from typing import List, Optional, Dict, Union, Any, Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class RatingType(str, Enum):
@@ -381,9 +381,7 @@ class MapResponse(BaseModel):
     updated_at: datetime.datetime
     image: str = Field(..., alias="image", description="Карта сервера в формате base64")
     territories_count: TerritoriesCount
-
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class BotAccount(BaseModel):

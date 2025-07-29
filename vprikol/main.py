@@ -209,11 +209,6 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, "family", self.headers, params=params)
         return FamilyResponse.model_validate(response_json)
 
-    async def get_family_members(self, server_id: int, family_id: int) -> List[FamilyMember]:
-        params = {"server_id": str(server_id), "family_id": str(family_id)}
-        response_json = await api.get_json(self.base_url, "family/members", self.headers, params=params)
-        return TypeAdapter(List[FamilyMember]).validate_python(response_json)
-
     async def find_family(self, server_id: int, nickname: Optional[str] = None, name: Optional[str] = None) -> FamilyResponse:
         params = {"server_id": str(server_id)}
         if nickname:
