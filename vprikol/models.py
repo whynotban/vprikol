@@ -118,9 +118,9 @@ class ServerInfo(BaseModel):
 
 class PlayerGeneral(BaseModel):
     account_id: int
+    skin_id: int
     nickname: str
     gender: str
-    skin_id: int
     played_hours: int
     phone_number: Optional[int]
     health: int
@@ -128,7 +128,7 @@ class PlayerGeneral(BaseModel):
     max_hunger: int
     drug_addict_lvl: int
     marriage: Optional[str]
-    job_label: str
+    job_label: Optional[str]
 
 
 class PlayerFraction(BaseModel):
@@ -155,7 +155,7 @@ class PlayerMoney(BaseModel):
     deposit: int
     have_bank_card: bool
     charity_money: int
-    phone_balance: int
+    phone_balance: Optional[int]
     individual_accounts: IndividualAccounts
 
 
@@ -172,8 +172,8 @@ class PlayerPunishes(BaseModel):
 
 
 class PlayerVIP(BaseModel):
-    vip_lvl: int
-    vip_label: str
+    vip_lvl: Optional[int]
+    vip_label: Optional[str]
     vip_expiration_date: Optional[datetime.datetime]
     have_addition_vip: bool
     addition_vip_expiration_date: Optional[datetime.datetime]
@@ -200,6 +200,8 @@ class FindPlayerResponse(BaseModel):
     vip_info: PlayerVIP
     family: Optional[PlayerFamilyInfo] = None
     ratings: List[PlayerRatingEntry] = []
+    is_cached: bool = Field(False, alias="isCached")
+    updated_at: datetime.datetime = Field(alias="updatedAt")
 
 
 class MembersPlayer(BaseModel):
@@ -248,6 +250,17 @@ class OnlineResponse(BaseModel):
     active_session_login_at: Optional[datetime.datetime]
     last_login_at: Optional[datetime.datetime]
     last_logout_at: Optional[datetime.datetime]
+
+
+class NicknameHistoryEntry(BaseModel):
+    old_value: Optional[str]
+    new_value: Optional[str]
+    created_at: datetime.datetime
+
+
+class MoneyHistoryEntry(BaseModel):
+    date: datetime.date
+    value: int
 
 
 class RatingPlayer(BaseModel):

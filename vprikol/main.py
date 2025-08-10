@@ -7,7 +7,8 @@ from pydantic import TypeAdapter
 from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
-                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont, FamilyResponse, FamilyMember)
+                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont, FamilyResponse,
+                     NicknameHistoryEntry, MoneyHistoryEntry)
 from . import api
 
 
@@ -143,8 +144,16 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, f"token/{token_id}/requests/stats", self.headers, params=params)
         return RequestStatsResponse.model_validate(response_json)
 
-    async def find_player(self, server_id: int, nickname: str) -> FindPlayerResponse:
-        params = {"server_id": str(server_id), "nickname": nickname}
+    async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None) -> FindPlayerResponse:
+        if not nickname and not account_id:
+            raise ValueError("Необходимо указать nickname или account_id.")
+
+        params = {"server_id": str(server_id)}
+        if nickname:
+            params["nickname"] = nickname
+        if account_id is not None:
+            params["account_id"] = str(account_id)
+
         response_json = await api.get_json(self.base_url, "player/find", self.headers, params=params)
         return FindPlayerResponse.model_validate(response_json)
 
@@ -157,6 +166,30 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "player/online", self.headers, params=params)
         return OnlineResponse.model_validate(response_json)
+
+    async def get_player_history(self, server_id: int, history_type: Literal['nickname', 'total_money'], nickname: Optional[str] = None, account_id: Optional[int] = None,
+                                 date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> Union[List[NicknameHistoryEntry], List[MoneyHistoryEntry]]:
+        if not nickname and not account_id:
+            raise ValueError("Необходимо указать nickname или account_id.")
+
+        params = {"server_id": str(server_id), "type": history_type}
+        if nickname:
+            params["nickname"] = nickname
+        if account_id is not None:
+            params["account_id"] = str(account_id)
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
+
+        response_json = await api.get_json(self.base_url, "player/history", self.headers, params=params)
+
+        if not response_json:
+            return []
+        if history_type == 'nickname':
+            return TypeAdapter(List[NicknameHistoryEntry]).validate_python(response_json)
+        else:
+            return TypeAdapter(List[MoneyHistoryEntry]).validate_python(response_json)
 
     async def get_fraction_members(self, server_id: int, fraction_id: int) -> MembersResponse:
         params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
