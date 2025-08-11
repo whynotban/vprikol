@@ -13,7 +13,7 @@ from . import api
 
 
 class VprikolAPI:
-    def __init__(self, token: Optional[str] = None, base_url: str = "https://apitest.szx.su/"):
+    def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
         self.headers = {"User-Agent": "vprikol-python-lib"}
         if token:

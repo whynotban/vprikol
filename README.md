@@ -8,7 +8,7 @@ pip install vprikol -U
 
 ## Документация
 
-https://apitest.szx.su/docs
+https://api.szx.su/docs
 
 ## Поддержка
 
