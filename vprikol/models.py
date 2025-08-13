@@ -200,8 +200,8 @@ class FindPlayerResponse(BaseModel):
     vip_info: PlayerVIP
     family: Optional[PlayerFamilyInfo] = None
     ratings: List[PlayerRatingEntry] = []
-    is_cached: bool = Field(False, alias="isCached")
-    updated_at: datetime.datetime = Field(alias="updatedAt")
+    is_cached: bool = False
+    updated_at: datetime.datetime
 
 
 class MembersPlayer(BaseModel):
