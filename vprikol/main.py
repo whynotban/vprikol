@@ -7,7 +7,7 @@ from pydantic import TypeAdapter
 from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
-                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont, FamilyResponse,
+                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
                      NicknameHistoryEntry, MoneyHistoryEntry)
 from . import api
 
@@ -236,21 +236,6 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "internal/detect-bots", self.headers, params=params)
         return BotDetectionResponse.model_validate(response_json)
-
-    async def get_family_by_id(self, server_id: int, family_id: int) -> FamilyResponse:
-        params = {"server_id": str(server_id), "family_id": str(family_id)}
-        response_json = await api.get_json(self.base_url, "family", self.headers, params=params)
-        return FamilyResponse.model_validate(response_json)
-
-    async def find_family(self, server_id: int, nickname: Optional[str] = None, name: Optional[str] = None) -> FamilyResponse:
-        params = {"server_id": str(server_id)}
-        if nickname:
-            params["nickname"] = nickname
-        if name:
-            params["name"] = name
-
-        response_json = await api.get_json(self.base_url, "family/find", self.headers, params=params)
-        return FamilyResponse.model_validate(response_json)
 
     async def create_token(self, project_label: str, service: bool = False, disabled_logs: bool = False, subscription_days: Optional[int] = None) -> TokenResponse:
         body = {"project_label": project_label, "service": service, "disabled_logs": disabled_logs, "subscription_days": subscription_days}

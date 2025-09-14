@@ -179,11 +179,6 @@ class PlayerVIP(BaseModel):
     addition_vip_expiration_date: Optional[datetime.datetime]
 
 
-class PlayerFamilyInfo(BaseModel):
-    family_id: int
-    family_name: Optional[str]
-
-
 class PlayerRatingEntry(BaseModel):
     rating_type: RatingType
     position: int
@@ -198,7 +193,6 @@ class FindPlayerResponse(BaseModel):
     lvl: PlayerLvl
     punishes: PlayerPunishes
     vip_info: PlayerVIP
-    family: Optional[PlayerFamilyInfo] = None
     ratings: List[PlayerRatingEntry] = []
     is_cached: bool = False
     updated_at: datetime.datetime
@@ -419,33 +413,3 @@ class CheckRpManualOverridesListResponse(BaseModel):
 
 class AIResponse(BaseModel):
     lines: List[str]
-
-
-class FamilyMember(BaseModel):
-    account_id: int
-    nickname: str
-    family_rank: int
-    quests: int
-    warns: int
-    is_online: bool
-    ingame_id: Optional[int] = None
-    is_leader: bool
-    is_deputy: bool
-    last_login_at: datetime.datetime
-
-
-class FamilyResponse(BaseModel):
-    server_id: int
-    server_label: str
-    family_id: int
-    name: Optional[str]
-    lvl: Optional[int]
-    flag_id: Optional[int] = None
-    leader_nickname: Optional[str] = None
-    is_leader_online: bool
-    total_members_count: int
-    online_members_count: int
-    total_deputies_count: int
-    online_deputies_count: int
-    members: List[FamilyMember]
-    updated_at: datetime.datetime
