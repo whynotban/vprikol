@@ -290,6 +290,8 @@ class ServerStatusResponse(BaseModel):
     online_players: int
     max_players: int
     is_closed: bool
+    payday_boost: int
+    multiplier_donate: int
     server_vk: Optional[str] = None
     server_discord: Optional[str] = None
     main_admin_vk: Optional[str] = None
