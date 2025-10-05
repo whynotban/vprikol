@@ -34,6 +34,11 @@ class EstateType(str, Enum):
     BUSINESSES = "businesses"
 
 
+class EstateHistoryType(str, Enum):
+    HOUSE = "house"
+    BUSINESS = "business"
+
+
 class SSFont(str, Enum):
     ARIAL_BOLD = 'arialbd.ttf'
     ARIAL_BOLD_ITALIC = 'arialbdi.ttf'
@@ -96,6 +101,25 @@ class EstateResponse(BaseModel):
     updated_at: datetime.datetime
     houses: List[HouseEntry]
     businesses: List[BusinessEntry]
+
+
+class EstateHistoryEntry(BaseModel):
+    previous_owner: Optional[str]
+    new_owner: Optional[str]
+    estate_name: Optional[str]
+    action_at: datetime.datetime
+
+
+class EstateHistoryResponse(BaseModel):
+    server_id: int
+    server_label: str
+    estate_type: EstateHistoryType
+    estate_id: int
+    estate_name: Optional[str]
+    total: int
+    limit: int
+    offset: int
+    data: List[EstateHistoryEntry]
 
 
 class CheckRpNameData(BaseModel):

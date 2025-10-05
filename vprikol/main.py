@@ -8,7 +8,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType)
 from . import api
 
 
@@ -279,3 +279,8 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "internal/requests/stats", self.headers, params=params)
         return RequestStatsResponse.model_validate(response_json)
+
+    async def get_estate_history(self, server_id: int, estate_type: EstateHistoryType, estate_id: int, limit: int = 15, offset: int = 0) -> EstateHistoryResponse:
+        params = {"server_id": str(server_id), "estate_type": estate_type.value, "estate_id": str(estate_id), "limit": str(limit), "offset": str(offset)}
+        response_json = await api.get_json(self.base_url, "estate/history", self.headers, params=params)
+        return EstateHistoryResponse.model_validate(response_json)
