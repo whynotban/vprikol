@@ -209,15 +209,23 @@ class PlayerRatingEntry(BaseModel):
     value: Any
 
 
+class AdminInfo(BaseModel):
+    is_admin: Optional[bool]
+    post: Optional[str]
+    vk_tag: Optional[str]
+
+
 class FindPlayerResponse(BaseModel):
     server: ServerInfo
     general: PlayerGeneral
+    admin_info: AdminInfo
     fraction: PlayerFraction
     money: PlayerMoney
     lvl: PlayerLvl
     punishes: PlayerPunishes
     vip_info: PlayerVIP
     ratings: List[PlayerRatingEntry] = []
+    is_premium: bool = False
     is_cached: bool = False
     updated_at: datetime.datetime
 

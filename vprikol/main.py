@@ -144,11 +144,11 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, f"token/{token_id}/requests/stats", self.headers, params=params)
         return RequestStatsResponse.model_validate(response_json)
 
-    async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None) -> FindPlayerResponse:
+    async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None, is_premium: bool = False) -> FindPlayerResponse:
         if not nickname and not account_id:
             raise ValueError("Необходимо указать nickname или account_id.")
 
-        params = {"server_id": str(server_id)}
+        params = {"server_id": str(server_id), "is_premium": int(is_premium)}
         if nickname:
             params["nickname"] = nickname
         if account_id is not None:
