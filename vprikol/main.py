@@ -8,14 +8,14 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse)
 from . import api
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib"}
+        self.headers = {"User-Agent": "vprikol-python-lib-5.4.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
 
@@ -195,6 +195,11 @@ class VprikolAPI:
         params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
         response_json = await api.get_json(self.base_url, "fraction/members", self.headers, params=params)
         return MembersResponse.model_validate(response_json)
+
+    async def get_admins_list(self, server_id: int) -> AdminsResponse:
+        params = {"server_id": str(server_id)}
+        response_json = await api.get_json(self.base_url, "admins/list", self.headers, params=params)
+        return AdminsResponse.model_validate(response_json)
 
     async def get_manual_checkrp_overrides(self) -> CheckRpManualOverridesListResponse:
         response_json = await api.get_json(self.base_url, "internal/checkrp/overrides", self.headers)

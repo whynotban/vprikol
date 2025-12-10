@@ -447,3 +447,16 @@ class CheckRpManualOverridesListResponse(BaseModel):
 
 class AIResponse(BaseModel):
     lines: List[str]
+
+
+class AdminEntry(BaseModel):
+    nickname: str
+    vk_id: Optional[str]
+    post: Optional[str]
+
+
+class AdminsResponse(BaseModel):
+    server_id: int
+    server_label: str
+    updated_at: datetime.datetime
+    admins: List[AdminEntry]
