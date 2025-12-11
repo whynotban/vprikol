@@ -8,14 +8,14 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse)
 from . import api
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-5.4.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-5.5.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
 
@@ -144,15 +144,21 @@ class VprikolAPI:
         response_json = await api.get_json(self.base_url, f"token/{token_id}/requests/stats", self.headers, params=params)
         return RequestStatsResponse.model_validate(response_json)
 
-    async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None, is_premium: bool = False) -> FindPlayerResponse:
+    async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None,
+                          is_premium: bool = False, bypass_privacy: bool = False, executor_id: Optional[int] = None,
+                          platform: Optional[str] = None, is_incognito: bool = False) -> FindPlayerResponse:
         if not nickname and not account_id:
             raise ValueError("Необходимо указать nickname или account_id.")
 
-        params = {"server_id": str(server_id), "is_premium": int(is_premium)}
+        params = {"server_id": str(server_id), "is_premium": int(is_premium), "bypass_privacy": int(bypass_privacy), "is_incognito": int(is_incognito)}
         if nickname:
             params["nickname"] = nickname
         if account_id is not None:
             params["account_id"] = str(account_id)
+        if executor_id is not None:
+            params["executor_id"] = str(executor_id)
+        if platform:
+            params["platform"] = platform
 
         response_json = await api.get_json(self.base_url, "player/find", self.headers, params=params)
         return FindPlayerResponse.model_validate(response_json)
@@ -289,3 +295,28 @@ class VprikolAPI:
         params = {"server_id": str(server_id), "estate_type": estate_type.value, "estate_id": str(estate_id), "limit": str(limit), "offset": str(offset)}
         response_json = await api.get_json(self.base_url, "estate/history", self.headers, params=params)
         return EstateHistoryResponse.model_validate(response_json)
+
+    async def get_player_views(self, server_id: int, nickname: str, limit: int = 5) -> PlayerViewsResponse:
+        params = {"server_id": str(server_id), "nickname": nickname, "limit": str(limit)}
+        response_json = await api.get_json(self.base_url, "player/views", self.headers, params=params)
+        return PlayerViewsResponse.model_validate(response_json)
+
+    async def hide_profile(self, platform: Literal['vk', 'tg'], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
+        body = {
+            "platform": platform,
+            "user_id": user_id,
+            "server_id": server_id,
+            "nickname": nickname,
+            "is_superadmin": is_superadmin
+        }
+        await api.post_json(self.base_url, "privacy/hide", self.headers, body=body)
+
+    async def unhide_profile(self, platform: Literal['vk', 'tg'], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
+        body = {
+            "platform": platform,
+            "user_id": user_id,
+            "server_id": server_id,
+            "nickname": nickname,
+            "is_superadmin": is_superadmin
+        }
+        await api.delete_json(self.base_url, "privacy/unhide", self.headers, body=body)

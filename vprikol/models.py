@@ -215,6 +215,19 @@ class AdminInfo(BaseModel):
     vk_tag: Optional[str]
 
 
+class PlayerViewEntry(BaseModel):
+    platform: Optional[str]
+    executor_id: Optional[int]
+    created_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+
+class PlayerViewsResponse(BaseModel):
+    views: List[PlayerViewEntry]
+
+
 class FindPlayerResponse(BaseModel):
     server: ServerInfo
     general: PlayerGeneral
@@ -225,9 +238,24 @@ class FindPlayerResponse(BaseModel):
     punishes: PlayerPunishes
     vip_info: PlayerVIP
     ratings: List[PlayerRatingEntry] = []
+    views_today: int = 0
+    views_total: int = 0
     is_premium: bool = False
     is_cached: bool = False
+    is_hidden: bool = False
     updated_at: datetime.datetime
+
+    class Config:
+        from_attributes = True
+        populate_by_name = True
+
+
+class PrivacyToggleRequest(BaseModel):
+    platform: Literal['vk', 'tg']
+    user_id: int
+    server_id: int
+    nickname: str
+    is_superadmin: bool = False
 
 
 class MembersPlayer(BaseModel):
