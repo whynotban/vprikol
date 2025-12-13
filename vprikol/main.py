@@ -309,7 +309,7 @@ class VprikolAPI:
             "nickname": nickname,
             "is_superadmin": is_superadmin
         }
-        await api.post_json(self.base_url, "privacy/hide", self.headers, body=body)
+        await api.post_json(self.base_url, "internal/privacy/hide", self.headers, body=body)
 
     async def unhide_profile(self, platform: Literal['vk', 'tg'], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
         body = {
@@ -319,4 +319,4 @@ class VprikolAPI:
             "nickname": nickname,
             "is_superadmin": is_superadmin
         }
-        await api.delete_json(self.base_url, "privacy/unhide", self.headers, body=body)
+        await api.delete_json(self.base_url, "internal/privacy/unhide", self.headers, body=body)
