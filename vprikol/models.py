@@ -348,6 +348,7 @@ class ServerStatusResponse(BaseModel):
     server_port: int
     server_label: str
     online_players: int
+    queue_players: int
     max_players: int
     is_closed: bool
     payday_boost: int
