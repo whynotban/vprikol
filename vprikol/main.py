@@ -8,7 +8,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse, PlayerSessionsResponse)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse)
 from . import api
 
 
@@ -186,6 +186,11 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "player/sessions", self.headers, params=params)
         return PlayerSessionsResponse.model_validate(response_json)
+
+    async def get_player_sessions_calendar(self, server_id: int, nickname: str, year: int, month: int) -> PlayerCalendarResponse:
+        params = {"server_id": str(server_id), "nickname": nickname, "year": str(year), "month": str(month)}
+        response_json = await api.get_json(self.base_url, "player/sessions/calendar", self.headers, params=params)
+        return PlayerCalendarResponse.model_validate(response_json)
 
     async def get_player_history(self, server_id: int, history_type: Literal['nickname', 'total_money'], nickname: Optional[str] = None, account_id: Optional[int] = None,
                                  date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> Union[List[NicknameHistoryEntry], List[MoneyHistoryEntry]]:

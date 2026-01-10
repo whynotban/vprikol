@@ -501,3 +501,18 @@ class PlayerSessionsResponse(BaseModel):
     limit: int
     offset: int
     sessions: List[PlayerSessionEntry]
+
+
+class CalendarDayEntry(BaseModel):
+    date: datetime.date
+    count: int
+    durations: List[int]
+    total_played_minutes: int
+
+
+class PlayerCalendarResponse(BaseModel):
+    server_id: int
+    nickname: str
+    year: int
+    month: int
+    days: List[CalendarDayEntry]
