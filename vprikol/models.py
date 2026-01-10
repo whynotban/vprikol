@@ -489,3 +489,15 @@ class AdminsResponse(BaseModel):
     server_label: str
     updated_at: datetime.datetime
     admins: List[AdminEntry]
+
+
+class PlayerSessionEntry(BaseModel):
+    login_at: datetime.datetime
+    logout_at: Optional[datetime.datetime]
+
+
+class PlayerSessionsResponse(BaseModel):
+    total: int
+    limit: int
+    offset: int
+    sessions: List[PlayerSessionEntry]

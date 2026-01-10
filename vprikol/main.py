@@ -8,7 +8,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse, PlayerSessionsResponse)
 from . import api
 
 
@@ -172,6 +172,20 @@ class VprikolAPI:
 
         response_json = await api.get_json(self.base_url, "player/online", self.headers, params=params)
         return OnlineResponse.model_validate(response_json)
+
+    async def get_player_sessions(self, server_id: int, nickname: str,
+                                  date_from: Optional[datetime.datetime] = None,
+                                  date_to: Optional[datetime.datetime] = None,
+                                  limit: int = 20, offset: int = 0) -> PlayerSessionsResponse:
+        params = {"server_id": str(server_id), "nickname": nickname, "limit": str(limit), "offset": str(offset)}
+
+        if date_from:
+            params["date_from"] = date_from.isoformat()
+        if date_to:
+            params["date_to"] = date_to.isoformat()
+
+        response_json = await api.get_json(self.base_url, "player/sessions", self.headers, params=params)
+        return PlayerSessionsResponse.model_validate(response_json)
 
     async def get_player_history(self, server_id: int, history_type: Literal['nickname', 'total_money'], nickname: Optional[str] = None, account_id: Optional[int] = None,
                                  date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None) -> Union[List[NicknameHistoryEntry], List[MoneyHistoryEntry]]:
