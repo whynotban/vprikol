@@ -8,7 +8,8 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
-                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse)
+                     NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse, PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse,
+                     ServerOnlineHistoryResponse)
 from . import api
 
 
@@ -339,3 +340,8 @@ class VprikolAPI:
             "is_superadmin": is_superadmin
         }
         await api.delete_json(self.base_url, "internal/privacy/unhide", self.headers, body=body)
+
+    async def get_server_online_history(self, server_id: int, hours: int = 24) -> ServerOnlineHistoryResponse:
+        params = {"server_id": str(server_id), "hours": str(hours)}
+        response_json = await api.get_json(self.base_url, "status/history", self.headers, params=params)
+        return ServerOnlineHistoryResponse.model_validate(response_json)

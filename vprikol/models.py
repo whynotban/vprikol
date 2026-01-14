@@ -516,3 +516,15 @@ class PlayerCalendarResponse(BaseModel):
     year: int
     month: int
     days: List[CalendarDayEntry]
+
+
+class GraphPoint(BaseModel):
+    time: datetime.datetime
+    online: int
+    queue: int
+    project_avg: int
+
+
+class ServerOnlineHistoryResponse(BaseModel):
+    server_id: int
+    data: List[GraphPoint]
