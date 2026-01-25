@@ -37,6 +37,25 @@ class EstateHistoryType(str, Enum):
     BUSINESS = "business"
 
 
+class PunishType(str, Enum):
+    KICK = "kick"
+    WARN = "warn"
+    WARNOFF = "warnoff"
+    JAIL = "jail"
+    JAILOFF = "jailoff"
+    MUTE = "mute"
+    MUTEOFF = "muteoff"
+    RMUTE = "rmute"
+    BAN = "ban"
+    BANIP = "banip"
+    UNJAIL = "unjail"
+    UNMUTE = "unmute"
+    UNRMUTE = "unrmute"
+    APUNISH = "apunish"
+    APUNISHOFF = "apunishoff"
+    UNAPUNISH = "unapunish"
+
+
 class SSFont(str, Enum):
     ARIAL_BOLD = 'arialbd.ttf'
     ARIAL_BOLD_ITALIC = 'arialbdi.ttf'

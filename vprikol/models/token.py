@@ -9,6 +9,7 @@ class TokenResponse(BaseModel):
     activated: bool
     disabled_logs: bool
     service: bool
+    allowed_ips: List[str]
     subscription_until: Optional[datetime.datetime]
     created_at: datetime.datetime
     modified_at: datetime.datetime
@@ -16,6 +17,7 @@ class TokenResponse(BaseModel):
 
 class RequestLogEntry(BaseModel):
     id: int
+    request_id: Optional[str] = None
     api_method: Optional[str]
     http_method: str
     params: Dict[str, Any]

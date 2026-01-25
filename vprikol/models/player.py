@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional, Any, Literal
 from pydantic import BaseModel, Field, ConfigDict
-from .base import RatingType
+from .base import RatingType, PunishType
 
 class CheckRpNameData(BaseModel):
     value: Optional[str]
@@ -191,3 +191,21 @@ class PrivacyToggleRequest(BaseModel):
     server_id: int
     nickname: str
     is_superadmin: bool = False
+
+
+class PunishHistoryEntry(BaseModel):
+    id: int
+    punish_type: PunishType
+    admin_nickname: str
+    player_nickname: str
+    reason: str
+    full_string: str
+    created_at: datetime.datetime
+    expires_at: Optional[datetime.datetime]
+
+
+class PunishHistoryResponse(BaseModel):
+    total: int
+    limit: int
+    offset: int
+    data: List[PunishHistoryEntry]

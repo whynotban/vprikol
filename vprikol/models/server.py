@@ -123,3 +123,39 @@ class GraphPoint(BaseModel):
 class ServerOnlineHistoryResponse(BaseModel):
     server_id: int
     data: List[GraphPoint]
+
+
+class EXPCalcResponse(BaseModel):
+    current_lvl: int
+    target_lvl: int
+    exp_needed: int
+    total_exp_needed: int
+
+
+class MapZone(BaseModel):
+    id: int
+    x1: int
+    y1: int
+    x2: int
+    y2: int
+    color: int
+
+
+class MapZonesResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[MapZone]
+    updated_at: datetime.datetime
+
+
+class CurrencyResponse(BaseModel):
+    server_id: int
+    server_label: str
+    btc: int
+    ltc: int
+    eth: int
+    euro: int
+    asc: int
+    vc_buy: int
+    vc_sell: int
+    updated_at: datetime.datetime

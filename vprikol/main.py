@@ -9,14 +9,18 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
                      BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
                      NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse,
-                     PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse, ServerOnlineHistoryResponse)
+                     PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse, ServerOnlineHistoryResponse,
+                     EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
+                     FindStatsResponse, PlayersRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
+                     IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
+                     PunishRequest, CurrencyRequest, RankSalaryEntry)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.0.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.1.1-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -40,7 +44,7 @@ class VprikolAPI:
 
     @staticmethod
     async def _make_request(session: aiohttp.ClientSession, method: str, url: str,
-                            params: Optional[Dict[str, Any]], json_body: Optional[Dict[str, Any]], data: Any) -> Any:
+                            params: Optional[Dict[str, Any]], json_body: Any, data: Any) -> Any:
         async with session.request(method, url, params=params, json=json_body, data=data) as response:
             if 200 <= response.status < 300:
                 if response.status == 204:
@@ -56,7 +60,7 @@ class VprikolAPI:
             raise VprikolAPIError(status_code=response.status, error_data=error_data)
 
     async def _request(self, method: str, path: str, params: Optional[Dict[str, Any]] = None,
-                       json_body: Optional[Dict[str, Any]] = None, data: Any = None) -> Any:
+                       json_body: Any = None, data: Any = None) -> Any:
         url = f"{self.base_url}{path}"
 
         cleaned_params = {}
@@ -297,15 +301,15 @@ class VprikolAPI:
         return BotDetectionResponse.model_validate(response)
 
     async def create_token(self, project_label: str, service: bool = False, disabled_logs: bool = False,
-                           subscription_days: Optional[int] = None) -> TokenResponse:
+                           subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None) -> TokenResponse:
         body = {"project_label": project_label, "service": service, "disabled_logs": disabled_logs,
-                "subscription_days": subscription_days}
+                "subscription_days": subscription_days, "allowed_ips": allowed_ips}
         response = await self._request("POST", "internal/token", json_body=body)
         return TokenResponse.model_validate(response)
 
     async def update_token(self, token_id: int, project_label: Optional[str] = None, activated: Optional[bool] = None,
                            service: Optional[bool] = None, disabled_logs: Optional[bool] = None,
-                           add_subscription_days: Optional[int] = None) -> TokenResponse:
+                           add_subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None) -> TokenResponse:
         body = {}
         if project_label is not None:
             body["project_label"] = project_label
@@ -317,6 +321,8 @@ class VprikolAPI:
             body["disabled_logs"] = disabled_logs
         if add_subscription_days is not None:
             body["add_subscription_days"] = add_subscription_days
+        if allowed_ips is not None:
+            body["allowed_ips"] = allowed_ips
         response = await self._request("PUT", f"internal/token/{token_id}", json_body=body)
         return TokenResponse.model_validate(response)
 
@@ -378,3 +384,96 @@ class VprikolAPI:
         params = {"server_id": str(server_id), "hours": str(hours)}
         response = await self._request("GET", "status/history", params=params)
         return ServerOnlineHistoryResponse.model_validate(response)
+
+    async def calculate_exp(self, current_lvl: int, target_lvl: int, current_exp: int) -> EXPCalcResponse:
+        params = {"current_lvl": str(current_lvl), "target_lvl": str(target_lvl), "current_exp": str(current_exp)}
+        response = await self._request("GET", "exp_calc", params=params)
+        return EXPCalcResponse.model_validate(response)
+
+    async def get_map_zones(self, server_id: int) -> MapZonesResponse:
+        response = await self._request("GET", "ingame/map/zones", params={"server_id": str(server_id)})
+        return MapZonesResponse.model_validate(response)
+
+    async def get_currency(self, server_id: int) -> CurrencyResponse:
+        response = await self._request("GET", "ingame/currency", params={"server_id": str(server_id)})
+        return CurrencyResponse.model_validate(response)
+
+    async def get_punishes(self, server_id: int, player_nickname: Optional[str] = None,
+                           admin_nickname: Optional[str] = None, punish_type: Optional[PunishType] = None,
+                           date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
+                           limit: int = 100, offset: int = 0) -> PunishHistoryResponse:
+        params = {
+            "server_id": str(server_id),
+            "player_nickname": player_nickname,
+            "admin_nickname": admin_nickname,
+            "punish_type": punish_type.value if punish_type else None,
+            "date_from": date_from.isoformat() if date_from else None,
+            "date_to": date_to.isoformat() if date_to else None,
+            "limit": str(limit),
+            "offset": str(offset)
+        }
+        response = await self._request("GET", "player/punishes", params=params)
+        return PunishHistoryResponse.model_validate(response)
+
+    async def get_find_stats(self) -> FindStatsResponse:
+        response = await self._request("GET", "internal/stats/find")
+        return FindStatsResponse.model_validate(response)
+
+    async def post_turnstile(self, captcha_token: str) -> None:
+        await self._request("POST", "internal/turnstile", params={"captcha_token": captcha_token})
+
+    async def get_account_token(self) -> Optional[str]:
+        return await self._request("GET", "internal/account-token")
+
+    async def update_players(self, server_id: int, players: List[dict]) -> List[str]:
+        req = PlayersRequest(server_id=server_id, players=players)
+        response = await self._request("POST", "internal/players", json_body=req.model_dump())
+        return TypeAdapter(List[str]).validate_python(response)
+
+    async def update_players_extended(self, server_id: int, players: List[PlayerExtendedEntry]) -> None:
+        body = [p.model_dump() for p in players]
+        await self._request("POST", "internal/players/extended", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_admins(self, server_id: int, admins: List[IngameAdminData]) -> None:
+        body = [a.model_dump() for a in admins]
+        await self._request("POST", "internal/admins", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_leaders(self, server_id: int, leaders: List[IngameLeaderData]) -> None:
+        body = [l.model_dump() for l in leaders]
+        await self._request("POST", "internal/leaders", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_deputies(self, server_id: int, deputies: List[IngameLeaderData]) -> None:
+        body = [d.model_dump() for d in deputies]
+        await self._request("POST", "internal/deputies", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_judges(self, server_id: int, judges: List[IngameJudgeData]) -> None:
+        body = [j.model_dump() for j in judges]
+        await self._request("POST", "internal/judges", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_map(self, server_id: int, zones: List[IngameMapData]) -> None:
+        body = [z.model_dump() for z in zones]
+        await self._request("POST", "internal/map", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_interviews(self, server_id: int, interviews: List[IngameInterviewData]) -> None:
+        body = [i.model_dump() for i in interviews]
+        await self._request("POST", "internal/interviews", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_salaries(self, server_id: int, salaries: Dict[str, List[RankSalaryEntry]]) -> None:
+        req = FractionSalariesRequest(server_id=server_id, data=salaries)
+        await self._request("POST", "internal/salaries", json_body=req.model_dump())
+
+    async def update_members(self, server_id: int, members: Dict[str, List[IngameMemberEntry]]) -> None:
+        body = {k: [m.model_dump() for m in v] for k, v in members.items()}
+        await self._request("POST", "internal/members", params={"server_id": str(server_id)}, json_body=body)
+
+    async def update_auth_token(self, server_id: int, token: str) -> None:
+        await self._request("POST", "internal/auth", params={"server_id": str(server_id), "token": token})
+
+    async def get_server_ip(self, host: str) -> str:
+        return await self._request("GET", "internal/server-ip", params={"host": host})
+
+    async def save_punish(self, punish_request: PunishRequest) -> None:
+        await self._request("POST", "internal/punish", json_body=punish_request.model_dump())
+
+    async def update_currency(self, server_id: int, currency: CurrencyRequest) -> None:
+        await self._request("POST", "internal/currency", params={"server_id": str(server_id)}, json_body=currency.model_dump())
