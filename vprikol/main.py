@@ -1,5 +1,5 @@
 import datetime
-import json
+import orjson
 import aiohttp
 from typing import List, Optional, Union, Literal, Dict, Any
 from pydantic import TypeAdapter
@@ -22,11 +22,17 @@ class VprikolAPI:
         self._session: Optional[aiohttp.ClientSession] = None
 
     async def __aenter__(self):
-        self._session = aiohttp.ClientSession(headers=self.headers)
+        await self.create_session()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
+
+    async def create_session(self):
+        if self._session and not self._session.closed:
+            return
+
+        self._session = aiohttp.ClientSession(headers=self.headers, json_serialize=lambda x: orjson.dumps(x).decode())
 
     async def close(self):
         if self._session and not self._session.closed:
@@ -62,7 +68,7 @@ class VprikolAPI:
         if self._session and not self._session.closed:
             return await self._make_request(self._session, method, url, cleaned_params, json_body, data)
         else:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
+            async with aiohttp.ClientSession(headers=self.headers, json_serialize=lambda x: orjson.dumps(x).decode()) as session:
                 return await self._make_request(session, method, url, cleaned_params, json_body, data)
 
     async def get_token_information(self, token_id: Union[int, Literal["current", "all", "deactivated"]] = "current") -> Union[TokenResponse, List[TokenResponse]]:
@@ -111,7 +117,7 @@ class VprikolAPI:
         form_data.add_field("text_top", str(text_top).lower())
         form_data.add_field("font", font.value)
         form_data.add_field("text_size", str(text_size))
-        form_data.add_field("commands_colors", json.dumps(commands_colors) if commands_colors else "{}")
+        form_data.add_field("commands_colors", orjson.dumps(commands_colors).decode() if commands_colors else "{}")
 
         return await self._request("POST", "ss", data=form_data)
 
