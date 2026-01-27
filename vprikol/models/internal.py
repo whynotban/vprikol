@@ -127,3 +127,10 @@ class CurrencyRequest(BaseModel):
     asc: int
     vc_buy: int
     vc_sell: int
+
+
+class InterviewRequestEntry(BaseModel):
+    fraction_id: int
+    fraction_label: str
+    place: Optional[str]
+    time: Optional[str]

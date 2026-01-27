@@ -12,7 +12,7 @@ from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, Pla
                       MembersRecord, LeaderEntry, InterviewEntry, PlayerEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry
 from .ai import AIResponse
-from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount,
+from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
                        FractionSalariesRequest, IngameMapData, IngameJudgeData, IngameLeaderData, IngameAdminData,
                        PlayerExtendedEntry, PlayersRequest, IngameInterviewData, IngameMemberEntry, RankSalaryEntry)
