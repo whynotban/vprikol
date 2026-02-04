@@ -13,14 +13,14 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
                      FindStatsResponse, PlayersRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
-                     PunishRequest, CurrencyRequest, RankSalaryEntry)
+                     PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.1.1-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.2.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -477,3 +477,20 @@ class VprikolAPI:
 
     async def update_currency(self, server_id: int, currency: CurrencyRequest) -> None:
         await self._request("POST", "internal/currency", params={"server_id": str(server_id)}, json_body=currency.model_dump())
+
+    async def get_items(self, item_type: Optional[int] = None, name: Optional[str] = None,
+                        skin_id: Optional[int] = None, limit: int = 50, offset: int = 0) -> ItemsResponse:
+        params = {
+            "item_type": str(item_type) if item_type is not None else None,
+            "name": name,
+            "skin_id": str(skin_id) if skin_id is not None else None,
+            "limit": str(limit),
+            "offset": str(offset)
+        }
+        response = await self._request("GET", "items/list", params=params)
+        return ItemsResponse.model_validate(response)
+
+    async def get_items_history(self, limit: int = 100) -> ItemsHistoryResponse:
+        params = {"limit": str(limit)}
+        response = await self._request("GET", "items/history", params=params)
+        return ItemsHistoryResponse.model_validate(response)
