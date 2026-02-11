@@ -172,7 +172,7 @@ class MapZone(BaseModel):
 
 
 class FamilyTerritoryCountEntry(BaseModel):
-    family_db_id: int
+    family_id: int
     family_name: str
     territory_count: int
 
