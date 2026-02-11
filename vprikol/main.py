@@ -22,7 +22,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.1-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -534,7 +534,11 @@ class VprikolAPI:
         response = await self._request("GET", "items/market", params=params)
         return ItemMarketStatsResponse.model_validate(response)
 
-    async def get_items_history(self, limit: int = 100, offset: int = 0) -> ItemsHistoryResponse:
-        params = {"limit": str(limit), "offset": str(offset)}
+    async def get_items_history(self, item_id: Optional[int] = None, limit: int = 100, offset: int = 0) -> ItemsHistoryResponse:
+        params = {
+            "item_id": str(item_id) if item_id is not None else None,
+            "limit": str(limit),
+            "offset": str(offset)
+        }
         response = await self._request("GET", "items/history", params=params)
         return ItemsHistoryResponse.model_validate(response)
