@@ -21,6 +21,24 @@ class ServerStatusResponse(BaseModel):
     updated_at: datetime.datetime
 
 
+class ServerStatusBriefResponse(BaseModel):
+    server_id: int
+    server_label: str
+    server_ip: str
+    server_port: int
+    online_players: int
+    queue_players: int
+    max_players: int
+    is_closed: bool
+    payday_boost: int
+    multiplier_donate: int
+    updated_at: datetime.datetime
+
+
+class AllServersStatusResponse(BaseModel):
+    data: List[ServerStatusBriefResponse]
+
+
 class RatingPlayer(BaseModel):
     position: int
     nickname: str
@@ -139,13 +157,34 @@ class MapZone(BaseModel):
     x2: int
     y2: int
     color: int
+    type: str
+    money: Optional[int] = None
+    respects: Optional[int] = None
+    drugden: Optional[bool] = None
+    respawn_fraction_id: Optional[int] = None
+    family_id: Optional[int] = None
+    family_name: Optional[str] = None
+    family_color: Optional[int] = None
+    family_flag: Optional[int] = None
+    family_logo: Optional[int] = None
+    zone_coin_count: Optional[int] = None
+    zone_money_amount: Optional[int] = None
+
+
+class FamilyTerritoryCountEntry(BaseModel):
+    family_db_id: int
+    family_name: str
+    territory_count: int
 
 
 class MapZonesResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
     server_id: int
     server_label: str
     data: List[MapZone]
     updated_at: datetime.datetime
+    ghetto_territories_count: TerritoriesCount
+    fam_ghetto_territories_count: List[FamilyTerritoryCountEntry]
 
 
 class CurrencyResponse(BaseModel):
@@ -158,4 +197,71 @@ class CurrencyResponse(BaseModel):
     asc: int
     vc_buy: int
     vc_sell: int
+    updated_at: datetime.datetime
+
+
+class GhettoRatingEntry(BaseModel):
+    fraction_id: int
+    fraction_label: str
+    territory_count: int
+
+
+class GhettoRatingResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[GhettoRatingEntry]
+    updated_at: datetime.datetime
+
+
+class GhettoCaptureEntry(BaseModel):
+    zone_id: int
+    defender_fraction_id: int
+    defender_fraction_label: str
+    attacker_fraction_id: int
+    attacker_fraction_label: str
+    captured_at: datetime.datetime
+
+
+class GhettoCapturesResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[GhettoCaptureEntry]
+    updated_at: datetime.datetime
+
+
+class FamilyTopEntry(BaseModel):
+    family_id: int
+    family_name: str
+    family_color: int
+    family_flag: int
+    territory_count: int
+
+
+class FamilyTopResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[FamilyTopEntry]
+    updated_at: datetime.datetime
+
+
+class FamilyCaptureEntry(BaseModel):
+    zone_id: int
+    defender_family_id: int
+    defender_family_name: str
+    defender_family_color: int
+    defender_family_flag: int
+    attacker_family_id: int
+    attacker_family_name: str
+    attacker_family_color: int
+    attacker_family_flag: int
+    attack_date: datetime.datetime
+    capture_date: datetime.datetime
+    zone_coin_count: int
+    zone_money_amount: int
+
+
+class FamilyCapturesResponse(BaseModel):
+    server_id: int
+    server_label: str
+    data: List[FamilyCaptureEntry]
     updated_at: datetime.datetime

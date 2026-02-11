@@ -39,7 +39,7 @@ class FindStatsResponse(BaseModel):
     total_searches: int
     total_players: int
     total_money: str
-    top_servers: Dict[str, int]
+    top_servers: Dict[int, int]
 
 
 class PlayersRequest(BaseModel):

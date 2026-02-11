@@ -13,14 +13,16 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
                      FindStatsResponse, PlayersRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
-                     PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse)
+                     PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
+                     AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
+                     FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.2.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -81,8 +83,11 @@ class VprikolAPI:
             return TypeAdapter(List[TokenResponse]).validate_python(response)
         return TokenResponse.model_validate(response)
 
-    async def get_server_status(self, server_id: int) -> ServerStatusResponse:
-        response = await self._request("GET", "status", params={"server_id": str(server_id)})
+    async def get_server_status(self, server_id: Optional[int] = None) -> Union[ServerStatusResponse, AllServersStatusResponse]:
+        params = {"server_id": str(server_id)} if server_id else None
+        response = await self._request("GET", "status", params=params)
+        if server_id is None:
+            return AllServersStatusResponse.model_validate(response)
         return ServerStatusResponse.model_validate(response)
 
     async def get_rating(self, server_id: int, rating_type: RatingType) -> RatingResponse:
@@ -490,7 +495,46 @@ class VprikolAPI:
         response = await self._request("GET", "items/list", params=params)
         return ItemsResponse.model_validate(response)
 
-    async def get_items_history(self, limit: int = 100) -> ItemsHistoryResponse:
-        params = {"limit": str(limit)}
+    async def get_ghetto_rating(self, server_id: int) -> GhettoRatingResponse:
+        response = await self._request("GET", "ingame/ghetto/rating", params={"server_id": str(server_id)})
+        return GhettoRatingResponse.model_validate(response)
+
+    async def get_ghetto_captures(self, server_id: int) -> GhettoCapturesResponse:
+        response = await self._request("GET", "ingame/ghetto/captures", params={"server_id": str(server_id)})
+        return GhettoCapturesResponse.model_validate(response)
+
+    async def get_family_top(self, server_id: int) -> FamilyTopResponse:
+        response = await self._request("GET", "ingame/family/top", params={"server_id": str(server_id)})
+        return FamilyTopResponse.model_validate(response)
+
+    async def get_family_captures(self, server_id: int) -> FamilyCapturesResponse:
+        response = await self._request("GET", "ingame/family/captures", params={"server_id": str(server_id)})
+        return FamilyCapturesResponse.model_validate(response)
+
+    async def get_shops(self, server_id: Optional[int] = None, nickname: Optional[str] = None,
+                        item_id: Optional[int] = None, min_price: Optional[int] = None,
+                        max_price: Optional[int] = None, item_type: Optional[str] = None,
+                        limit: int = 50, offset: int = 0) -> ShopsResponse:
+        params = {
+            "server_id": str(server_id) if server_id is not None else None,
+            "nickname": nickname,
+            "item_id": str(item_id) if item_id is not None else None,
+            "min_price": str(min_price) if min_price is not None else None,
+            "max_price": str(max_price) if max_price is not None else None,
+            "type": item_type,
+            "limit": str(limit),
+            "offset": str(offset)
+        }
+        response = await self._request("GET", "items/shops", params=params)
+        return ShopsResponse.model_validate(response)
+
+    async def get_item_market_details(self, item_id: int, server_id: int = 1000,
+                                      period: Literal['1d', '1w', '1m', '3m', '6m', '1y'] = '1m') -> ItemMarketStatsResponse:
+        params = {"item_id": str(item_id), "server_id": str(server_id), "period": period}
+        response = await self._request("GET", "items/market", params=params)
+        return ItemMarketStatsResponse.model_validate(response)
+
+    async def get_items_history(self, limit: int = 100, offset: int = 0) -> ItemsHistoryResponse:
+        params = {"limit": str(limit), "offset": str(offset)}
         response = await self._request("GET", "items/history", params=params)
         return ItemsHistoryResponse.model_validate(response)
