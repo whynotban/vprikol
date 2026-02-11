@@ -513,7 +513,7 @@ class VprikolAPI:
 
     async def get_shops(self, server_id: Optional[int] = None, nickname: Optional[str] = None,
                         item_id: Optional[int] = None, min_price: Optional[int] = None,
-                        max_price: Optional[int] = None, item_type: Optional[str] = None,
+                        max_price: Optional[int] = None, type: Optional[str] = None,
                         limit: int = 50, offset: int = 0) -> ShopsResponse:
         params = {
             "server_id": str(server_id) if server_id is not None else None,
@@ -521,7 +521,7 @@ class VprikolAPI:
             "item_id": str(item_id) if item_id is not None else None,
             "min_price": str(min_price) if min_price is not None else None,
             "max_price": str(max_price) if max_price is not None else None,
-            "type": item_type,
+            "type": type,
             "limit": str(limit),
             "offset": str(offset)
         }
