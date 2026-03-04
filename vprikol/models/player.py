@@ -209,3 +209,23 @@ class PunishHistoryResponse(BaseModel):
     limit: int
     offset: int
     data: List[PunishHistoryEntry]
+
+
+class PlayerEntry(BaseModel):
+    color: int
+    ping: int
+    id: int
+    lvl: int
+    nickname: str
+
+    account_id: Optional[int] = None
+    afk_seconds: Optional[int] = None
+    client: Optional[str] = None
+    packetloss: Optional[float] = None
+
+
+class PlayersResponse(BaseModel):
+    server_id: int
+    server_label: str
+    players: List[PlayerEntry]
+    updated_at: datetime.datetime

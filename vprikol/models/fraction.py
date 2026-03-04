@@ -63,18 +63,3 @@ class InterviewsResponse(BaseModel):
     server_label: str
     data: List[InterviewEntry]
     updated_at: datetime.datetime
-
-
-class PlayerEntry(BaseModel):
-    color: int
-    ping: int
-    id: int
-    lvl: int
-    nickname: str
-
-
-class PlayersResponse(BaseModel):
-    server_id: int
-    server_label: str
-    players: List[PlayerEntry]
-    updated_at: datetime.datetime

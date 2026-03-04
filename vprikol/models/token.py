@@ -9,7 +9,11 @@ class TokenResponse(BaseModel):
     activated: bool
     disabled_logs: bool
     service: bool
+    bypass_antifloods: bool = False
     allowed_ips: List[str]
+    allowed_methods: List[str] = []
+    rate_limits: Dict[str, Any] = {}
+    daily_limit: Optional[int] = None
     subscription_until: Optional[datetime.datetime]
     created_at: datetime.datetime
     modified_at: datetime.datetime
@@ -33,3 +37,12 @@ class RequestLogResponse(BaseModel):
 class RequestStatsResponse(BaseModel):
     total_count: int
     methods: Dict[str, int]
+
+
+class RateLimitStatusResponse(BaseModel):
+    daily_used: Optional[int] = None
+    daily_limit: Optional[int] = None
+    find_used: int = 0
+    find_limit: int = 15
+    bypass_antifloods: bool = False
+    per_method: Dict[str, Any] = {}

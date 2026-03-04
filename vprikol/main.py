@@ -15,7 +15,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
-                     FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse)
+                     FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse, RateLimitStatusResponse)
 from .api import VprikolAPIError
 
 
@@ -77,11 +77,108 @@ class VprikolAPI:
             async with aiohttp.ClientSession(headers=self.headers, json_serialize=lambda x: orjson.dumps(x).decode()) as session:
                 return await self._make_request(session, method, url, cleaned_params, json_body, data)
 
-    async def get_token_information(self, token_id: Union[int, Literal["current", "all", "deactivated"]] = "current") -> Union[TokenResponse, List[TokenResponse]]:
-        response = await self._request("GET", f"token/{token_id}")
-        if isinstance(response, list):
-            return TypeAdapter(List[TokenResponse]).validate_python(response)
+    async def get_token_info(self, token_id: Optional[int] = None) -> TokenResponse:
+        params = {"token_id": str(token_id)} if token_id else None
+        response = await self._request("GET", "token/info", params=params)
         return TokenResponse.model_validate(response)
+
+    async def get_token_list(self, status: Optional[Literal["active", "deactivated"]] = None, ip_address: Optional[str] = None) -> List[TokenResponse]:
+        params = {}
+        if status:
+            params["status"] = status
+        if ip_address:
+            params["ip_address"] = ip_address
+        response = await self._request("GET", "token/list", params=params)
+        return TypeAdapter(List[TokenResponse]).validate_python(response)
+
+    async def reissue_token(self, token_id: Optional[int] = None) -> TokenResponse:
+        params = {"token_id": str(token_id)} if token_id else None
+        response = await self._request("POST", "token/reissue", params=params)
+        return TokenResponse.model_validate(response)
+
+    async def update_token_settings(self, allowed_ips: Optional[List[str]] = None, token_id: Optional[int] = None) -> TokenResponse:
+        params = {"token_id": str(token_id)} if token_id else None
+        response = await self._request("PATCH", "token/settings", json_body={"allowed_ips": allowed_ips}, params=params)
+        return TokenResponse.model_validate(response)
+
+    async def get_token_limits(self, token_id: Optional[int] = None) -> RateLimitStatusResponse:
+        params = {"token_id": str(token_id)} if token_id else None
+        response = await self._request("GET", "token/limits", params=params)
+        return RateLimitStatusResponse.model_validate(response)
+
+    async def get_token_requests_history(self, token_id: Optional[int] = None, limit: int = 50,
+                                         request_start_id: Optional[int] = None, date_from: Optional[datetime.datetime] = None,
+                                         date_to: Optional[datetime.datetime] = None, api_method: Optional[str] = None,
+                                         ip_address: Optional[str] = None) -> RequestLogResponse:
+        params = {
+            "limit": str(limit),
+            "request_start_id": str(request_start_id) if request_start_id is not None else None,
+            "date_from": date_from.isoformat() if date_from else None,
+            "date_to": date_to.isoformat() if date_to else None,
+            "api_method": api_method,
+            "ip_address": ip_address
+        }
+        if token_id is not None:
+            params["token_id"] = str(token_id)
+        response = await self._request("GET", "token/requests", params=params)
+        return RequestLogResponse.model_validate(response)
+
+    async def get_token_requests_stats(self, token_id: Optional[int] = None,
+                                       date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
+                                       api_method: Optional[str] = None, ip_address: Optional[str] = None) -> RequestStatsResponse:
+        params = {
+            "date_from": date_from.isoformat() if date_from else None,
+            "date_to": date_to.isoformat() if date_to else None,
+            "api_method": api_method,
+            "ip_address": ip_address
+        }
+        if token_id is not None:
+            params["token_id"] = str(token_id)
+        response = await self._request("GET", "token/requests/stats", params=params)
+        return RequestStatsResponse.model_validate(response)
+
+    async def create_token(self, project_label: str, service: bool = False, disabled_logs: bool = False,
+                           subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None,
+                           bypass_antifloods: bool = False, allowed_methods: Optional[List[str]] = None,
+                           rate_limits: Optional[Dict[str, Any]] = None, daily_limit: Optional[int] = None) -> TokenResponse:
+        body = {"project_label": project_label, "service": service, "disabled_logs": disabled_logs,
+                "subscription_days": subscription_days, "allowed_ips": allowed_ips,
+                "bypass_antifloods": bypass_antifloods, "allowed_methods": allowed_methods,
+                "rate_limits": rate_limits, "daily_limit": daily_limit}
+        response = await self._request("POST", "token", json_body=body)
+        return TokenResponse.model_validate(response)
+
+    async def update_token(self, token_id: int, project_label: Optional[str] = None, activated: Optional[bool] = None,
+                           service: Optional[bool] = None, disabled_logs: Optional[bool] = None,
+                           add_subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None,
+                           bypass_antifloods: Optional[bool] = None, allowed_methods: Optional[List[str]] = None,
+                           rate_limits: Optional[Dict[str, Any]] = None, daily_limit: Optional[int] = None) -> TokenResponse:
+        body = {}
+        if project_label is not None:
+            body["project_label"] = project_label
+        if activated is not None:
+            body["activated"] = activated
+        if service is not None:
+            body["service"] = service
+        if disabled_logs is not None:
+            body["disabled_logs"] = disabled_logs
+        if add_subscription_days is not None:
+            body["add_subscription_days"] = add_subscription_days
+        if allowed_ips is not None:
+            body["allowed_ips"] = allowed_ips
+        if bypass_antifloods is not None:
+            body["bypass_antifloods"] = bypass_antifloods
+        if allowed_methods is not None:
+            body["allowed_methods"] = allowed_methods
+        if rate_limits is not None:
+            body["rate_limits"] = rate_limits
+        if daily_limit is not None:
+            body["daily_limit"] = daily_limit
+        response = await self._request("PUT", "token", params={"token_id": str(token_id)}, json_body=body)
+        return TokenResponse.model_validate(response)
+
+    async def delete_token(self, token_id: int) -> None:
+        await self._request("DELETE", "token", params={"token_id": str(token_id)})
 
     async def get_server_status(self, server_id: Optional[int] = None) -> Union[ServerStatusResponse, AllServersStatusResponse]:
         params = {"server_id": str(server_id)} if server_id else None
@@ -154,33 +251,6 @@ class VprikolAPI:
         params = {"server_id": str(server_id), "only_ghetto": str(only_ghetto).lower()}
         response = await self._request("GET", "ingame/map", params=params)
         return MapResponse.model_validate(response)
-
-    async def get_token_requests_history(self, token_id: Union[int, Literal["current"]] = "current", limit: int = 50,
-                                         request_start_id: Optional[int] = None, date_from: Optional[datetime.datetime] = None,
-                                         date_to: Optional[datetime.datetime] = None, api_method: Optional[str] = None,
-                                         ip_address: Optional[str] = None) -> RequestLogResponse:
-        params = {
-            "limit": str(limit),
-            "request_start_id": str(request_start_id) if request_start_id is not None else None,
-            "date_from": date_from.isoformat() if date_from else None,
-            "date_to": date_to.isoformat() if date_to else None,
-            "api_method": api_method,
-            "ip_address": ip_address
-        }
-        response = await self._request("GET", f"token/{token_id}/requests", params=params)
-        return RequestLogResponse.model_validate(response)
-
-    async def get_token_requests_stats(self, token_id: Union[int, Literal["current"]] = "current",
-                                       date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
-                                       api_method: Optional[str] = None, ip_address: Optional[str] = None) -> RequestStatsResponse:
-        params = {
-            "date_from": date_from.isoformat() if date_from else None,
-            "date_to": date_to.isoformat() if date_to else None,
-            "api_method": api_method,
-            "ip_address": ip_address
-        }
-        response = await self._request("GET", f"token/{token_id}/requests/stats", params=params)
-        return RequestStatsResponse.model_validate(response)
 
     async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None,
                           is_premium: bool = False, bypass_privacy: bool = False, executor_id: Optional[int] = None,
@@ -304,43 +374,6 @@ class VprikolAPI:
         }
         response = await self._request("GET", "internal/detect-bots", params=params)
         return BotDetectionResponse.model_validate(response)
-
-    async def create_token(self, project_label: str, service: bool = False, disabled_logs: bool = False,
-                           subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None) -> TokenResponse:
-        body = {"project_label": project_label, "service": service, "disabled_logs": disabled_logs,
-                "subscription_days": subscription_days, "allowed_ips": allowed_ips}
-        response = await self._request("POST", "internal/token", json_body=body)
-        return TokenResponse.model_validate(response)
-
-    async def update_token(self, token_id: int, project_label: Optional[str] = None, activated: Optional[bool] = None,
-                           service: Optional[bool] = None, disabled_logs: Optional[bool] = None,
-                           add_subscription_days: Optional[int] = None, allowed_ips: Optional[List[str]] = None) -> TokenResponse:
-        body = {}
-        if project_label is not None:
-            body["project_label"] = project_label
-        if activated is not None:
-            body["activated"] = activated
-        if service is not None:
-            body["service"] = service
-        if disabled_logs is not None:
-            body["disabled_logs"] = disabled_logs
-        if add_subscription_days is not None:
-            body["add_subscription_days"] = add_subscription_days
-        if allowed_ips is not None:
-            body["allowed_ips"] = allowed_ips
-        response = await self._request("PUT", f"internal/token/{token_id}", json_body=body)
-        return TokenResponse.model_validate(response)
-
-    async def delete_token(self, token_id: int) -> None:
-        await self._request("DELETE", f"internal/token/{token_id}")
-
-    async def reissue_token(self, token_id: int) -> TokenResponse:
-        response = await self._request("POST", f"internal/token/{token_id}/reissue")
-        return TokenResponse.model_validate(response)
-
-    async def find_tokens_by_ip(self, ip_address: str) -> List[TokenResponse]:
-        response = await self._request("GET", f"internal/token/find-by-ip/{ip_address}")
-        return TypeAdapter(List[TokenResponse]).validate_python(response)
 
     async def get_overall_requests_stats(self, date_from: Optional[datetime.datetime] = None,
                                          date_to: Optional[datetime.datetime] = None) -> RequestStatsResponse:
