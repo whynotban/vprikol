@@ -15,6 +15,7 @@ from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, Mem
                       MembersRecord, LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
 from .ai import AIResponse
+from .backend import BackendMeResponse, NotificationSubscriptionEntry
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
