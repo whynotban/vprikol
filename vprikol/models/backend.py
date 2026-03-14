@@ -16,3 +16,9 @@ class NotificationSubscriptionEntry(BaseModel):
     event_type: str
     target_value: str
     created_at: datetime
+
+
+class TgAuthConfirmResponse(BaseModel):
+    success: bool
+    redirect_uri: str
+    site_url: str

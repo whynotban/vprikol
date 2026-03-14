@@ -3,7 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse
 
 
 class VprikolBackend:
@@ -106,3 +106,19 @@ class VprikolBackend:
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"notify_platform": notify_platform}
         )
+
+    async def confirm_tg_auth(self, code: str, tg_id: int, first_name: str,
+                               last_name: str = None, username: str = None,
+                               photo_url: str = None) -> TgAuthConfirmResponse:
+        response = await self._request(
+            "POST", "auth/tg/bot/confirm",
+            json_body={
+                "code": code,
+                "tg_id": tg_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "username": username,
+                "photo_url": photo_url
+            }
+        )
+        return TgAuthConfirmResponse.model_validate(response)
