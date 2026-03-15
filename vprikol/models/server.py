@@ -32,6 +32,10 @@ class ServerStatusBriefResponse(BaseModel):
     is_closed: bool
     payday_boost: int
     multiplier_donate: int
+    server_vk: Optional[str] = None
+    server_discord: Optional[str] = None
+    main_admin_vk: Optional[str] = None
+    deputy_main_admin_vk: Optional[str] = None
     updated_at: datetime.datetime
 
 

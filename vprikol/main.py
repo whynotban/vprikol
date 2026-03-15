@@ -436,6 +436,10 @@ class VprikolAPI:
         response = await self._request("GET", "ingame/currency", params={"server_id": str(server_id)})
         return CurrencyResponse.model_validate(response)
 
+    async def get_all_currencies(self) -> List[CurrencyResponse]:
+        response = await self._request("GET", "ingame/currency/all")
+        return [CurrencyResponse.model_validate(item) for item in response]
+
     async def get_punishes(self, server_id: int, player_nickname: Optional[str] = None,
                            admin_nickname: Optional[str] = None, punish_type: Optional[PunishType] = None,
                            date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
