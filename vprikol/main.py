@@ -180,6 +180,15 @@ class VprikolAPI:
     async def delete_token(self, token_id: int) -> None:
         await self._request("DELETE", "token", params={"token_id": str(token_id)})
 
+    async def update_fraction_record(self, server_id: int, fraction_id: int, online_players: int,
+                                      leader_nickname: Optional[str] = None, modified_by: Optional[str] = 'admin') -> dict:
+        body = {"server_id": server_id, "fraction_id": fraction_id, "online_players": online_players,
+                "leader_nickname": leader_nickname, "modified_by": modified_by}
+        return await self._request("PUT", "internal/fraction-record", json_body=body)
+
+    async def get_available_methods(self) -> dict:
+        return await self._request("GET", "internal/methods")
+
     async def get_server_status(self, server_id: Optional[int] = None) -> Union[ServerStatusResponse, AllServersStatusResponse]:
         params = {"server_id": str(server_id)} if server_id else None
         response = await self._request("GET", "status", params=params)
