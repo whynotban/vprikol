@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
 from pydantic import BaseModel
 
 
 class BackendMeResponse(BaseModel):
     found: bool
     access_level: int
+    ref_level: int = 0
     notify_platform: Optional[str]
     site_url: str
 
@@ -22,3 +23,11 @@ class TgAuthConfirmResponse(BaseModel):
     success: bool
     redirect_uri: str
     site_url: str
+
+
+class PrivacyToggleRequest(BaseModel):
+    platform: Literal['vk', 'tg']
+    user_id: int
+    server_id: int
+    nickname: str
+    is_superadmin: bool = False

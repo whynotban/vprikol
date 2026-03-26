@@ -1,7 +1,13 @@
 import datetime
+from enum import IntEnum
 from typing import List, Optional, Any, Literal
 from pydantic import BaseModel, Field, ConfigDict
 from .base import RatingType, PunishType
+
+
+class VoteType(IntEnum):
+    LIKE = 1
+    DISLIKE = -1
 
 class CheckRpNameData(BaseModel):
     value: Optional[str]
@@ -115,10 +121,27 @@ class FindPlayerResponse(BaseModel):
     ratings: List[PlayerRatingEntry] = []
     views_today: int = 0
     views_total: int = 0
+    likes_count: int = 0
+    dislikes_count: int = 0
+    user_vote: Optional[VoteType] = None
     is_premium: bool = False
     is_cached: bool = False
     is_hidden: bool = False
     updated_at: datetime.datetime
+
+
+class PlayerVoteRequest(BaseModel):
+    server_id: int
+    account_id: int
+    executor_id: int
+    platform: str
+    vote: Optional[VoteType] = None
+
+
+class PlayerVoteResponse(BaseModel):
+    likes_count: int
+    dislikes_count: int
+    user_vote: Optional[VoteType] = None
 
 
 class OnlineEntry(BaseModel):

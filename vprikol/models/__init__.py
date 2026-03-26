@@ -10,7 +10,7 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
                      PlayerCalendarResponse, PlayerGeneral, PlayerFraction, PlayerMoney, PlayerLvl,
                      PlayerPunishes, PlayerVIP, PlayerRatingEntry, AdminInfo, PlayerViewEntry, OnlineEntry,
                      PlayerSessionEntry, CalendarDayEntry, PrivacyToggleRequest, PunishHistoryResponse,
-                     PunishHistoryEntry, PlayersResponse, PlayerEntry)
+                     PunishHistoryEntry, PlayersResponse, PlayerEntry, VoteType, PlayerVoteRequest, PlayerVoteResponse)
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
                       MembersRecord, LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse

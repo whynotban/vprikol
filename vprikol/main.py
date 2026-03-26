@@ -15,14 +15,15 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
-                     FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse, RateLimitStatusResponse)
+                     FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse, RateLimitStatusResponse,
+                     VoteType, PlayerVoteResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.2-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.8-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -280,6 +281,18 @@ class VprikolAPI:
 
         response = await self._request("GET", "player/find", params=params)
         return FindPlayerResponse.model_validate(response)
+
+    async def vote_player(self, server_id: int, account_id: int, executor_id: int, platform: str,
+                          vote: Optional[VoteType] = None) -> PlayerVoteResponse:
+        body = {
+            "server_id": server_id,
+            "account_id": account_id,
+            "executor_id": executor_id,
+            "platform": platform,
+            "vote": vote.value if vote is not None else None
+        }
+        response = await self._request("POST", "player/vote", json_body=body)
+        return PlayerVoteResponse.model_validate(response)
 
     async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None,
                                 date_to: Optional[datetime.datetime] = None) -> OnlineResponse:

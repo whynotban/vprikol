@@ -3,12 +3,11 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, PrivacyToggleRequest, TgAuthConfirmResponse
 
 
 class VprikolBackend:
-    def __init__(self, bot_token: str, platform: Literal["tg", "vk"],
-                 base_url: str = "https://backend.szx.su/"):
+    def __init__(self, bot_token: str, platform: Literal["tg", "vk"], base_url: str = "https://backend.szx.su/"):
         self.base_url = base_url
         self.platform = platform
         self._headers = {
@@ -106,6 +105,30 @@ class VprikolBackend:
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"notify_platform": notify_platform}
         )
+
+    async def hide_profile(self, user_id: int, server_id: int, nickname: str,
+                           is_superadmin: bool = False,
+                           platform: Optional[Literal["tg", "vk"]] = None) -> None:
+        body = PrivacyToggleRequest(
+            platform=platform or self.platform,
+            user_id=user_id,
+            server_id=server_id,
+            nickname=nickname,
+            is_superadmin=is_superadmin
+        )
+        await self._request("POST", "internal/privacy/hide", json_body=body.model_dump())
+
+    async def unhide_profile(self, user_id: int, server_id: int, nickname: str,
+                             is_superadmin: bool = False,
+                             platform: Optional[Literal["tg", "vk"]] = None) -> None:
+        body = PrivacyToggleRequest(
+            platform=platform or self.platform,
+            user_id=user_id,
+            server_id=server_id,
+            nickname=nickname,
+            is_superadmin=is_superadmin
+        )
+        await self._request("DELETE", "internal/privacy/unhide", json_body=body.model_dump())
 
     async def confirm_tg_auth(self, code: str, tg_id: int, first_name: str,
                                last_name: str = None, username: str = None,
