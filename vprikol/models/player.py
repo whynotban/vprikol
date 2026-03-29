@@ -216,6 +216,17 @@ class PrivacyToggleRequest(BaseModel):
     is_superadmin: bool = False
 
 
+class HiddenProfileEntry(BaseModel):
+    id: int
+    server_id: int
+    nickname: str
+    created_at: datetime.datetime
+
+
+class HiddenProfilesListResponse(BaseModel):
+    items: List[HiddenProfileEntry]
+
+
 class PunishHistoryEntry(BaseModel):
     id: int
     punish_type: PunishType

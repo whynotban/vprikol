@@ -9,7 +9,8 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
                      NicknameHistoryEntry, MoneyHistoryEntry, PlayerViewsResponse, PlayerSessionsResponse,
                      PlayerCalendarResponse, PlayerGeneral, PlayerFraction, PlayerMoney, PlayerLvl,
                      PlayerPunishes, PlayerVIP, PlayerRatingEntry, AdminInfo, PlayerViewEntry, OnlineEntry,
-                     PlayerSessionEntry, CalendarDayEntry, PrivacyToggleRequest, PunishHistoryResponse,
+                     PlayerSessionEntry, CalendarDayEntry, PrivacyToggleRequest, HiddenProfileEntry,
+                     HiddenProfilesListResponse, PunishHistoryResponse,
                      PunishHistoryEntry, PlayersResponse, PlayerEntry, VoteType, PlayerVoteRequest, PlayerVoteResponse)
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
                       MembersRecord, LeaderEntry, InterviewEntry)

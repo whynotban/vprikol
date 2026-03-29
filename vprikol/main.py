@@ -16,7 +16,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
                      FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse, RateLimitStatusResponse,
-                     VoteType, PlayerVoteResponse)
+                     VoteType, PlayerVoteResponse, HiddenProfilesListResponse)
 from .api import VprikolAPIError
 
 
@@ -439,6 +439,11 @@ class VprikolAPI:
             "is_superadmin": is_superadmin
         }
         await self._request("DELETE", "internal/privacy/unhide", json_body=body)
+
+    async def get_hidden_players(self, platform: Literal['vk', 'tg'], user_id: int) -> HiddenProfilesListResponse:
+        response = await self._request("GET", "internal/privacy/list",
+                                       params={"platform": platform, "user_id": str(user_id)})
+        return HiddenProfilesListResponse.model_validate(response)
 
     async def get_server_online_history(self, server_id: int, hours: int = 24) -> ServerOnlineHistoryResponse:
         params = {"server_id": str(server_id), "hours": str(hours)}
