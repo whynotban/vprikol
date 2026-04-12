@@ -7,7 +7,10 @@ class BackendMeResponse(BaseModel):
     found: bool
     access_level: int
     ref_level: int = 0
+    refs_count: int = 0
     notify_platform: Optional[str]
+    tg_id: Optional[int] = None
+    vk_id: Optional[int] = None
     site_url: str
 
 
