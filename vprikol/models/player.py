@@ -9,6 +9,20 @@ class VoteType(IntEnum):
     LIKE = 1
     DISLIKE = -1
 
+
+class CommentStatus(IntEnum):
+    PENDING = 0
+    APPROVED = 1
+    REJECTED = 2
+    HIDDEN = 3
+
+
+class ComplaintReason(IntEnum):
+    SPAM = 1
+    INSULT = 2
+    FALSE_INFO = 3
+    OTHER = 4
+
 class CheckRpNameData(BaseModel):
     value: Optional[str]
     is_existing: bool
@@ -263,3 +277,70 @@ class PlayersResponse(BaseModel):
     server_label: str
     players: List[PlayerEntry]
     updated_at: datetime.datetime
+
+
+class PlayerCommentCreateRequest(BaseModel):
+    server_id: int
+    account_id: int
+    executor_id: int
+    platform: str
+    text: str = Field(min_length=3, max_length=500)
+
+
+class PlayerCommentDeleteRequest(BaseModel):
+    server_id: int
+    account_id: int
+    executor_id: int
+    platform: str
+
+
+class PlayerCommentResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    server_id: int
+    account_id: int
+    executor_id: int
+    platform: str
+    text: str
+    status: CommentStatus
+    moderator_comment: Optional[str] = None
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class PlayerCommentsListResponse(BaseModel):
+    comments: List[PlayerCommentResponse]
+    total: int
+    my_comment: Optional[PlayerCommentResponse] = None
+
+
+class CommentComplaintCreateRequest(BaseModel):
+    comment_id: int
+    executor_id: int
+    platform: str
+    reason: ComplaintReason
+
+
+class CommentComplaintResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    comment_id: int
+    executor_id: int
+    platform: str
+    reason: ComplaintReason
+    status: str
+    created_at: datetime.datetime
+
+
+class PendingCommentsResponse(BaseModel):
+    comments: List[PlayerCommentResponse]
+    total: int
+
+
+class PendingComplaintsResponse(BaseModel):
+    complaints: List[CommentComplaintResponse]
+    total: int
+
+
+class CommentsCountResponse(BaseModel):
+    count: int

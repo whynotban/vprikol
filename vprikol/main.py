@@ -16,14 +16,17 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
                      FamilyCapturesResponse, ShopsResponse, ItemMarketStatsResponse, RateLimitStatusResponse,
-                     VoteType, PlayerVoteResponse, HiddenProfilesListResponse)
+                     VoteType, PlayerVoteResponse, HiddenProfilesListResponse,
+                     PlayerCommentCreateRequest, PlayerCommentDeleteRequest, PlayerCommentResponse,
+                     PlayerCommentsListResponse, CommentComplaintCreateRequest, CommentComplaintResponse,
+                     PendingCommentsResponse, PendingComplaintsResponse, CommentsCountResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.11-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.12-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -293,6 +296,64 @@ class VprikolAPI:
         }
         response = await self._request("POST", "player/vote", json_body=body)
         return PlayerVoteResponse.model_validate(response)
+
+    async def create_player_comment(self, data: PlayerCommentCreateRequest) -> PlayerCommentResponse:
+        response = await self._request("POST", "player/comments", json_body=data.model_dump())
+        return PlayerCommentResponse.model_validate(response)
+
+    async def get_player_comments(self, server_id: int, account_id: int,
+                                  executor_id: Optional[int] = None, platform: Optional[str] = None,
+                                  limit: int = 20, offset: int = 0) -> PlayerCommentsListResponse:
+        params = {"server_id": str(server_id), "account_id": str(account_id),
+                  "limit": str(limit), "offset": str(offset)}
+        if executor_id is not None:
+            params["executor_id"] = str(executor_id)
+        if platform is not None:
+            params["platform"] = platform
+        response = await self._request("GET", "player/comments", params=params)
+        return PlayerCommentsListResponse.model_validate(response)
+
+    async def get_my_player_comment(self, server_id: int, account_id: int,
+                                    executor_id: int, platform: str) -> Optional[PlayerCommentResponse]:
+        params = {"server_id": str(server_id), "account_id": str(account_id),
+                  "executor_id": str(executor_id), "platform": platform}
+        response = await self._request("GET", "player/comments/mine", params=params)
+        if response is None:
+            return None
+        return PlayerCommentResponse.model_validate(response)
+
+    async def delete_player_comment(self, data: PlayerCommentDeleteRequest) -> None:
+        await self._request("DELETE", "player/comments", json_body=data.model_dump())
+
+    async def get_player_comments_count(self, server_id: int, account_id: int) -> int:
+        params = {"server_id": str(server_id), "account_id": str(account_id)}
+        response = await self._request("GET", "player/comments/count", params=params)
+        return CommentsCountResponse.model_validate(response).count
+
+    async def create_comment_complaint(self, data: CommentComplaintCreateRequest) -> CommentComplaintResponse:
+        response = await self._request("POST", "player/comments/complaint", json_body=data.model_dump())
+        return CommentComplaintResponse.model_validate(response)
+
+    async def get_pending_comments(self, limit: int = 20, offset: int = 0) -> PendingCommentsResponse:
+        params = {"limit": str(limit), "offset": str(offset)}
+        response = await self._request("GET", "player/comments/pending", params=params)
+        return PendingCommentsResponse.model_validate(response)
+
+    async def moderate_comment(self, comment_id: int, action: str, moderator_id: int,
+                               moderator_comment: Optional[str] = None) -> PlayerCommentResponse:
+        body = {"action": action, "moderator_id": moderator_id, "moderator_comment": moderator_comment}
+        response = await self._request("POST", f"player/comments/{comment_id}/moderate", json_body=body)
+        return PlayerCommentResponse.model_validate(response)
+
+    async def get_pending_complaints(self, limit: int = 20, offset: int = 0) -> PendingComplaintsResponse:
+        params = {"limit": str(limit), "offset": str(offset)}
+        response = await self._request("GET", "player/comments/complaints/pending", params=params)
+        return PendingComplaintsResponse.model_validate(response)
+
+    async def moderate_complaint(self, complaint_id: int, action: str, moderator_id: int) -> CommentComplaintResponse:
+        body = {"action": action, "moderator_id": moderator_id}
+        response = await self._request("POST", f"player/comments/complaints/{complaint_id}/moderate", json_body=body)
+        return CommentComplaintResponse.model_validate(response)
 
     async def get_player_online(self, server_id: int, nickname: str, date_from: Optional[datetime.datetime] = None,
                                 date_to: Optional[datetime.datetime] = None) -> OnlineResponse:

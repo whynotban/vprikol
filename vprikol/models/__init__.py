@@ -11,7 +11,10 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
                      PlayerPunishes, PlayerVIP, PlayerRatingEntry, AdminInfo, PlayerViewEntry, OnlineEntry,
                      PlayerSessionEntry, CalendarDayEntry, PrivacyToggleRequest, HiddenProfileEntry,
                      HiddenProfilesListResponse, PunishHistoryResponse,
-                     PunishHistoryEntry, PlayersResponse, PlayerEntry, VoteType, PlayerVoteRequest, PlayerVoteResponse)
+                     PunishHistoryEntry, PlayersResponse, PlayerEntry, VoteType, PlayerVoteRequest, PlayerVoteResponse,
+                     CommentStatus, ComplaintReason, PlayerCommentCreateRequest, PlayerCommentDeleteRequest,
+                     PlayerCommentResponse, PlayerCommentsListResponse, CommentComplaintCreateRequest,
+                     CommentComplaintResponse, PendingCommentsResponse, PendingComplaintsResponse, CommentsCountResponse)
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
                       MembersRecord, LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
