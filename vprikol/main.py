@@ -19,7 +19,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      VoteType, PlayerVoteResponse, HiddenProfilesListResponse,
                      PlayerCommentCreateRequest, PlayerCommentDeleteRequest, PlayerCommentResponse,
                      PlayerCommentsListResponse, CommentComplaintCreateRequest, CommentComplaintResponse,
-                     PendingCommentsResponse, PendingComplaintsResponse, CommentsCountResponse)
+                     PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse)
 from .api import VprikolAPIError
 
 
@@ -338,6 +338,14 @@ class VprikolAPI:
         params = {"limit": str(limit), "offset": str(offset)}
         response = await self._request("GET", "player/comments/pending", params=params)
         return PendingCommentsResponse.model_validate(response)
+
+    async def get_all_comments(self, limit: int = 20, offset: int = 0,
+                               status: Optional[int] = None) -> AllCommentsResponse:
+        params = {"limit": str(limit), "offset": str(offset)}
+        if status is not None:
+            params["status"] = str(status)
+        response = await self._request("GET", "player/comments/all", params=params)
+        return AllCommentsResponse.model_validate(response)
 
     async def moderate_comment(self, comment_id: int, action: str, moderator_id: int,
                                moderator_comment: Optional[str] = None) -> PlayerCommentResponse:

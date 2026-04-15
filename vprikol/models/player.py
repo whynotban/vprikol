@@ -284,7 +284,8 @@ class PlayerCommentCreateRequest(BaseModel):
     account_id: int
     executor_id: int
     platform: str
-    text: str = Field(min_length=3, max_length=500)
+    nickname: Optional[str] = None
+    text: str = Field(min_length=3, max_length=50)
 
 
 class PlayerCommentDeleteRequest(BaseModel):
@@ -301,6 +302,7 @@ class PlayerCommentResponse(BaseModel):
     account_id: int
     executor_id: int
     platform: str
+    nickname: Optional[str] = None
     text: str
     status: CommentStatus
     moderator_comment: Optional[str] = None
@@ -339,6 +341,11 @@ class PendingCommentsResponse(BaseModel):
 
 class PendingComplaintsResponse(BaseModel):
     complaints: List[CommentComplaintResponse]
+    total: int
+
+
+class AllCommentsResponse(BaseModel):
+    comments: List[PlayerCommentResponse]
     total: int
 
 
