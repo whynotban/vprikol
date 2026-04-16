@@ -26,6 +26,8 @@ class AdminEntry(BaseModel):
     nickname: str
     vk_id: Optional[str]
     post: Optional[str]
+    is_online: bool = False
+    ingame_id: Optional[int] = None
 
 
 class AdminsResponse(BaseModel):
