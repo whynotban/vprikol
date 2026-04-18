@@ -3,7 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, MarketDealsResponse
 
 
 class VprikolBackend:
@@ -105,6 +105,31 @@ class VprikolBackend:
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"notify_platform": notify_platform}
         )
+
+    async def get_market_deals(
+        self,
+        server_id: int,
+        item_id: Optional[int] = None,
+        mod_level: Optional[int] = None,
+        include_modded: bool = True,
+        min_profit: int = 0,
+        sort: Literal["profit", "discount", "price"] = "profit",
+        limit: int = 20,
+        offset: int = 0,
+    ) -> MarketDealsResponse:
+        response = await self._request(
+            "GET", f"market/bot/deals/{server_id}",
+            params={
+                "item_id": item_id,
+                "mod_level": mod_level,
+                "include_modded": str(include_modded).lower(),
+                "min_profit": min_profit,
+                "sort": sort,
+                "limit": limit,
+                "offset": offset,
+            }
+        )
+        return MarketDealsResponse.model_validate(response)
 
     async def confirm_tg_auth(self, code: str, tg_id: int, first_name: str,
                                last_name: str = None, username: str = None,

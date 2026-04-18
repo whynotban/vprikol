@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal, Optional
+from typing import List, Literal, Optional
 from pydantic import BaseModel
 
 
@@ -34,3 +34,31 @@ class PrivacyToggleRequest(BaseModel):
     server_id: int
     nickname: str
     is_superadmin: bool = False
+
+
+class MarketDealEntry(BaseModel):
+    item_id: int
+    item_name: str
+    mod_level: int = 0
+
+    sell_shop_id: int
+    sell_nickname: Optional[str] = None
+    sell_price: int
+    sell_count: int
+
+    buy_shop_id: int
+    buy_nickname: Optional[str] = None
+    buy_price: int
+    buy_count: int
+
+    flip_count: int
+    profit: int
+    discount_pct: int
+
+
+class MarketDealsResponse(BaseModel):
+    server_id: int
+    total: int
+    limit: int
+    offset: int
+    deals: List[MarketDealEntry]

@@ -26,7 +26,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.14-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.15-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None

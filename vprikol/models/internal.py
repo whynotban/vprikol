@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Optional, Literal, Dict
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class CheckrRpManualOverrideEntry(BaseModel):
     value: str
@@ -26,8 +26,8 @@ class AdminEntry(BaseModel):
     nickname: str
     vk_id: Optional[str]
     post: Optional[str]
-    is_online: bool = False
-    ingame_id: Optional[int] = None
+    is_online: bool = Field(default=False)
+    ingame_id: Optional[int] = Field(default=None)
 
 
 class AdminsResponse(BaseModel):
