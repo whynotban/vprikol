@@ -339,8 +339,12 @@ class PendingCommentsResponse(BaseModel):
     total: int
 
 
+class PendingComplaintResponse(CommentComplaintResponse):
+    comment: Optional[PlayerCommentResponse] = None
+
+
 class PendingComplaintsResponse(BaseModel):
-    complaints: List[CommentComplaintResponse]
+    complaints: List[PendingComplaintResponse]
     total: int
 
 

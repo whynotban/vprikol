@@ -14,7 +14,7 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
                      PunishHistoryEntry, PlayersResponse, PlayerEntry, VoteType, PlayerVoteRequest, PlayerVoteResponse,
                      CommentStatus, ComplaintReason, PlayerCommentCreateRequest, PlayerCommentDeleteRequest,
                      PlayerCommentResponse, PlayerCommentsListResponse, CommentComplaintCreateRequest,
-                     CommentComplaintResponse, PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse)
+                     CommentComplaintResponse, PendingCommentsResponse, PendingComplaintResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse)
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
                       MembersRecord, LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
