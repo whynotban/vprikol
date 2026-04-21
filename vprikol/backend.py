@@ -3,7 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, MarketDealsResponse
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, MarketDealsResponse, DndSettings
 
 
 class VprikolBackend:
@@ -104,6 +104,20 @@ class VprikolBackend:
             "PATCH", "notifications/bot/platform",
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"notify_platform": notify_platform}
+        )
+
+    async def get_dnd_settings(self, platform_user_id: int) -> DndSettings:
+        response = await self._request(
+            "GET", "notifications/bot/dnd",
+            params={"platform": self.platform, "platform_user_id": platform_user_id}
+        )
+        return DndSettings.model_validate(response)
+
+    async def set_dnd_settings(self, platform_user_id: int, dnd_start_hour: Optional[int], dnd_end_hour: Optional[int]) -> None:
+        await self._request(
+            "PATCH", "notifications/bot/dnd",
+            params={"platform": self.platform, "platform_user_id": platform_user_id},
+            json_body={"dnd_start_hour": dnd_start_hour, "dnd_end_hour": dnd_end_hour}
         )
 
     async def get_market_deals(

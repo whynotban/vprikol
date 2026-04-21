@@ -36,6 +36,11 @@ class PrivacyToggleRequest(BaseModel):
     is_superadmin: bool = False
 
 
+class DndSettings(BaseModel):
+    dnd_start_hour: Optional[int] = None
+    dnd_end_hour: Optional[int] = None
+
+
 class MarketDealEntry(BaseModel):
     item_id: int
     item_name: str
