@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 class BackendMeResponse(BaseModel):
     found: bool
+    id: Optional[int] = None
     access_level: int
     ref_level: int = 0
     refs_count: int = 0

@@ -26,7 +26,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.17-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.18-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -267,6 +267,7 @@ class VprikolAPI:
 
     async def find_player(self, server_id: int, nickname: Optional[str] = None, account_id: Optional[int] = None,
                           is_premium: bool = False, bypass_privacy: bool = False, executor_id: Optional[int] = None,
+                          executor_site_id: Optional[int] = None,
                           platform: Optional[str] = None, is_incognito: bool = False) -> FindPlayerResponse:
         if not nickname and not account_id:
             raise ValueError("Необходимо указать nickname или account_id.")
@@ -279,6 +280,7 @@ class VprikolAPI:
             "nickname": nickname,
             "account_id": str(account_id) if account_id is not None else None,
             "executor_id": str(executor_id) if executor_id is not None else None,
+            "executor_site_id": str(executor_site_id) if executor_site_id is not None else None,
             "platform": platform
         }
 
@@ -509,9 +511,9 @@ class VprikolAPI:
         }
         await self._request("DELETE", "internal/privacy/unhide", json_body=body)
 
-    async def get_hidden_players(self, platform: Literal['vk', 'tg'], user_id: int) -> HiddenProfilesListResponse:
+    async def get_hidden_players(self, user_id: int) -> HiddenProfilesListResponse:
         response = await self._request("GET", "internal/privacy/list",
-                                       params={"platform": platform, "user_id": str(user_id)})
+                                       params={"user_id": str(user_id)})
         return HiddenProfilesListResponse.model_validate(response)
 
     async def get_server_online_history(self, server_id: int, hours: int = 24) -> ServerOnlineHistoryResponse:
