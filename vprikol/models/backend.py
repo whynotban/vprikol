@@ -65,6 +65,7 @@ class MarketDealEntry(BaseModel):
 class MarketDealsResponse(BaseModel):
     server_id: int
     total: int
+    total_profit: int
     limit: int
     offset: int
     deals: List[MarketDealEntry]
