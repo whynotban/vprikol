@@ -21,7 +21,8 @@ from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, Requ
 from .ai import AIResponse
 from .backend import BackendMeResponse, NotificationSubscriptionEntry
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
-                    MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse)
+                    MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
+                    MarketDealEntry, MarketDealsResponse)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
                        FractionSalariesRequest, IngameMapData, IngameJudgeData, IngameLeaderData, IngameAdminData,
