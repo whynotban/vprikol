@@ -26,7 +26,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.20-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.21-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -665,7 +665,7 @@ class VprikolAPI:
 
     async def get_shop_deals(self, server_id: int, item_id: Optional[int] = None,
                              mod_level: Optional[int] = None, include_modded: bool = True,
-                             min_profit: int = 0,
+                             min_profit: int = 0, min_discount: int = 0,
                              sort: Literal['profit', 'discount', 'price'] = 'profit',
                              limit: int = 20, offset: int = 0) -> MarketDealsResponse:
         params = {
@@ -674,6 +674,7 @@ class VprikolAPI:
             "mod_level": str(mod_level) if mod_level is not None else None,
             "include_modded": str(include_modded).lower(),
             "min_profit": str(min_profit),
+            "min_discount": str(min_discount),
             "sort": sort,
             "limit": str(limit),
             "offset": str(offset)
