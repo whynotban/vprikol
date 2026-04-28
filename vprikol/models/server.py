@@ -3,6 +3,15 @@ from typing import List, Optional, Any
 from pydantic import BaseModel, Field, ConfigDict
 from .base import RatingType, EstateHistoryType
 
+
+class QueueETA(BaseModel):
+    instant_join: bool
+    queue_growing: bool
+    min_seconds: Optional[int] = None
+    max_seconds: Optional[int] = None
+    confidence: str
+
+
 class ServerStatusResponse(BaseModel):
     server_id: int
     server_ip: str
@@ -18,6 +27,7 @@ class ServerStatusResponse(BaseModel):
     server_discord: Optional[str] = None
     main_admin_vk: Optional[str] = None
     deputy_main_admin_vk: Optional[str] = None
+    queue_eta: Optional[QueueETA] = None
     updated_at: datetime.datetime
 
 
@@ -36,6 +46,7 @@ class ServerStatusBriefResponse(BaseModel):
     server_discord: Optional[str] = None
     main_admin_vk: Optional[str] = None
     deputy_main_admin_vk: Optional[str] = None
+    queue_eta: Optional[QueueETA] = None
     updated_at: datetime.datetime
 
 
