@@ -42,3 +42,15 @@ class DndSettings(BaseModel):
     dnd_end_hour: Optional[int] = None
 
 
+class ForumThreadEntry(BaseModel):
+    id: int
+    thread_name: Optional[str] = None
+    thread_path: Optional[str] = None
+    nickname: Optional[str] = None
+    created_at: datetime
+
+
+class AddForumThreadRequest(BaseModel):
+    platform: Literal['tg', 'vk']
+    platform_user_id: int
+    raw_input: str

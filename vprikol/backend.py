@@ -3,7 +3,10 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings
+from .models.backend import (
+    BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
+    ForumThreadEntry,
+)
 
 
 class VprikolBackend:
@@ -118,6 +121,31 @@ class VprikolBackend:
             "PATCH", "notifications/bot/dnd",
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"dnd_start_hour": dnd_start_hour, "dnd_end_hour": dnd_end_hour}
+        )
+
+    async def list_forum_threads(self, platform_user_id: int) -> List[ForumThreadEntry]:
+        response = await self._request(
+            "GET", "forum/bot/threads",
+            params={"platform": self.platform, "platform_user_id": platform_user_id}
+        )
+        from pydantic import TypeAdapter
+        return TypeAdapter(List[ForumThreadEntry]).validate_python(response)
+
+    async def add_forum_thread(self, platform_user_id: int, raw_input: str) -> ForumThreadEntry:
+        response = await self._request(
+            "POST", "forum/bot/threads",
+            json_body={
+                "platform": self.platform,
+                "platform_user_id": platform_user_id,
+                "raw_input": raw_input,
+            }
+        )
+        return ForumThreadEntry.model_validate(response)
+
+    async def delete_forum_thread(self, platform_user_id: int, thread_id: int) -> None:
+        await self._request(
+            "DELETE", f"forum/bot/threads/{thread_id}",
+            params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
 
     async def confirm_tg_auth(self, code: str, tg_id: int, first_name: str,
