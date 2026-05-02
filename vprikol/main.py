@@ -19,14 +19,15 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      VoteType, PlayerVoteResponse, HiddenProfilesListResponse,
                      PlayerCommentCreateRequest, PlayerCommentDeleteRequest, PlayerCommentResponse,
                      PlayerCommentsListResponse, CommentComplaintCreateRequest, CommentComplaintResponse,
-                     PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse)
+                     PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse,
+                     HostStatsResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.23-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.24-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -696,3 +697,7 @@ class VprikolAPI:
         }
         response = await self._request("GET", "items/history", params=params)
         return ItemsHistoryResponse.model_validate(response)
+
+    async def get_host_stats(self) -> HostStatsResponse:
+        response = await self._request("GET", "internal/host_stats")
+        return HostStatsResponse.model_validate(response)

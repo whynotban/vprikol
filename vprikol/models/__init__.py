@@ -27,3 +27,5 @@ from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
                        FractionSalariesRequest, IngameMapData, IngameJudgeData, IngameLeaderData, IngameAdminData,
                        PlayerExtendedEntry, PlayersRequest, IngameInterviewData, IngameMemberEntry, RankSalaryEntry)
+from .host_stats import (HostStatsResponse, HostStatsLoadAvg, HostStatsCPU, HostStatsMemory, HostStatsFilesystem,
+                          HostStatsDiskIO, HostStatsSMART, HostStatsDisks, HostStatsNetIface, HostStatsSensor)
