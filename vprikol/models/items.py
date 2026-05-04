@@ -96,11 +96,13 @@ class MarketDealEntry(BaseModel):
 
     sell_shop_id: int
     sell_nickname: Optional[str] = None
+    sell_shop_updated_at: Optional[datetime.datetime] = None
     sell_price: int
     sell_count: int
 
     buy_shop_id: int
     buy_nickname: Optional[str] = None
+    buy_shop_updated_at: Optional[datetime.datetime] = None
     buy_price: int
     buy_count: int
 
