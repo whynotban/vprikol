@@ -13,6 +13,7 @@ class BackendMeResponse(BaseModel):
     tg_id: Optional[int] = None
     vk_id: Optional[int] = None
     site_url: str
+    subscription_expires: Optional[datetime] = None
 
 
 class NotificationSubscriptionEntry(BaseModel):
