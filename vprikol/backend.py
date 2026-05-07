@@ -3,10 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import (
-    BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
-    ForumThreadEntry,
-)
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse
 
 
 class VprikolBackend:
@@ -122,6 +119,17 @@ class VprikolBackend:
             params={"platform": self.platform, "platform_user_id": platform_user_id},
             json_body={"dnd_start_hour": dnd_start_hour, "dnd_end_hour": dnd_end_hour}
         )
+
+    async def get_broadcast_audience(self, ref_levels: List[int], active_paid_subscription: bool = False,) -> List[int]:
+        response = await self._request(
+            "POST", "notifications/bot/broadcast/audience",
+            json_body={
+                "platform": self.platform,
+                "ref_levels": ref_levels,
+                "active_paid_subscription": active_paid_subscription,
+            }
+        )
+        return BroadcastAudienceResponse.model_validate(response).user_ids
 
     async def list_forum_threads(self, platform_user_id: int) -> List[ForumThreadEntry]:
         response = await self._request(

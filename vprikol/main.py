@@ -27,7 +27,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.26-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.27-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -516,6 +516,9 @@ class VprikolAPI:
         response = await self._request("GET", "internal/privacy/list",
                                        params={"user_id": str(user_id)})
         return HiddenProfilesListResponse.model_validate(response)
+
+    async def clear_hidden_profiles(self, user_id: int) -> None:
+        await self._request("DELETE", "internal/privacy/clear", json_body={"user_id": user_id})
 
     async def get_server_online_history(self, server_id: int, hours: int = 24) -> ServerOnlineHistoryResponse:
         params = {"server_id": str(server_id), "hours": str(hours)}

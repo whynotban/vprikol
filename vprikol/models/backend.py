@@ -24,6 +24,10 @@ class NotificationSubscriptionEntry(BaseModel):
     created_at: datetime
 
 
+class BroadcastAudienceResponse(BaseModel):
+    user_ids: List[int]
+
+
 class TgAuthConfirmResponse(BaseModel):
     success: bool
     redirect_uri: str

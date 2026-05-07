@@ -19,7 +19,7 @@ from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, Mem
                       MembersRecord, LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
 from .ai import AIResponse
-from .backend import BackendMeResponse, NotificationSubscriptionEntry
+from .backend import BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)
