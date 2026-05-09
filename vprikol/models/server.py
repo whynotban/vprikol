@@ -17,6 +17,7 @@ class ServerStatusResponse(BaseModel):
     server_ip: str
     server_port: int
     server_label: str
+    server_icon: Optional[str] = None
     online_players: int
     queue_players: int
     max_players: int
@@ -34,6 +35,7 @@ class ServerStatusResponse(BaseModel):
 class ServerStatusBriefResponse(BaseModel):
     server_id: int
     server_label: str
+    server_icon: Optional[str] = None
     server_ip: str
     server_port: int
     online_players: int
