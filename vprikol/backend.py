@@ -79,7 +79,7 @@ class VprikolBackend:
         from pydantic import TypeAdapter
         return TypeAdapter(List[NotificationSubscriptionEntry]).validate_python(response)
 
-    async def add_subscription(self, platform_user_id: int, server_id: int,
+    async def add_subscription(self, platform_user_id: int, server_id: Optional[int],
                                event_type: str, target_value: str = "*") -> NotificationSubscriptionEntry:
         response = await self._request(
             "POST", "notifications/bot/subscriptions",
