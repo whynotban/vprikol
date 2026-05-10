@@ -20,14 +20,14 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      PlayerCommentCreateRequest, PlayerCommentDeleteRequest, PlayerCommentResponse,
                      PlayerCommentsListResponse, CommentComplaintCreateRequest, CommentComplaintResponse,
                      PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse,
-                     HostStatsResponse)
+                     HostStatsResponse, FractionMemberHistoryResponse)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.29-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.30-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -430,6 +430,25 @@ class VprikolAPI:
         params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
         response = await self._request("GET", "fraction/members", params=params)
         return MembersResponse.model_validate(response)
+
+    async def get_fraction_member_history(self, server_id: int, fraction_id: Optional[int] = None,
+                                          nickname: Optional[str] = None,
+                                          action: Optional[Literal['invite', 'fraction_change', 'rank_change', 'uninvite']] = None,
+                                          date_from: Optional[datetime.datetime] = None,
+                                          date_to: Optional[datetime.datetime] = None,
+                                          limit: int = 50, offset: int = 0) -> FractionMemberHistoryResponse:
+        params = {
+            "server_id": str(server_id),
+            "fraction_id": str(fraction_id) if fraction_id is not None else None,
+            "nickname": nickname,
+            "action": action,
+            "date_from": date_from.isoformat() if date_from else None,
+            "date_to": date_to.isoformat() if date_to else None,
+            "limit": str(limit),
+            "offset": str(offset)
+        }
+        response = await self._request("GET", "fraction/member-history", params=params)
+        return FractionMemberHistoryResponse.model_validate(response)
 
     async def get_admins_list(self, server_id: int) -> AdminsResponse:
         response = await self._request("GET", "admins/list", params={"server_id": str(server_id)})

@@ -35,6 +35,32 @@ class MembersResponse(BaseModel):
     players: List[MembersPlayer]
 
 
+class FractionMemberHistoryEntry(BaseModel):
+    id: int
+    server_id: int
+    server_label: str
+    nickname: str
+    action: Literal["invite", "fraction_change", "rank_change", "uninvite"]
+    old_fraction_id: Optional[int]
+    old_fraction_label: Optional[str]
+    new_fraction_id: Optional[int]
+    new_fraction_label: Optional[str]
+    old_rank_label: Optional[str]
+    new_rank_label: Optional[str]
+    old_rank_number: Optional[int]
+    new_rank_number: Optional[int]
+    created_at: datetime.datetime
+
+
+class FractionMemberHistoryResponse(BaseModel):
+    server_id: int
+    server_label: str
+    total: int
+    limit: int
+    offset: int
+    data: List[FractionMemberHistoryEntry]
+
+
 class LeaderEntry(BaseModel):
     fraction_id: int
     fraction_label: str

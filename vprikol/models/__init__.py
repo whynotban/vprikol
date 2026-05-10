@@ -16,7 +16,8 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
                      PlayerCommentResponse, PlayerCommentsListResponse, CommentComplaintCreateRequest,
                      CommentComplaintResponse, PendingCommentsResponse, PendingComplaintResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse)
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
-                      MembersRecord, LeaderEntry, InterviewEntry)
+                      MembersRecord, FractionMemberHistoryEntry, FractionMemberHistoryResponse,
+                      LeaderEntry, InterviewEntry)
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
 from .ai import AIResponse
 from .backend import BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
