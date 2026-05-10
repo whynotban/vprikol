@@ -4,6 +4,7 @@ from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
 from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
+from .models.items import MarketDealsResponse
 
 
 class VprikolBackend:
@@ -70,6 +71,27 @@ class VprikolBackend:
             params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
         return BackendMeResponse.model_validate(response)
+
+    async def get_market_deals(self, platform_user_id: int, server_id: int, item_id: Optional[int] = None,
+                               include_modded: bool = True, min_profit: int = 0, min_discount: int = 0,
+                               sort: Literal["profit", "discount", "price"] = "profit",
+                               limit: int = 20, offset: int = 0) -> MarketDealsResponse:
+        response = await self._request(
+            "GET", "notifications/bot/market/deals",
+            params={
+                "platform": self.platform,
+                "platform_user_id": platform_user_id,
+                "server_id": server_id,
+                "item_id": item_id,
+                "include_modded": str(include_modded).lower(),
+                "min_profit": min_profit,
+                "min_discount": min_discount,
+                "sort": sort,
+                "limit": limit,
+                "offset": offset,
+            }
+        )
+        return MarketDealsResponse.model_validate(response)
 
     async def get_subscriptions(self, platform_user_id: int) -> List[NotificationSubscriptionEntry]:
         response = await self._request(
