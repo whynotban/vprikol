@@ -89,6 +89,18 @@ class ItemMarketStatsResponse(BaseModel):
     max_buy_price: Optional[int]
 
 
+class MarketDealRoute(BaseModel):
+    type: str
+    label: str
+    buy_server_id: int
+    buy_server_label: Optional[str] = None
+    sell_server_id: int
+    sell_server_label: Optional[str] = None
+    exchange_server_id: Optional[int] = None
+    vc_rate: Optional[int] = None
+    vc_bank_rate: Optional[int] = None
+
+
 class MarketDealEntry(BaseModel):
     item_id: int
     item_name: str
@@ -108,7 +120,10 @@ class MarketDealEntry(BaseModel):
 
     flip_count: int
     profit: int
+    net_profit: Optional[int] = None
+    bank_net_profit: Optional[int] = None
     discount_pct: int
+    route: Optional[MarketDealRoute] = None
 
 
 class MarketDealsResponse(BaseModel):
