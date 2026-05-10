@@ -27,7 +27,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.28-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.29-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -241,8 +241,13 @@ class VprikolAPI:
 
         return await self._request("POST", "ss", data=form_data)
 
-    async def generate_ai_situation(self, theme_prompt: str) -> AIResponse:
-        response = await self._request("POST", "ai/situation", params={"theme_prompt": theme_prompt})
+    async def generate_ai_situation(self, theme_prompt: str, executor_id: int, platform: str) -> AIResponse:
+        params = {
+            "theme_prompt": theme_prompt,
+            "executor_id": str(executor_id),
+            "platform": platform,
+        }
+        response = await self._request("POST", "ai/situation", params=params)
         return AIResponse.model_validate(response)
 
     async def get_leaders(self, server_id: int) -> LeadersResponse:

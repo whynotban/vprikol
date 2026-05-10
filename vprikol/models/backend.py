@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Literal, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class BackendMeResponse(BaseModel):
@@ -26,6 +26,33 @@ class NotificationSubscriptionEntry(BaseModel):
 
 class BroadcastAudienceResponse(BaseModel):
     user_ids: List[int]
+
+
+class PromoActivationResponse(BaseModel):
+    code: str
+    reward_type: str
+    reward_value: int
+    duration_seconds: int
+    expires_at: datetime
+    description: str
+    activation_id: int
+
+
+class PromoCodeEntry(BaseModel):
+    id: int
+    code: str
+    title: Optional[str] = None
+    reward_type: str
+    reward_value: int
+    duration_seconds: int
+    max_activations: Optional[int] = None
+    per_user_limit: int
+    starts_at: Optional[datetime] = None
+    expires_at: Optional[datetime] = None
+    allowed_platforms: List[str] = Field(default_factory=list)
+    allowed_user_ids: List[int] = Field(default_factory=list)
+    require_site_account: bool
+    is_active: bool
 
 
 class TgAuthConfirmResponse(BaseModel):

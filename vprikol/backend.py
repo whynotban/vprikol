@@ -3,7 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse
+from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
 
 
 class VprikolBackend:
@@ -130,6 +130,48 @@ class VprikolBackend:
             }
         )
         return BroadcastAudienceResponse.model_validate(response).user_ids
+
+    async def activate_promo(self, platform_user_id: int, code: str) -> PromoActivationResponse:
+        response = await self._request(
+            "POST", "notifications/bot/promos/activate",
+            json_body={
+                "platform": self.platform,
+                "platform_user_id": platform_user_id,
+                "code": code,
+            },
+        )
+        return PromoActivationResponse.model_validate(response)
+
+    async def create_promo(self, platform_user_id: int, code: str, reward_type: str, reward_value: int = 3,
+                           duration_seconds: int = None, duration_hours: int = None, duration_days: int = None,
+                           title: str = None, max_activations: int = None, per_user_limit: int = 1,
+                           starts_at: str = None, expires_at: str = None, allowed_platforms: List[str] = None,
+                           allowed_user_ids: List[int] = None, require_site_account: bool = True) -> PromoCodeEntry:
+        response = await self._request(
+            "POST", "notifications/bot/promos",
+            json_body={
+                "platform": self.platform,
+                "platform_user_id": platform_user_id,
+                "code": code,
+                "reward_type": reward_type,
+                "reward_value": reward_value,
+                "duration_seconds": duration_seconds,
+                "duration_hours": duration_hours,
+                "duration_days": duration_days,
+                "title": title,
+                "max_activations": max_activations,
+                "per_user_limit": per_user_limit,
+                "starts_at": starts_at,
+                "expires_at": expires_at,
+                "allowed_platforms": allowed_platforms or [],
+                "allowed_user_ids": allowed_user_ids or [],
+                "require_site_account": require_site_account,
+            },
+        )
+        return PromoCodeEntry.model_validate(response)
+
+    async def delete_promo(self, code: str) -> None:
+        await self._request("DELETE", f"notifications/bot/promos/{code}")
 
     async def list_forum_threads(self, platform_user_id: int) -> List[ForumThreadEntry]:
         response = await self._request(
