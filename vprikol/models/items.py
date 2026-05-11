@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class MarketHistoryPoint(BaseModel):
@@ -101,6 +101,16 @@ class MarketDealRoute(BaseModel):
     vc_bank_rate: Optional[int] = None
 
 
+class MarketDealOrder(BaseModel):
+    shop_id: Optional[int] = None
+    nickname: Optional[str] = None
+    shop_updated_at: Optional[datetime.datetime] = None
+    price: int
+    count: int
+    server_id: int
+    server_label: Optional[str] = None
+
+
 class MarketDealEntry(BaseModel):
     item_id: int
     item_name: str
@@ -123,6 +133,8 @@ class MarketDealEntry(BaseModel):
     net_profit: Optional[int] = None
     bank_net_profit: Optional[int] = None
     discount_pct: int
+    sell_orders: List[MarketDealOrder] = Field(default_factory=list)
+    buy_orders: List[MarketDealOrder] = Field(default_factory=list)
     route: Optional[MarketDealRoute] = None
 
 
