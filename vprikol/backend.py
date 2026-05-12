@@ -3,7 +3,7 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
+from .models.backend import BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
 from .models.items import MarketDealsResponse
 
 
@@ -73,7 +73,7 @@ class VprikolBackend:
         return BackendMeResponse.model_validate(response)
 
     async def get_market_deals(self, platform_user_id: int, server_id: int, item_id: Optional[int] = None,
-                               include_modded: bool = True, min_profit: int = 0, min_discount: int = 0,
+                               include_modded: bool = True, allow_vc_routes: bool = True, min_profit: int = 0, min_discount: int = 0,
                                sort: Literal["profit", "discount", "price"] = "profit",
                                limit: int = 20, offset: int = 0) -> MarketDealsResponse:
         response = await self._request(
@@ -84,6 +84,7 @@ class VprikolBackend:
                 "server_id": server_id,
                 "item_id": item_id,
                 "include_modded": str(include_modded).lower(),
+                "allow_vc_routes": str(allow_vc_routes).lower(),
                 "min_profit": min_profit,
                 "min_discount": min_discount,
                 "sort": sort,
@@ -100,6 +101,14 @@ class VprikolBackend:
         )
         from pydantic import TypeAdapter
         return TypeAdapter(List[NotificationSubscriptionEntry]).validate_python(response)
+
+    async def get_market_alerts(self, platform_user_id: int) -> List[MarketAlertSubscriptionEntry]:
+        response = await self._request(
+            "GET", "notifications/bot/market-alerts",
+            params={"platform": self.platform, "platform_user_id": platform_user_id}
+        )
+        from pydantic import TypeAdapter
+        return TypeAdapter(List[MarketAlertSubscriptionEntry]).validate_python(response)
 
     async def add_subscription(self, platform_user_id: int, server_id: Optional[int],
                                event_type: str, target_value: str = "*") -> NotificationSubscriptionEntry:
@@ -203,12 +212,13 @@ class VprikolBackend:
         from pydantic import TypeAdapter
         return TypeAdapter(List[ForumThreadEntry]).validate_python(response)
 
-    async def add_forum_thread(self, platform_user_id: int, raw_input: str) -> ForumThreadEntry:
+    async def add_forum_thread(self, platform_user_id: int, raw_input: str, subscription_platform_user_id: Optional[int] = None) -> ForumThreadEntry:
         response = await self._request(
             "POST", "forum/bot/threads",
             json_body={
                 "platform": self.platform,
                 "platform_user_id": platform_user_id,
+                "subscription_platform_user_id": subscription_platform_user_id,
                 "raw_input": raw_input,
             }
         )

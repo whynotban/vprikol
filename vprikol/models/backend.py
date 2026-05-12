@@ -14,6 +14,8 @@ class BackendMeResponse(BaseModel):
     vk_id: Optional[int] = None
     site_url: str
     subscription_expires: Optional[datetime] = None
+    notify_extra_slots: int = 0
+    forum_extra_slots: int = 0
 
 
 class NotificationSubscriptionEntry(BaseModel):
@@ -22,6 +24,46 @@ class NotificationSubscriptionEntry(BaseModel):
     event_type: str
     target_value: str
     created_at: datetime
+
+
+class MarketAlertSetItemEntry(BaseModel):
+    id: int
+    item_id: int
+    item_name: str = ""
+    mod_level: Optional[int] = None
+    max_sell_price: Optional[int] = None
+    min_profit: Optional[int] = None
+    min_price_gap: Optional[int] = None
+    min_margin_pct: Optional[int] = None
+    note: Optional[str] = None
+    enabled: bool
+    created_at: datetime
+    updated_at: datetime
+
+
+class MarketAlertSetEntry(BaseModel):
+    id: int
+    subscription_id: int
+    server_id: int
+    name: str
+    is_active: bool
+    include_modded: bool
+    allow_vc_routes: bool
+    min_profit: int
+    min_price_gap: int
+    min_margin_pct: int
+    items_count: int
+    items: List[MarketAlertSetItemEntry] = Field(default_factory=list)
+    created_at: datetime
+    updated_at: datetime
+
+
+class MarketAlertSubscriptionEntry(BaseModel):
+    subscription_id: int
+    server_id: int
+    sets_count: int
+    items_count: int
+    sets: List[MarketAlertSetEntry]
 
 
 class BroadcastAudienceResponse(BaseModel):
@@ -85,4 +127,5 @@ class ForumThreadEntry(BaseModel):
 class AddForumThreadRequest(BaseModel):
     platform: Literal['tg', 'vk']
     platform_user_id: int
+    subscription_platform_user_id: Optional[int] = None
     raw_input: str
