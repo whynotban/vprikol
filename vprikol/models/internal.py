@@ -49,6 +49,14 @@ class PlayersRequest(BaseModel):
     server_id: int
 
 
+class GameEventRequest(BaseModel):
+    event_type: str
+    server_id: int
+    payload: Dict[str, object]
+    dedupe_key: Optional[str] = None
+    dedupe_ttl: int = 60
+
+
 class PlayerExtendedEntry(BaseModel):
     id: int
     account_id: Optional[int]
