@@ -3,7 +3,9 @@ import aiohttp
 from typing import List, Optional, Literal
 
 from .api import VprikolAPIError
-from .models.backend import BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings, ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry
+from .models.backend import (BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
+                             ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
+                             TelegramStarsPaymentResponse, TelegramStarsConfirmResponse)
 from .models.items import MarketDealsResponse
 
 
@@ -172,6 +174,34 @@ class VprikolBackend:
             },
         )
         return PromoActivationResponse.model_validate(response)
+
+    async def create_telegram_stars_payment(self, platform_user_id: int, tariff_id: int, target_site_user_id: int = None, username: str = None,
+                                            first_name: str = None, last_name: str = None) -> TelegramStarsPaymentResponse:
+        response = await self._request(
+            "POST", "payment/telegram-stars/create",
+            json_body={
+                "platform_user_id": platform_user_id,
+                "tariff_id": tariff_id,
+                "target_site_user_id": target_site_user_id,
+                "username": username,
+                "first_name": first_name,
+                "last_name": last_name,
+            },
+        )
+        return TelegramStarsPaymentResponse.model_validate(response)
+
+    async def confirm_telegram_stars_payment(self, platform_user_id: int, payment_id: str, total_amount: int,
+                                             telegram_payment_charge_id: str) -> TelegramStarsConfirmResponse:
+        response = await self._request(
+            "POST", "payment/telegram-stars/confirm",
+            json_body={
+                "platform_user_id": platform_user_id,
+                "payment_id": payment_id,
+                "total_amount": total_amount,
+                "telegram_payment_charge_id": telegram_payment_charge_id,
+            },
+        )
+        return TelegramStarsConfirmResponse.model_validate(response)
 
     async def create_promo(self, platform_user_id: int, code: str, reward_type: str, reward_value: int = 3,
                            duration_seconds: int = None, duration_hours: int = None, duration_days: int = None,

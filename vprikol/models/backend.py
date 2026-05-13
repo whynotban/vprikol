@@ -97,6 +97,17 @@ class PromoCodeEntry(BaseModel):
     is_active: bool
 
 
+class TelegramStarsPaymentResponse(BaseModel):
+    payment_id: str
+    amount: int
+    months: int
+    description: str
+
+
+class TelegramStarsConfirmResponse(BaseModel):
+    paid: bool
+
+
 class TgAuthConfirmResponse(BaseModel):
     success: bool
     redirect_uri: str
