@@ -21,7 +21,7 @@ from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, Mem
 from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
 from .ai import AIResponse
 from .backend import (BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
-                      TelegramStarsPaymentResponse, TelegramStarsConfirmResponse)
+                      TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)

@@ -5,7 +5,7 @@ from typing import List, Optional, Literal
 from .api import VprikolAPIError
 from .models.backend import (BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
                              ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
-                             TelegramStarsPaymentResponse, TelegramStarsConfirmResponse)
+                             TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
 from .models.items import MarketDealsResponse
 
 
@@ -202,6 +202,16 @@ class VprikolBackend:
             },
         )
         return TelegramStarsConfirmResponse.model_validate(response)
+
+    async def pre_checkout_telegram_stars_payment(self, payment_id: str, total_amount: int) -> TelegramStarsPreCheckoutResponse:
+        response = await self._request(
+            "POST", "payment/telegram-stars/pre-checkout",
+            json_body={
+                "payment_id": payment_id,
+                "total_amount": total_amount,
+            },
+        )
+        return TelegramStarsPreCheckoutResponse.model_validate(response)
 
     async def create_promo(self, platform_user_id: int, code: str, reward_type: str, reward_value: int = 3,
                            duration_seconds: int = None, duration_hours: int = None, duration_days: int = None,

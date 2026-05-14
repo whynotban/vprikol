@@ -108,6 +108,11 @@ class TelegramStarsConfirmResponse(BaseModel):
     paid: bool
 
 
+class TelegramStarsPreCheckoutResponse(BaseModel):
+    ok: bool
+    error_message: Optional[str] = None
+
+
 class TgAuthConfirmResponse(BaseModel):
     success: bool
     redirect_uri: str
