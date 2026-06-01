@@ -83,7 +83,7 @@ class PlayerMoney(BaseModel):
     total_money: int
     cash: int
     bank_balance: int
-    deposit: int
+    deposit: Optional[int]
     have_bank_card: bool
     charity_money: int
     phone_balance: Optional[int]
