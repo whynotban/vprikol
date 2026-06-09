@@ -244,6 +244,7 @@ class HiddenProfilesListResponse(BaseModel):
 class PunishHistoryEntry(BaseModel):
     id: int
     punish_type: PunishType
+    server_id: int
     admin_nickname: str
     player_nickname: str
     reason: str

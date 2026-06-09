@@ -27,7 +27,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.41-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.42-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -569,7 +569,7 @@ class VprikolAPI:
     async def get_punishes(self, server_id: int, player_nickname: Optional[str] = None,
                            admin_nickname: Optional[str] = None, punish_type: Optional[PunishType] = None,
                            date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
-                           limit: int = 100, offset: int = 0) -> PunishHistoryResponse:
+                           limit: int = 100, offset: int = 0, include_cross_server: bool = False) -> PunishHistoryResponse:
         params = {
             "server_id": str(server_id),
             "player_nickname": player_nickname,
@@ -578,7 +578,8 @@ class VprikolAPI:
             "date_from": date_from.isoformat() if date_from else None,
             "date_to": date_to.isoformat() if date_to else None,
             "limit": str(limit),
-            "offset": str(offset)
+            "offset": str(offset),
+            "include_cross_server": str(include_cross_server).lower()
         }
         response = await self._request("GET", "player/punishes", params=params)
         return PunishHistoryResponse.model_validate(response)
