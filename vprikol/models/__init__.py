@@ -25,6 +25,11 @@ from .backend import (BackendMeResponse, NotificationSubscriptionEntry, Broadcas
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)
+from .marketplace import (MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceContact, MarketplaceContactClickRequest, MarketplaceContactInput,
+                          MarketplaceExternalOwner, MarketplaceExternalSimilarListing, MarketplaceFavoriteRequest, MarketplaceListRequest, MarketplaceListing,
+                          MarketplaceListingActionRequest, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
+                          MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserItemInput,
+                          MarketplaceUserListingCreateRequest, MarketplaceUserListingPatchRequest)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
                        FractionSalariesRequest, IngameMapData, IngameJudgeData, IngameLeaderData, IngameAdminData,

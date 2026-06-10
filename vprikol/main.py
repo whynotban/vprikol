@@ -20,14 +20,18 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      PlayerCommentCreateRequest, PlayerCommentDeleteRequest, PlayerCommentResponse,
                      PlayerCommentsListResponse, CommentComplaintCreateRequest, CommentComplaintResponse,
                      PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse,
-                     HostStatsResponse, FractionMemberHistoryResponse)
+                     HostStatsResponse, FractionMemberHistoryResponse, MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceListRequest,
+                     MarketplaceContactClickRequest, MarketplaceFavoriteRequest, MarketplaceListingActionRequest, MarketplaceListingResponse,
+                     MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
+                     MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserListingCreateRequest,
+                     MarketplaceUserListingPatchRequest)
 from .api import VprikolAPIError
 
 
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.42-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.43-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -721,6 +725,99 @@ class VprikolAPI:
         params = {"item_id": str(item_id), "server_id": str(server_id), "period": period}
         response = await self._request("GET", "items/market", params=params)
         return ItemMarketStatsResponse.model_validate(response)
+
+    async def get_marketplace_listings(self, server_id: Optional[int] = None, source: Optional[Literal["external", "user"]] = None,
+                                       q: Optional[str] = None, object_type: Optional[str] = None, deal_type: Optional[str] = None,
+                                       category_id: Optional[int] = None, min_price: Optional[int] = None, max_price: Optional[int] = None,
+                                       sort: Literal["smart", "new", "price", "price_desc", "bumped"] = "smart",
+                                       limit: int = 50, offset: int = 0, author: Optional[MarketplaceAuthorContext] = None) -> MarketplaceListingsResponse:
+        if author is not None:
+            request = MarketplaceListRequest(
+                author=author,
+                server_id=server_id,
+                source=source,
+                q=q,
+                object_type=object_type,
+                deal_type=deal_type,
+                category_id=category_id,
+                min_price=min_price,
+                max_price=max_price,
+                sort=sort,
+                limit=limit,
+                offset=offset,
+            )
+            response = await self._request("POST", "marketplace/list/context", json_body=request.model_dump(mode="json"))
+            return MarketplaceListingsResponse.model_validate(response)
+
+        params = {
+            "server_id": str(server_id) if server_id is not None else None,
+            "source": source,
+            "q": q,
+            "object_type": object_type,
+            "deal_type": deal_type,
+            "category_id": str(category_id) if category_id is not None else None,
+            "min_price": str(min_price) if min_price is not None else None,
+            "max_price": str(max_price) if max_price is not None else None,
+            "sort": sort,
+            "limit": str(limit),
+            "offset": str(offset),
+        }
+        response = await self._request("GET", "marketplace/list", params=params)
+        return MarketplaceListingsResponse.model_validate(response)
+
+    async def get_marketplace_listing(self, target_key: str) -> MarketplaceListingResponse:
+        response = await self._request("GET", "marketplace/detail", params={"target_key": target_key})
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def get_marketplace_similar(self, server_id: int, q: Optional[str] = None,
+                                      item_id: Optional[int] = None, category_id: Optional[int] = None,
+                                      limit: int = 8) -> MarketplaceSimilarResponse:
+        params = {
+            "server_id": str(server_id),
+            "q": q,
+            "item_id": str(item_id) if item_id is not None else None,
+            "category_id": str(category_id) if category_id is not None else None,
+            "limit": str(limit),
+        }
+        response = await self._request("GET", "marketplace/similar", params=params)
+        return MarketplaceSimilarResponse.model_validate(response)
+
+    async def create_marketplace_listing(self, request: MarketplaceUserListingCreateRequest) -> MarketplaceListingResponse:
+        response = await self._request("POST", "marketplace/listings", json_body=request.model_dump(mode="json"))
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def patch_marketplace_listing(self, listing_id: int, request: MarketplaceUserListingPatchRequest) -> MarketplaceListingResponse:
+        response = await self._request("PATCH", f"marketplace/listings/{listing_id}", json_body=request.model_dump(mode="json", exclude_unset=True))
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def update_marketplace_listing_status(self, listing_id: int, request: MarketplaceListingActionRequest) -> MarketplaceListingResponse:
+        response = await self._request("POST", f"marketplace/listings/{listing_id}/status", json_body=request.model_dump(mode="json"))
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def get_my_marketplace_listings(self, author: MarketplaceAuthorContext) -> MarketplaceMyListingsResponse:
+        response = await self._request("POST", "marketplace/me/listings", json_body=MarketplaceAuthorRequest(author=author).model_dump(mode="json"))
+        return MarketplaceMyListingsResponse.model_validate(response)
+
+    async def get_marketplace_moderation(self, status: str = "moderation", limit: int = 50, offset: int = 0) -> MarketplaceModerationListResponse:
+        response = await self._request("GET", "marketplace/moderation", params={"status": status, "limit": str(limit), "offset": str(offset)})
+        return MarketplaceModerationListResponse.model_validate(response)
+
+    async def moderate_marketplace_listing(self, listing_id: int, request: MarketplaceModerationRequest) -> MarketplaceListingResponse:
+        response = await self._request("POST", f"marketplace/listings/{listing_id}/moderation", json_body=request.model_dump(mode="json"))
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def promote_marketplace_listing(self, request: MarketplacePromoteRequest) -> MarketplacePromoteResponse:
+        response = await self._request("POST", "marketplace/promote", json_body=request.model_dump(mode="json"))
+        return MarketplacePromoteResponse.model_validate(response)
+
+    async def set_marketplace_favorite(self, request: MarketplaceFavoriteRequest) -> None:
+        await self._request("POST", "marketplace/favorite", json_body=request.model_dump(mode="json"))
+
+    async def track_marketplace_view(self, target_key: str) -> None:
+        await self._request("POST", "marketplace/view", params={"target_key": target_key})
+
+    async def track_marketplace_contact_click(self, request: MarketplaceContactClickRequest) -> None:
+        await self._request("POST", "marketplace/contact-click", json_body=request.model_dump(mode="json"))
 
     async def get_items_history(self, item_id: Optional[int] = None, limit: int = 100, offset: int = 0) -> ItemsHistoryResponse:
         params = {
