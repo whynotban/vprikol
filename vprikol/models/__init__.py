@@ -27,7 +27,7 @@ from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryE
                     MarketDealEntry, MarketDealsResponse)
 from .marketplace import (MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceContact, MarketplaceContactClickRequest, MarketplaceContactInput,
                           MarketplaceExternalOwner, MarketplaceExternalSimilarListing, MarketplaceFavoriteRequest, MarketplaceListRequest, MarketplaceListing,
-                          MarketplaceListingActionRequest, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
+                          MarketplaceListingActionRequest, MarketplaceListingDeleteRequest, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
                           MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserItemInput,
                           MarketplaceUserListingCreateRequest, MarketplaceUserListingPatchRequest)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,

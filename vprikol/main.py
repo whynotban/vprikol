@@ -22,7 +22,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      PendingCommentsResponse, PendingComplaintsResponse, AllCommentsResponse, CommentsCountResponse,
                      HostStatsResponse, FractionMemberHistoryResponse, MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceListRequest,
                      MarketplaceContactClickRequest, MarketplaceFavoriteRequest, MarketplaceListingActionRequest, MarketplaceListingResponse,
-                     MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
+                     MarketplaceListingDeleteRequest, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
                      MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserListingCreateRequest,
                      MarketplaceUserListingPatchRequest)
 from .api import VprikolAPIError
@@ -31,7 +31,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.43-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.44-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -804,6 +804,10 @@ class VprikolAPI:
 
     async def moderate_marketplace_listing(self, listing_id: int, request: MarketplaceModerationRequest) -> MarketplaceListingResponse:
         response = await self._request("POST", f"marketplace/listings/{listing_id}/moderation", json_body=request.model_dump(mode="json"))
+        return MarketplaceListingResponse.model_validate(response)
+
+    async def delete_marketplace_listing(self, listing_id: int, request: MarketplaceListingDeleteRequest) -> MarketplaceListingResponse:
+        response = await self._request("DELETE", f"marketplace/listings/{listing_id}", json_body=request.model_dump(mode="json"))
         return MarketplaceListingResponse.model_validate(response)
 
     async def promote_marketplace_listing(self, request: MarketplacePromoteRequest) -> MarketplacePromoteResponse:
