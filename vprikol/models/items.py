@@ -70,6 +70,11 @@ class ShopItem(BaseModel):
     icon: Optional[str] = None
     acs_slot: Optional[int] = None
     item_type: Optional[int] = None
+    stack_count: int = 1
+    is_tradeable: bool = False
+    custom_type: Optional[str] = None
+    slot_id: Optional[int] = None
+    slot_name: Optional[str] = None
 
 
 class ShopEntry(BaseModel):
