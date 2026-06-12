@@ -31,7 +31,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.45-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.46-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -656,11 +656,16 @@ class VprikolAPI:
         await self._request("POST", "internal/game-event", json_body=event.model_dump())
 
     async def get_items(self, item_type: Optional[int] = None, name: Optional[str] = None,
-                        skin_id: Optional[int] = None, limit: int = 50, offset: int = 0) -> ItemsResponse:
+                        skin_id: Optional[int] = None, availability: Optional[Literal["tradeable", "rentable"]] = None,
+                        server_id: Optional[int] = None, period: Literal['1d', '1w', '1m', '3m', '6m', '1y'] = '1m',
+                        limit: int = 50, offset: int = 0) -> ItemsResponse:
         params = {
             "item_type": str(item_type) if item_type is not None else None,
             "name": name,
             "skin_id": str(skin_id) if skin_id is not None else None,
+            "availability": availability,
+            "server_id": str(server_id) if server_id is not None else None,
+            "period": period,
             "limit": str(limit),
             "offset": str(offset)
         }

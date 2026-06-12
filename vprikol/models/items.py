@@ -26,6 +26,16 @@ class ItemEntry(BaseModel):
     type: int
     active: int
     skin_id: Optional[int]
+    model_id: Optional[int] = None
+    stack_count: int = 1
+    is_useable: bool = False
+    is_tradeable: bool = False
+    is_droppable: bool = False
+    custom_type: Optional[str] = None
+    is_colored: bool = False
+    is_enchanted: bool = False
+    slot_id: Optional[int] = None
+    slot_name: Optional[str] = None
     updated_at: datetime.datetime
     market_stats: Optional[MarketItemStats] = None
 
