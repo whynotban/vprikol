@@ -175,7 +175,7 @@ class VprikolBackend:
         )
         return PromoActivationResponse.model_validate(response)
 
-    async def create_telegram_stars_payment(self, platform_user_id: int, tariff_id: int, target_site_user_id: int = None, username: str = None,
+    async def create_telegram_stars_payment(self, platform_user_id: int, tariff_id: int, target_site_user_id: int = None, promo_code: str = None, username: str = None,
                                             first_name: str = None, last_name: str = None) -> TelegramStarsPaymentResponse:
         response = await self._request(
             "POST", "payment/telegram-stars/create",
@@ -183,6 +183,7 @@ class VprikolBackend:
                 "platform_user_id": platform_user_id,
                 "tariff_id": tariff_id,
                 "target_site_user_id": target_site_user_id,
+                "promo_code": promo_code,
                 "username": username,
                 "first_name": first_name,
                 "last_name": last_name,

@@ -99,7 +99,14 @@ class PromoCodeEntry(BaseModel):
 class TelegramStarsPaymentResponse(BaseModel):
     payment_id: str
     amount: int
+    raw_amount: Optional[int] = None
     months: int
+    tariff_discount_percent: int = 0
+    referral_discount_percent: int = 0
+    promo_code: Optional[str] = None
+    promo_title: Optional[str] = None
+    promo_discount_percent: int = 0
+    total_discount_percent: int = 0
     description: str
 
 

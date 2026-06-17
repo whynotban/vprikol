@@ -28,7 +28,7 @@ from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryE
 from .marketplace import (MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceContact, MarketplaceContactClickRequest, MarketplaceContactInput,
                           MarketplaceExternalOwner, MarketplaceExternalSimilarListing, MarketplaceFavoriteRequest, MarketplaceListRequest, MarketplaceListing,
                           MarketplaceListingActionRequest, MarketplaceListingDeleteRequest, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
-                          MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserItemInput,
+                          MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceListingDetails, MarketplaceUserItemInput,
                           MarketplaceUserListingCreateRequest, MarketplaceUserListingPatchRequest)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
