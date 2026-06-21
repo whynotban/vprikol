@@ -31,7 +31,7 @@ from .api import VprikolAPIError
 class VprikolAPI:
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
         self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.48-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-6.3.49-release"}
         if token:
             self.headers["VP-API-Token"] = token
         self._session: Optional[aiohttp.ClientSession] = None
@@ -770,8 +770,11 @@ class VprikolAPI:
         response = await self._request("GET", "marketplace/list", params=params)
         return MarketplaceListingsResponse.model_validate(response)
 
-    async def get_marketplace_listing(self, target_key: str) -> MarketplaceListingResponse:
-        response = await self._request("GET", "marketplace/detail", params={"target_key": target_key})
+    async def get_marketplace_listing(self, target_key: str, author: Optional[MarketplaceAuthorContext] = None) -> MarketplaceListingResponse:
+        params = {"target_key": target_key}
+        if author is not None:
+            params["author"] = author.model_dump_json()
+        response = await self._request("GET", "marketplace/detail", params=params)
         return MarketplaceListingResponse.model_validate(response)
 
     async def get_marketplace_similar(self, server_id: int, q: Optional[str] = None,
