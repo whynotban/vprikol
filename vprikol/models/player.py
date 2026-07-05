@@ -132,7 +132,7 @@ class FindPlayerResponse(BaseModel):
     lvl: PlayerLvl
     punishes: PlayerPunishes
     vip_info: PlayerVIP
-    ratings: List[PlayerRatingEntry] = []
+    ratings: List[PlayerRatingEntry] = Field(default_factory=list)
     views_today: int = 0
     views_total: int = 0
     likes_count: int = 0

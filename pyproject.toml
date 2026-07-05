@@ -1,16 +1,21 @@
 [tool.poetry]
 name = "vprikol"
-version = "6.3.49"
+version = "7.0.0"
 description = ""
 authors = ["whynotban <dev@szx.su>"]
 readme = "README.md"
 packages = [{ include = "vprikol" }]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.10,<4"
 pydantic = ">=1.10.7,<3"
 aiohttp = "^3.8.4"
 orjson = "^3.10.0"
+grpcio = { version = ">=1.64,<2", optional = true }
+protobuf = { version = ">=5,<7", optional = true }
+
+[tool.poetry.extras]
+grpc = ["grpcio", "protobuf"]
 
 [build-system]
 requires = ["poetry-core"]

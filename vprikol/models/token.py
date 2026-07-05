@@ -1,18 +1,17 @@
 import datetime
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class TokenResponse(BaseModel):
     id: int
     project_label: str
-    token: Optional[str]
     activated: bool
     disabled_logs: bool
     service: bool
     bypass_antifloods: bool = False
     allowed_ips: List[str]
-    allowed_methods: List[str] = []
-    rate_limits: Dict[str, Any] = {}
+    allowed_methods: List[str] = Field(default_factory=list)
+    rate_limits: Dict[str, Any] = Field(default_factory=dict)
     daily_limit: Optional[int] = None
     subscription_until: Optional[datetime.datetime]
     created_at: datetime.datetime
@@ -45,4 +44,4 @@ class RateLimitStatusResponse(BaseModel):
     find_used: int = 0
     find_limit: int = 15
     bypass_antifloods: bool = False
-    per_method: Dict[str, Any] = {}
+    per_method: Dict[str, Any] = Field(default_factory=dict)

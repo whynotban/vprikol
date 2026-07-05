@@ -26,10 +26,11 @@ from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryE
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)
 from .marketplace import (MarketplaceAuthorContext, MarketplaceAuthorRequest, MarketplaceContact, MarketplaceContactClickRequest, MarketplaceContactInput,
-                          MarketplaceExternalOwner, MarketplaceExternalSimilarListing, MarketplaceFavoriteRequest, MarketplaceListRequest, MarketplaceListing,
-                          MarketplaceListingActionRequest, MarketplaceListingDeleteRequest, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
-                          MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceListingDetails, MarketplaceUserItemInput,
-                          MarketplaceUserListingCreateRequest, MarketplaceUserListingPatchRequest)
+                          MarketplaceExternalListing, MarketplaceExternalOwner, MarketplaceExternalPlayer, MarketplaceExternalSimilarListing,
+                          MarketplaceFavoriteRequest, MarketplaceListRequest, MarketplaceListing, MarketplaceListingActionRequest, MarketplaceListingDeleteRequest,
+                          MarketplaceListingDetails, MarketplaceListingResponse, MarketplaceListingsResponse, MarketplaceModerationListResponse,
+                          MarketplaceModerationRequest, MarketplaceMyListingsResponse, MarketplacePromoteRequest, MarketplacePromoteResponse,
+                          MarketplaceSimilarResponse, MarketplaceUserItemInput, MarketplaceUserListingCreateRequest, MarketplaceUserListingPatchRequest)
 from .internal import (BotDetectionResponse, CheckRpManualOverridesListResponse, AdminsResponse, BotAccount, InterviewRequestEntry,
                        CheckrRpManualOverrideEntry, AdminEntry, FindStatsResponse, PunishRequest, CurrencyRequest,
                        FractionSalariesRequest, IngameMapData, IngameJudgeData, IngameLeaderData, IngameAdminData,

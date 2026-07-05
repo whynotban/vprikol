@@ -1,71 +1,30 @@
-import orjson
 import aiohttp
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Union
+from pydantic import TypeAdapter
 
-from .api import VprikolAPIError
+from ._http import VprikolHTTPClient
 from .models.backend import (BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
                              ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
                              TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
 from .models.items import MarketDealsResponse
 
 
-class VprikolBackend:
-    def __init__(self, bot_token: str, platform: Literal["tg", "vk"], base_url: str = "https://backend.szx.su/"):
-        self.base_url = base_url
+NOTIFICATION_SUBSCRIPTIONS_ADAPTER = TypeAdapter(List[NotificationSubscriptionEntry])
+MARKET_ALERTS_ADAPTER = TypeAdapter(List[MarketAlertSubscriptionEntry])
+FORUM_THREADS_ADAPTER = TypeAdapter(List[ForumThreadEntry])
+
+
+class VprikolBackend(VprikolHTTPClient):
+    def __init__(self, bot_token: str, platform: Literal["tg", "vk"], base_url: str = "https://backend.szx.su/",
+                 timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
+                 connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
         self.platform = platform
         self._headers = {
             "X-Bot-Token": bot_token,
             "User-Agent": "vprikol-python-lib-backend",
         }
-        self._session: Optional[aiohttp.ClientSession] = None
-
-    async def __aenter__(self):
-        await self.create_session()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.close()
-
-    async def create_session(self):
-        if self._session and not self._session.closed:
-            return
-        self._session = aiohttp.ClientSession(
-            headers=self._headers,
-            json_serialize=lambda x: orjson.dumps(x).decode()
-        )
-
-    async def close(self):
-        if self._session and not self._session.closed:
-            await self._session.close()
-
-    @staticmethod
-    async def _make_request(session: aiohttp.ClientSession, method: str, url: str,
-                            params: dict, json_body):
-        async with session.request(method, url, params=params, json=json_body) as response:
-            if 200 <= response.status < 300:
-                if response.status == 204:
-                    return None
-                if response.content_type == "application/json":
-                    return await response.json(loads=orjson.loads)
-                return await response.read()
-            if response.content_type == "application/json":
-                error_data = await response.json(loads=orjson.loads)
-            else:
-                error_data = {"detail": f"HTTP {response.status}", "status_code": response.status}
-            raise VprikolAPIError(status_code=response.status, error_data=error_data)
-
-    async def _request(self, method: str, path: str, params: dict = None, json_body=None):
-        url = f"{self.base_url}{path}"
-        cleaned_params = {k: v for k, v in (params or {}).items() if v is not None}
-
-        if self._session and not self._session.closed:
-            return await self._make_request(self._session, method, url, cleaned_params, json_body)
-        else:
-            async with aiohttp.ClientSession(
-                headers=self._headers,
-                json_serialize=lambda x: orjson.dumps(x).decode()
-            ) as session:
-                return await self._make_request(session, method, url, cleaned_params, json_body)
+        super().__init__(base_url, self._headers, session=session, timeout=timeout, connector=connector,
+                         retry_count=retry_count, retry_backoff=retry_backoff)
 
     async def get_me(self, platform_user_id: int) -> BackendMeResponse:
         response = await self._request(
@@ -101,16 +60,14 @@ class VprikolBackend:
             "GET", "notifications/bot/subscriptions",
             params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
-        from pydantic import TypeAdapter
-        return TypeAdapter(List[NotificationSubscriptionEntry]).validate_python(response)
+        return NOTIFICATION_SUBSCRIPTIONS_ADAPTER.validate_python(response)
 
     async def get_market_alerts(self, platform_user_id: int) -> List[MarketAlertSubscriptionEntry]:
         response = await self._request(
             "GET", "notifications/bot/market-alerts",
             params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
-        from pydantic import TypeAdapter
-        return TypeAdapter(List[MarketAlertSubscriptionEntry]).validate_python(response)
+        return MARKET_ALERTS_ADAPTER.validate_python(response)
 
     async def add_subscription(self, platform_user_id: int, server_id: Optional[int],
                                event_type: str, target_value: str = "*") -> NotificationSubscriptionEntry:
@@ -250,8 +207,7 @@ class VprikolBackend:
             "GET", "forum/bot/threads",
             params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
-        from pydantic import TypeAdapter
-        return TypeAdapter(List[ForumThreadEntry]).validate_python(response)
+        return FORUM_THREADS_ADAPTER.validate_python(response)
 
     async def add_forum_thread(self, platform_user_id: int, raw_input: str, subscription_platform_user_id: Optional[int] = None) -> ForumThreadEntry:
         response = await self._request(

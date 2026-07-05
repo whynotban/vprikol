@@ -25,66 +25,25 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      MarketplaceListingDeleteRequest, MarketplaceListingsResponse, MarketplaceModerationListResponse, MarketplaceModerationRequest, MarketplaceMyListingsResponse,
                      MarketplacePromoteRequest, MarketplacePromoteResponse, MarketplaceSimilarResponse, MarketplaceUserListingCreateRequest,
                      MarketplaceUserListingPatchRequest)
-from .api import VprikolAPIError
+from ._http import VprikolHTTPClient
 
 
-class VprikolAPI:
-    def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/"):
-        self.base_url = base_url
-        self.headers = {"User-Agent": "vprikol-python-lib-6.3.49-release"}
+TOKEN_LIST_ADAPTER = TypeAdapter(List[TokenResponse])
+NICKNAME_HISTORY_ADAPTER = TypeAdapter(List[NicknameHistoryEntry])
+MONEY_HISTORY_ADAPTER = TypeAdapter(List[MoneyHistoryEntry])
+STR_LIST_ADAPTER = TypeAdapter(List[str])
+CURRENCY_LIST_ADAPTER = TypeAdapter(List[CurrencyResponse])
+
+
+class VprikolAPI(VprikolHTTPClient):
+    def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
+                 timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
+                 connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
+        self.headers = {"User-Agent": "vprikol-python-lib-7.0.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
-        self._session: Optional[aiohttp.ClientSession] = None
-
-    async def __aenter__(self):
-        await self.create_session()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.close()
-
-    async def create_session(self):
-        if self._session and not self._session.closed:
-            return
-
-        self._session = aiohttp.ClientSession(headers=self.headers, json_serialize=lambda x: orjson.dumps(x).decode())
-
-    async def close(self):
-        if self._session and not self._session.closed:
-            await self._session.close()
-
-    @staticmethod
-    async def _make_request(session: aiohttp.ClientSession, method: str, url: str,
-                            params: Optional[Dict[str, Any]], json_body: Any, data: Any) -> Any:
-        async with session.request(method, url, params=params, json=json_body, data=data) as response:
-            if 200 <= response.status < 300:
-                if response.status == 204:
-                    return None
-                if response.content_type == "application/json":
-                    return await response.json()
-                return await response.read()
-
-            if response.content_type == "application/json":
-                error_data = await response.json()
-            else:
-                error_data = {"detail": f"Необработанное исключение #{response.status}", "status_code": response.status}
-            raise VprikolAPIError(status_code=response.status, error_data=error_data)
-
-    async def _request(self, method: str, path: str, params: Optional[Dict[str, Any]] = None,
-                       json_body: Any = None, data: Any = None) -> Any:
-        url = f"{self.base_url}{path}"
-
-        cleaned_params = {}
-        if params:
-            for k, v in params.items():
-                if v is not None:
-                    cleaned_params[k] = v
-
-        if self._session and not self._session.closed:
-            return await self._make_request(self._session, method, url, cleaned_params, json_body, data)
-        else:
-            async with aiohttp.ClientSession(headers=self.headers, json_serialize=lambda x: orjson.dumps(x).decode()) as session:
-                return await self._make_request(session, method, url, cleaned_params, json_body, data)
+        super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
+                         retry_count=retry_count, retry_backoff=retry_backoff)
 
     async def get_token_info(self, token_id: Optional[int] = None) -> TokenResponse:
         params = {"token_id": str(token_id)} if token_id else None
@@ -98,7 +57,7 @@ class VprikolAPI:
         if ip_address:
             params["ip_address"] = ip_address
         response = await self._request("GET", "token/list", params=params)
-        return TypeAdapter(List[TokenResponse]).validate_python(response)
+        return TOKEN_LIST_ADAPTER.validate_python(response)
 
     async def reissue_token(self, token_id: Optional[int] = None) -> TokenResponse:
         params = {"token_id": str(token_id)} if token_id else None
@@ -426,9 +385,8 @@ class VprikolAPI:
         if not response:
             return []
         if history_type == 'nickname':
-            return TypeAdapter(List[NicknameHistoryEntry]).validate_python(response)
-        else:
-            return TypeAdapter(List[MoneyHistoryEntry]).validate_python(response)
+            return NICKNAME_HISTORY_ADAPTER.validate_python(response)
+        return MONEY_HISTORY_ADAPTER.validate_python(response)
 
     async def get_fraction_members(self, server_id: int, fraction_id: int) -> MembersResponse:
         params = {"server_id": str(server_id), "fraction_id": str(fraction_id)}
@@ -479,7 +437,7 @@ class VprikolAPI:
 
     async def list_disabled_methods(self) -> List[str]:
         response = await self._request("GET", "internal/disabled-methods")
-        return TypeAdapter(List[str]).validate_python(response)
+        return STR_LIST_ADAPTER.validate_python(response)
 
     async def disable_method(self, method_name: str) -> None:
         await self._request("POST", "internal/disabled-methods", params={"method_name": method_name})
@@ -568,7 +526,7 @@ class VprikolAPI:
 
     async def get_all_currencies(self) -> List[CurrencyResponse]:
         response = await self._request("GET", "ingame/currency/all")
-        return [CurrencyResponse.model_validate(item) for item in response]
+        return CURRENCY_LIST_ADAPTER.validate_python(response)
 
     async def get_punishes(self, server_id: int, player_nickname: Optional[str] = None,
                            admin_nickname: Optional[str] = None, punish_type: Optional[PunishType] = None,
@@ -601,7 +559,7 @@ class VprikolAPI:
     async def update_players(self, server_id: int, players: List[dict]) -> List[str]:
         req = PlayersRequest(server_id=server_id, players=players)
         response = await self._request("POST", "internal/players", json_body=req.model_dump())
-        return TypeAdapter(List[str]).validate_python(response)
+        return STR_LIST_ADAPTER.validate_python(response)
 
     async def update_players_extended(self, server_id: int, players: List[PlayerExtendedEntry]) -> None:
         body = [p.model_dump() for p in players]

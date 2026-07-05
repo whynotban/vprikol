@@ -1,6 +1,8 @@
 import datetime
-from typing import List, Optional
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
+
+UpdateFreshnessState = Literal["fresh", "recent", "hour", "stale", "unknown"]
 
 
 class MarketHistoryPoint(BaseModel):
@@ -82,7 +84,9 @@ class ShopEntry(BaseModel):
     server_label: str
     shop_id: int
     nickname: str
-    updated_at: datetime.datetime
+    updated_at: Optional[datetime.datetime] = None
+    updated_state: Optional[UpdateFreshnessState] = None
+    updated_label: Optional[str] = None
     items_sell: List[ShopItem]
     items_buy: List[ShopItem]
 
@@ -120,6 +124,8 @@ class MarketDealOrder(BaseModel):
     shop_id: Optional[int] = None
     nickname: Optional[str] = None
     shop_updated_at: Optional[datetime.datetime] = None
+    shop_updated_state: Optional[UpdateFreshnessState] = None
+    shop_updated_label: Optional[str] = None
     price: int
     count: int
     server_id: int
@@ -134,12 +140,16 @@ class MarketDealEntry(BaseModel):
     sell_shop_id: int
     sell_nickname: Optional[str] = None
     sell_shop_updated_at: Optional[datetime.datetime] = None
+    sell_shop_updated_state: Optional[UpdateFreshnessState] = None
+    sell_shop_updated_label: Optional[str] = None
     sell_price: int
     sell_count: int
 
     buy_shop_id: int
     buy_nickname: Optional[str] = None
     buy_shop_updated_at: Optional[datetime.datetime] = None
+    buy_shop_updated_state: Optional[UpdateFreshnessState] = None
+    buy_shop_updated_label: Optional[str] = None
     buy_price: int
     buy_count: int
 

@@ -20,7 +20,7 @@ class HostStatsCPU(BaseModel):
     freq_min_mhz: Optional[float] = None
     freq_max_mhz: Optional[float] = None
     temperature_package_c: Optional[float] = None
-    temperature_per_core_c: List[float] = []
+    temperature_per_core_c: List[float] = Field(default_factory=list)
 
 
 class HostStatsMemory(BaseModel):
