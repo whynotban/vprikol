@@ -39,7 +39,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.0.1-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.0.2-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -628,6 +628,10 @@ class VprikolAPI(VprikolHTTPClient):
             "offset": str(offset)
         }
         response = await self._request("GET", "items/list", params=params)
+        return ItemsResponse.model_validate(response)
+
+    async def get_vehicles(self, name: Optional[str] = None, limit: int = 6, offset: int = 0) -> ItemsResponse:
+        response = await self._request("GET", "items/vehicles", params={"name": name, "limit": str(limit), "offset": str(offset)})
         return ItemsResponse.model_validate(response)
 
     async def get_ghetto_rating(self, server_id: int) -> GhettoRatingResponse:
