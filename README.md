@@ -12,6 +12,8 @@ pip install vprikol -U
 pip install vprikol[grpc] -U
 ```
 
+Обновляется реже, чем стандартная версия, но работает быстрее и стабильнее
+
 ## Документация
 
 https://api.szx.su/docs
