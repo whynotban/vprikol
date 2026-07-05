@@ -215,6 +215,7 @@ class MarketplaceExternalListing(BaseModel):
     rented: bool = False
     rent_end_unix: int = 0
     rent_end_at: Optional[datetime.datetime] = None
+    owner: Optional[MarketplaceExternalPlayer] = None
     renter: Optional[MarketplaceExternalPlayer] = None
 
 
@@ -251,6 +252,9 @@ class MarketplaceListing(BaseModel):
     details: MarketplaceListingDetails = Field(default_factory=MarketplaceListingDetails)
     image_urls: list[str] = Field(default_factory=list)
     external: Optional[MarketplaceExternalListing] = None
+    rented: bool = False
+    rent_end_unix: int = 0
+    rent_end_at: Optional[datetime.datetime] = None
     views_count: int = 0
     contact_clicks_count: int = 0
     favorites_count: int = 0
