@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 class TokenResponse(BaseModel):
     id: int
     project_label: str
+    token: Optional[str] = None
     activated: bool
     disabled_logs: bool
     service: bool
@@ -14,7 +15,6 @@ class TokenResponse(BaseModel):
     rate_limits: Dict[str, Any] = Field(default_factory=dict)
     daily_limit: Optional[int] = None
     subscription_until: Optional[datetime.datetime]
-    token: str
     created_at: datetime.datetime
     modified_at: datetime.datetime
 
