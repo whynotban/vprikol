@@ -2,7 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import vprikol_pb2 as vprikol_dot_v1_dot_vprikol__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+from . import vprikol_pb2 as vprikol__pb2
 
 
 class VprikolAPIStub(object):
@@ -16,88 +17,408 @@ class VprikolAPIStub(object):
         """
         self.GetStatus = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetStatus',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetStatusRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetStatusResponse.FromString,
+                request_serializer=vprikol__pb2.GetStatusRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.GetStatusResponse.FromString,
                 )
         self.GetRating = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetRating',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetRatingRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.RatingResponse.FromString,
+                request_serializer=vprikol__pb2.GetRatingRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.RatingResponse.FromString,
                 )
         self.GetEstate = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetEstate',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetEstateRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.EstateResponse.FromString,
+                request_serializer=vprikol__pb2.GetEstateRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.EstateResponse.FromString,
                 )
         self.GetLeaders = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetLeaders',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.FromString,
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.LeadersResponse.FromString,
                 )
         self.GetDeputies = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetDeputies',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.FromString,
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.LeadersResponse.FromString,
                 )
         self.GetInterviews = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetInterviews',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.InterviewsResponse.FromString,
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.InterviewsResponse.FromString,
                 )
         self.GetPlayers = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetPlayers',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.PlayersResponse.FromString,
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.PlayersResponse.FromString,
                 )
         self.GetMap = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetMap',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetMapRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.MapResponse.FromString,
+                request_serializer=vprikol__pb2.GetMapRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.MapResponse.FromString,
                 )
         self.GetMapZones = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetMapZones',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.MapZonesResponse.FromString,
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.MapZonesResponse.FromString,
                 )
         self.GetFractionMembers = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetFractionMembers',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetFractionMembersRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.MembersResponse.FromString,
+                request_serializer=vprikol__pb2.GetFractionMembersRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.MembersResponse.FromString,
                 )
         self.FindPlayer = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/FindPlayer',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.FindPlayerRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.FindPlayerResponse.FromString,
+                request_serializer=vprikol__pb2.FindPlayerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.FindPlayerResponse.FromString,
                 )
         self.GetPlayerOnline = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetPlayerOnline',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetPlayerOnlineRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.OnlineResponse.FromString,
+                request_serializer=vprikol__pb2.GetPlayerOnlineRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.OnlineResponse.FromString,
                 )
         self.GetPlayerHistory = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetPlayerHistory',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetPlayerHistoryRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.PlayerHistoryResponse.FromString,
+                request_serializer=vprikol__pb2.GetPlayerHistoryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.PlayerHistoryResponse.FromString,
                 )
         self.GetPunishes = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetPunishes',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetPunishesRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.PunishHistoryResponse.FromString,
+                request_serializer=vprikol__pb2.GetPunishesRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.PunishHistoryResponse.FromString,
                 )
         self.GetTokenInfo = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetTokenInfo',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenInfoRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.TokenResponse.FromString,
+                request_serializer=vprikol__pb2.GetTokenInfoRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.TokenResponse.FromString,
+                )
+        self.GetTokenList = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetTokenList',
+                request_serializer=vprikol__pb2.GetTokenListRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.CreateToken = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CreateToken',
+                request_serializer=vprikol__pb2.CreateTokenRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.TokenResponse.FromString,
+                )
+        self.UpdateToken = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/UpdateToken',
+                request_serializer=vprikol__pb2.UpdateTokenRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.TokenResponse.FromString,
+                )
+        self.DeleteToken = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/DeleteToken',
+                request_serializer=vprikol__pb2.DeleteTokenRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ReissueToken = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ReissueToken',
+                request_serializer=vprikol__pb2.ReissueTokenRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.TokenResponse.FromString,
+                )
+        self.GetTokenLimits = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetTokenLimits',
+                request_serializer=vprikol__pb2.GetTokenInfoRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
                 )
         self.GetTokenRequests = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetTokenRequests',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.RequestLogResponse.FromString,
+                request_serializer=vprikol__pb2.GetTokenRequestsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.RequestLogResponse.FromString,
                 )
         self.GetTokenRequestsStats = channel.unary_unary(
                 '/vprikol.v1.VprikolAPI/GetTokenRequestsStats',
-                request_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsStatsRequest.SerializeToString,
-                response_deserializer=vprikol_dot_v1_dot_vprikol__pb2.RequestStatsResponse.FromString,
+                request_serializer=vprikol__pb2.GetTokenRequestsStatsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.RequestStatsResponse.FromString,
+                )
+        self.GetAvailableMethods = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetAvailableMethods',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.UpdateFractionRecord = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/UpdateFractionRecord',
+                request_serializer=vprikol__pb2.UpdateFractionRecordRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.CheckRpNickname = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CheckRpNickname',
+                request_serializer=vprikol__pb2.CheckRpNicknameRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GenerateRpNickname = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GenerateRpNickname',
+                request_serializer=vprikol__pb2.GenerateRpNicknameRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetServerOnlineHistory = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetServerOnlineHistory',
+                request_serializer=vprikol__pb2.GetServerOnlineHistoryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetPlayerSessions = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetPlayerSessions',
+                request_serializer=vprikol__pb2.GetPlayerSessionsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetPlayerSessionsCalendar = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetPlayerSessionsCalendar',
+                request_serializer=vprikol__pb2.GetPlayerSessionsCalendarRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetFractionMemberHistory = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetFractionMemberHistory',
+                request_serializer=vprikol__pb2.GetFractionMemberHistoryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetAdminsList = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetAdminsList',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetManualCheckRpOverrides = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetManualCheckRpOverrides',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.ConfirmRpName = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ConfirmRpName',
+                request_serializer=vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.DenyRpName = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/DenyRpName',
+                request_serializer=vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ResetRpName = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ResetRpName',
+                request_serializer=vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.GetEstateHistory = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetEstateHistory',
+                request_serializer=vprikol__pb2.GetEstateHistoryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.CalculateExp = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CalculateExp',
+                request_serializer=vprikol__pb2.CalculateExpRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetCurrency = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetCurrency',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetAllCurrencies = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetAllCurrencies',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetItems = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetItems',
+                request_serializer=vprikol__pb2.GetItemsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetVehicles = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetVehicles',
+                request_serializer=vprikol__pb2.GetVehiclesRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetShops = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetShops',
+                request_serializer=vprikol__pb2.GetShopsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetShopDeals = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetShopDeals',
+                request_serializer=vprikol__pb2.GetShopDealsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetItemMarketDetails = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetItemMarketDetails',
+                request_serializer=vprikol__pb2.GetItemMarketDetailsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetItemsHistory = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetItemsHistory',
+                request_serializer=vprikol__pb2.GetItemsHistoryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetClientShopSnapshots = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetClientShopSnapshots',
+                request_serializer=vprikol__pb2.JsonQueryRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.ReportClientShopSnapshot = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ReportClientShopSnapshot',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetGhettoRating = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetGhettoRating',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetGhettoCaptures = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetGhettoCaptures',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetFamilyTop = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetFamilyTop',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetFamilyCaptures = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetFamilyCaptures',
+                request_serializer=vprikol__pb2.ServerRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.HideProfile = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/HideProfile',
+                request_serializer=vprikol__pb2.PrivacyToggleRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.UnhideProfile = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/UnhideProfile',
+                request_serializer=vprikol__pb2.PrivacyToggleRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.ClearHiddenProfiles = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ClearHiddenProfiles',
+                request_serializer=vprikol__pb2.ClearHiddenProfilesRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.GetHiddenPlayers = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetHiddenPlayers',
+                request_serializer=vprikol__pb2.GetHiddenPlayersRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.CreatePlayerComment = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CreatePlayerComment',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetPlayerComments = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetPlayerComments',
+                request_serializer=vprikol__pb2.GetPlayerCommentsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMyPlayerComment = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMyPlayerComment',
+                request_serializer=vprikol__pb2.GetMyPlayerCommentRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.DeletePlayerComment = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/DeletePlayerComment',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.CreateCommentComplaint = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CreateCommentComplaint',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetPendingComments = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetPendingComments',
+                request_serializer=vprikol__pb2.PagingRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.ModerateComment = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ModerateComment',
+                request_serializer=vprikol__pb2.ModerateCommentRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetAllComments = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetAllComments',
+                request_serializer=vprikol__pb2.GetAllCommentsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetPendingComplaints = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetPendingComplaints',
+                request_serializer=vprikol__pb2.PagingRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.ModerateComplaint = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ModerateComplaint',
+                request_serializer=vprikol__pb2.ModerateComplaintRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMarketplaceListings = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMarketplaceListings',
+                request_serializer=vprikol__pb2.GetMarketplaceListingsRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMarketplaceListing',
+                request_serializer=vprikol__pb2.GetMarketplaceListingRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMarketplaceSimilar = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMarketplaceSimilar',
+                request_serializer=vprikol__pb2.GetMarketplaceSimilarRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.CreateMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/CreateMarketplaceListing',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.PatchMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/PatchMarketplaceListing',
+                request_serializer=vprikol__pb2.ListingBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.UpdateMarketplaceListingStatus = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/UpdateMarketplaceListingStatus',
+                request_serializer=vprikol__pb2.ListingBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMyMarketplaceListings = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMyMarketplaceListings',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.GetMarketplaceModeration = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetMarketplaceModeration',
+                request_serializer=vprikol__pb2.GetMarketplaceModerationRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.ModerateMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/ModerateMarketplaceListing',
+                request_serializer=vprikol__pb2.ListingBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.DeleteMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/DeleteMarketplaceListing',
+                request_serializer=vprikol__pb2.ListingBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.PromoteMarketplaceListing = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/PromoteMarketplaceListing',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
+                )
+        self.SetMarketplaceFavorite = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/SetMarketplaceFavorite',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.TrackMarketplaceView = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/TrackMarketplaceView',
+                request_serializer=vprikol__pb2.TrackMarketplaceViewRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.TrackMarketplaceContactClick = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/TrackMarketplaceContactClick',
+                request_serializer=vprikol__pb2.JsonBodyRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.GetHostStats = channel.unary_unary(
+                '/vprikol.v1.VprikolAPI/GetHostStats',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=vprikol__pb2.JsonResponse.FromString,
                 )
 
 
@@ -194,6 +515,42 @@ class VprikolAPIServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetTokenList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateToken(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateToken(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteToken(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReissueToken(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTokenLimits(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def GetTokenRequests(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -206,93 +563,761 @@ class VprikolAPIServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAvailableMethods(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateFractionRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CheckRpNickname(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GenerateRpNickname(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetServerOnlineHistory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPlayerSessions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPlayerSessionsCalendar(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetFractionMemberHistory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAdminsList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetManualCheckRpOverrides(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ConfirmRpName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DenyRpName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ResetRpName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetEstateHistory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CalculateExp(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetCurrency(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAllCurrencies(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetItems(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetVehicles(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetShops(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetShopDeals(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetItemMarketDetails(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetItemsHistory(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetClientShopSnapshots(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReportClientShopSnapshot(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetGhettoRating(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetGhettoCaptures(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetFamilyTop(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetFamilyCaptures(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def HideProfile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UnhideProfile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ClearHiddenProfiles(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetHiddenPlayers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreatePlayerComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPlayerComments(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMyPlayerComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeletePlayerComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateCommentComplaint(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPendingComments(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ModerateComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAllComments(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPendingComplaints(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ModerateComplaint(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMarketplaceListings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMarketplaceSimilar(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PatchMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateMarketplaceListingStatus(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMyMarketplaceListings(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMarketplaceModeration(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ModerateMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PromoteMarketplaceListing(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SetMarketplaceFavorite(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TrackMarketplaceView(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TrackMarketplaceContactClick(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetHostStats(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_VprikolAPIServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.GetStatus,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetStatusRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.GetStatusResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetStatusRequest.FromString,
+                    response_serializer=vprikol__pb2.GetStatusResponse.SerializeToString,
             ),
             'GetRating': grpc.unary_unary_rpc_method_handler(
                     servicer.GetRating,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetRatingRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.RatingResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetRatingRequest.FromString,
+                    response_serializer=vprikol__pb2.RatingResponse.SerializeToString,
             ),
             'GetEstate': grpc.unary_unary_rpc_method_handler(
                     servicer.GetEstate,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetEstateRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.EstateResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetEstateRequest.FromString,
+                    response_serializer=vprikol__pb2.EstateResponse.SerializeToString,
             ),
             'GetLeaders': grpc.unary_unary_rpc_method_handler(
                     servicer.GetLeaders,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.LeadersResponse.SerializeToString,
             ),
             'GetDeputies': grpc.unary_unary_rpc_method_handler(
                     servicer.GetDeputies,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.LeadersResponse.SerializeToString,
             ),
             'GetInterviews': grpc.unary_unary_rpc_method_handler(
                     servicer.GetInterviews,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.InterviewsResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.InterviewsResponse.SerializeToString,
             ),
             'GetPlayers': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPlayers,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.PlayersResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.PlayersResponse.SerializeToString,
             ),
             'GetMap': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMap,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetMapRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.MapResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetMapRequest.FromString,
+                    response_serializer=vprikol__pb2.MapResponse.SerializeToString,
             ),
             'GetMapZones': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMapZones,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.MapZonesResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.MapZonesResponse.SerializeToString,
             ),
             'GetFractionMembers': grpc.unary_unary_rpc_method_handler(
                     servicer.GetFractionMembers,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetFractionMembersRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.MembersResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetFractionMembersRequest.FromString,
+                    response_serializer=vprikol__pb2.MembersResponse.SerializeToString,
             ),
             'FindPlayer': grpc.unary_unary_rpc_method_handler(
                     servicer.FindPlayer,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.FindPlayerRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.FindPlayerResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.FindPlayerRequest.FromString,
+                    response_serializer=vprikol__pb2.FindPlayerResponse.SerializeToString,
             ),
             'GetPlayerOnline': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPlayerOnline,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetPlayerOnlineRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.OnlineResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetPlayerOnlineRequest.FromString,
+                    response_serializer=vprikol__pb2.OnlineResponse.SerializeToString,
             ),
             'GetPlayerHistory': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPlayerHistory,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetPlayerHistoryRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.PlayerHistoryResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetPlayerHistoryRequest.FromString,
+                    response_serializer=vprikol__pb2.PlayerHistoryResponse.SerializeToString,
             ),
             'GetPunishes': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPunishes,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetPunishesRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.PunishHistoryResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetPunishesRequest.FromString,
+                    response_serializer=vprikol__pb2.PunishHistoryResponse.SerializeToString,
             ),
             'GetTokenInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTokenInfo,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenInfoRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.TokenResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetTokenInfoRequest.FromString,
+                    response_serializer=vprikol__pb2.TokenResponse.SerializeToString,
+            ),
+            'GetTokenList': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTokenList,
+                    request_deserializer=vprikol__pb2.GetTokenListRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'CreateToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateToken,
+                    request_deserializer=vprikol__pb2.CreateTokenRequest.FromString,
+                    response_serializer=vprikol__pb2.TokenResponse.SerializeToString,
+            ),
+            'UpdateToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateToken,
+                    request_deserializer=vprikol__pb2.UpdateTokenRequest.FromString,
+                    response_serializer=vprikol__pb2.TokenResponse.SerializeToString,
+            ),
+            'DeleteToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteToken,
+                    request_deserializer=vprikol__pb2.DeleteTokenRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ReissueToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReissueToken,
+                    request_deserializer=vprikol__pb2.ReissueTokenRequest.FromString,
+                    response_serializer=vprikol__pb2.TokenResponse.SerializeToString,
+            ),
+            'GetTokenLimits': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTokenLimits,
+                    request_deserializer=vprikol__pb2.GetTokenInfoRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
             ),
             'GetTokenRequests': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTokenRequests,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.RequestLogResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetTokenRequestsRequest.FromString,
+                    response_serializer=vprikol__pb2.RequestLogResponse.SerializeToString,
             ),
             'GetTokenRequestsStats': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTokenRequestsStats,
-                    request_deserializer=vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsStatsRequest.FromString,
-                    response_serializer=vprikol_dot_v1_dot_vprikol__pb2.RequestStatsResponse.SerializeToString,
+                    request_deserializer=vprikol__pb2.GetTokenRequestsStatsRequest.FromString,
+                    response_serializer=vprikol__pb2.RequestStatsResponse.SerializeToString,
+            ),
+            'GetAvailableMethods': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAvailableMethods,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'UpdateFractionRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateFractionRecord,
+                    request_deserializer=vprikol__pb2.UpdateFractionRecordRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'CheckRpNickname': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckRpNickname,
+                    request_deserializer=vprikol__pb2.CheckRpNicknameRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GenerateRpNickname': grpc.unary_unary_rpc_method_handler(
+                    servicer.GenerateRpNickname,
+                    request_deserializer=vprikol__pb2.GenerateRpNicknameRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetServerOnlineHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetServerOnlineHistory,
+                    request_deserializer=vprikol__pb2.GetServerOnlineHistoryRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetPlayerSessions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPlayerSessions,
+                    request_deserializer=vprikol__pb2.GetPlayerSessionsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetPlayerSessionsCalendar': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPlayerSessionsCalendar,
+                    request_deserializer=vprikol__pb2.GetPlayerSessionsCalendarRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetFractionMemberHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetFractionMemberHistory,
+                    request_deserializer=vprikol__pb2.GetFractionMemberHistoryRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetAdminsList': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAdminsList,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetManualCheckRpOverrides': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetManualCheckRpOverrides,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'ConfirmRpName': grpc.unary_unary_rpc_method_handler(
+                    servicer.ConfirmRpName,
+                    request_deserializer=vprikol__pb2.RpNameOverrideRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DenyRpName': grpc.unary_unary_rpc_method_handler(
+                    servicer.DenyRpName,
+                    request_deserializer=vprikol__pb2.RpNameOverrideRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ResetRpName': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResetRpName,
+                    request_deserializer=vprikol__pb2.RpNameOverrideRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetEstateHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetEstateHistory,
+                    request_deserializer=vprikol__pb2.GetEstateHistoryRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'CalculateExp': grpc.unary_unary_rpc_method_handler(
+                    servicer.CalculateExp,
+                    request_deserializer=vprikol__pb2.CalculateExpRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetCurrency': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCurrency,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetAllCurrencies': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllCurrencies,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetItems': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetItems,
+                    request_deserializer=vprikol__pb2.GetItemsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetVehicles': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetVehicles,
+                    request_deserializer=vprikol__pb2.GetVehiclesRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetShops': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetShops,
+                    request_deserializer=vprikol__pb2.GetShopsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetShopDeals': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetShopDeals,
+                    request_deserializer=vprikol__pb2.GetShopDealsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetItemMarketDetails': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetItemMarketDetails,
+                    request_deserializer=vprikol__pb2.GetItemMarketDetailsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetItemsHistory': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetItemsHistory,
+                    request_deserializer=vprikol__pb2.GetItemsHistoryRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetClientShopSnapshots': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetClientShopSnapshots,
+                    request_deserializer=vprikol__pb2.JsonQueryRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'ReportClientShopSnapshot': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportClientShopSnapshot,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetGhettoRating': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetGhettoRating,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetGhettoCaptures': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetGhettoCaptures,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetFamilyTop': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetFamilyTop,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetFamilyCaptures': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetFamilyCaptures,
+                    request_deserializer=vprikol__pb2.ServerRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'HideProfile': grpc.unary_unary_rpc_method_handler(
+                    servicer.HideProfile,
+                    request_deserializer=vprikol__pb2.PrivacyToggleRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'UnhideProfile': grpc.unary_unary_rpc_method_handler(
+                    servicer.UnhideProfile,
+                    request_deserializer=vprikol__pb2.PrivacyToggleRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ClearHiddenProfiles': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClearHiddenProfiles,
+                    request_deserializer=vprikol__pb2.ClearHiddenProfilesRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetHiddenPlayers': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetHiddenPlayers,
+                    request_deserializer=vprikol__pb2.GetHiddenPlayersRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'CreatePlayerComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreatePlayerComment,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetPlayerComments': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPlayerComments,
+                    request_deserializer=vprikol__pb2.GetPlayerCommentsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMyPlayerComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMyPlayerComment,
+                    request_deserializer=vprikol__pb2.GetMyPlayerCommentRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'DeletePlayerComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeletePlayerComment,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'CreateCommentComplaint': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateCommentComplaint,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetPendingComments': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPendingComments,
+                    request_deserializer=vprikol__pb2.PagingRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'ModerateComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.ModerateComment,
+                    request_deserializer=vprikol__pb2.ModerateCommentRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetAllComments': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllComments,
+                    request_deserializer=vprikol__pb2.GetAllCommentsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetPendingComplaints': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPendingComplaints,
+                    request_deserializer=vprikol__pb2.PagingRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'ModerateComplaint': grpc.unary_unary_rpc_method_handler(
+                    servicer.ModerateComplaint,
+                    request_deserializer=vprikol__pb2.ModerateComplaintRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMarketplaceListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMarketplaceListings,
+                    request_deserializer=vprikol__pb2.GetMarketplaceListingsRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMarketplaceListing,
+                    request_deserializer=vprikol__pb2.GetMarketplaceListingRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMarketplaceSimilar': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMarketplaceSimilar,
+                    request_deserializer=vprikol__pb2.GetMarketplaceSimilarRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'CreateMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateMarketplaceListing,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'PatchMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.PatchMarketplaceListing,
+                    request_deserializer=vprikol__pb2.ListingBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'UpdateMarketplaceListingStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateMarketplaceListingStatus,
+                    request_deserializer=vprikol__pb2.ListingBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMyMarketplaceListings': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMyMarketplaceListings,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'GetMarketplaceModeration': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMarketplaceModeration,
+                    request_deserializer=vprikol__pb2.GetMarketplaceModerationRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'ModerateMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.ModerateMarketplaceListing,
+                    request_deserializer=vprikol__pb2.ListingBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'DeleteMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteMarketplaceListing,
+                    request_deserializer=vprikol__pb2.ListingBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'PromoteMarketplaceListing': grpc.unary_unary_rpc_method_handler(
+                    servicer.PromoteMarketplaceListing,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
+            ),
+            'SetMarketplaceFavorite': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetMarketplaceFavorite,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'TrackMarketplaceView': grpc.unary_unary_rpc_method_handler(
+                    servicer.TrackMarketplaceView,
+                    request_deserializer=vprikol__pb2.TrackMarketplaceViewRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'TrackMarketplaceContactClick': grpc.unary_unary_rpc_method_handler(
+                    servicer.TrackMarketplaceContactClick,
+                    request_deserializer=vprikol__pb2.JsonBodyRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetHostStats': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetHostStats,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=vprikol__pb2.JsonResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -316,8 +1341,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetStatus',
-            vprikol_dot_v1_dot_vprikol__pb2.GetStatusRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.GetStatusResponse.FromString,
+            vprikol__pb2.GetStatusRequest.SerializeToString,
+            vprikol__pb2.GetStatusResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -333,8 +1358,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetRating',
-            vprikol_dot_v1_dot_vprikol__pb2.GetRatingRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.RatingResponse.FromString,
+            vprikol__pb2.GetRatingRequest.SerializeToString,
+            vprikol__pb2.RatingResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -350,8 +1375,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetEstate',
-            vprikol_dot_v1_dot_vprikol__pb2.GetEstateRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.EstateResponse.FromString,
+            vprikol__pb2.GetEstateRequest.SerializeToString,
+            vprikol__pb2.EstateResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -367,8 +1392,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetLeaders',
-            vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.FromString,
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.LeadersResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -384,8 +1409,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetDeputies',
-            vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.LeadersResponse.FromString,
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.LeadersResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -401,8 +1426,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetInterviews',
-            vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.InterviewsResponse.FromString,
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.InterviewsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -418,8 +1443,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayers',
-            vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.PlayersResponse.FromString,
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.PlayersResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -435,8 +1460,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMap',
-            vprikol_dot_v1_dot_vprikol__pb2.GetMapRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.MapResponse.FromString,
+            vprikol__pb2.GetMapRequest.SerializeToString,
+            vprikol__pb2.MapResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -452,8 +1477,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMapZones',
-            vprikol_dot_v1_dot_vprikol__pb2.ServerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.MapZonesResponse.FromString,
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.MapZonesResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -469,8 +1494,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetFractionMembers',
-            vprikol_dot_v1_dot_vprikol__pb2.GetFractionMembersRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.MembersResponse.FromString,
+            vprikol__pb2.GetFractionMembersRequest.SerializeToString,
+            vprikol__pb2.MembersResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -486,8 +1511,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/FindPlayer',
-            vprikol_dot_v1_dot_vprikol__pb2.FindPlayerRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.FindPlayerResponse.FromString,
+            vprikol__pb2.FindPlayerRequest.SerializeToString,
+            vprikol__pb2.FindPlayerResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -503,8 +1528,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayerOnline',
-            vprikol_dot_v1_dot_vprikol__pb2.GetPlayerOnlineRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.OnlineResponse.FromString,
+            vprikol__pb2.GetPlayerOnlineRequest.SerializeToString,
+            vprikol__pb2.OnlineResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -520,8 +1545,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayerHistory',
-            vprikol_dot_v1_dot_vprikol__pb2.GetPlayerHistoryRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.PlayerHistoryResponse.FromString,
+            vprikol__pb2.GetPlayerHistoryRequest.SerializeToString,
+            vprikol__pb2.PlayerHistoryResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -537,8 +1562,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPunishes',
-            vprikol_dot_v1_dot_vprikol__pb2.GetPunishesRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.PunishHistoryResponse.FromString,
+            vprikol__pb2.GetPunishesRequest.SerializeToString,
+            vprikol__pb2.PunishHistoryResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -554,8 +1579,110 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetTokenInfo',
-            vprikol_dot_v1_dot_vprikol__pb2.GetTokenInfoRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.TokenResponse.FromString,
+            vprikol__pb2.GetTokenInfoRequest.SerializeToString,
+            vprikol__pb2.TokenResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTokenList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetTokenList',
+            vprikol__pb2.GetTokenListRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CreateToken',
+            vprikol__pb2.CreateTokenRequest.SerializeToString,
+            vprikol__pb2.TokenResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/UpdateToken',
+            vprikol__pb2.UpdateTokenRequest.SerializeToString,
+            vprikol__pb2.TokenResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/DeleteToken',
+            vprikol__pb2.DeleteTokenRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ReissueToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ReissueToken',
+            vprikol__pb2.ReissueTokenRequest.SerializeToString,
+            vprikol__pb2.TokenResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetTokenLimits(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetTokenLimits',
+            vprikol__pb2.GetTokenInfoRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -571,8 +1698,8 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetTokenRequests',
-            vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.RequestLogResponse.FromString,
+            vprikol__pb2.GetTokenRequestsRequest.SerializeToString,
+            vprikol__pb2.RequestLogResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -588,7 +1715,993 @@ class VprikolAPI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetTokenRequestsStats',
-            vprikol_dot_v1_dot_vprikol__pb2.GetTokenRequestsStatsRequest.SerializeToString,
-            vprikol_dot_v1_dot_vprikol__pb2.RequestStatsResponse.FromString,
+            vprikol__pb2.GetTokenRequestsStatsRequest.SerializeToString,
+            vprikol__pb2.RequestStatsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAvailableMethods(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetAvailableMethods',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateFractionRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/UpdateFractionRecord',
+            vprikol__pb2.UpdateFractionRecordRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CheckRpNickname(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CheckRpNickname',
+            vprikol__pb2.CheckRpNicknameRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GenerateRpNickname(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GenerateRpNickname',
+            vprikol__pb2.GenerateRpNicknameRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetServerOnlineHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetServerOnlineHistory',
+            vprikol__pb2.GetServerOnlineHistoryRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPlayerSessions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayerSessions',
+            vprikol__pb2.GetPlayerSessionsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPlayerSessionsCalendar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayerSessionsCalendar',
+            vprikol__pb2.GetPlayerSessionsCalendarRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetFractionMemberHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetFractionMemberHistory',
+            vprikol__pb2.GetFractionMemberHistoryRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAdminsList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetAdminsList',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetManualCheckRpOverrides(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetManualCheckRpOverrides',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ConfirmRpName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ConfirmRpName',
+            vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DenyRpName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/DenyRpName',
+            vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ResetRpName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ResetRpName',
+            vprikol__pb2.RpNameOverrideRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetEstateHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetEstateHistory',
+            vprikol__pb2.GetEstateHistoryRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CalculateExp(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CalculateExp',
+            vprikol__pb2.CalculateExpRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetCurrency(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetCurrency',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllCurrencies(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetAllCurrencies',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetItems(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetItems',
+            vprikol__pb2.GetItemsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetVehicles(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetVehicles',
+            vprikol__pb2.GetVehiclesRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetShops(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetShops',
+            vprikol__pb2.GetShopsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetShopDeals(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetShopDeals',
+            vprikol__pb2.GetShopDealsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetItemMarketDetails(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetItemMarketDetails',
+            vprikol__pb2.GetItemMarketDetailsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetItemsHistory(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetItemsHistory',
+            vprikol__pb2.GetItemsHistoryRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetClientShopSnapshots(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetClientShopSnapshots',
+            vprikol__pb2.JsonQueryRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ReportClientShopSnapshot(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ReportClientShopSnapshot',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetGhettoRating(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetGhettoRating',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetGhettoCaptures(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetGhettoCaptures',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetFamilyTop(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetFamilyTop',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetFamilyCaptures(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetFamilyCaptures',
+            vprikol__pb2.ServerRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def HideProfile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/HideProfile',
+            vprikol__pb2.PrivacyToggleRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UnhideProfile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/UnhideProfile',
+            vprikol__pb2.PrivacyToggleRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ClearHiddenProfiles(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ClearHiddenProfiles',
+            vprikol__pb2.ClearHiddenProfilesRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetHiddenPlayers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetHiddenPlayers',
+            vprikol__pb2.GetHiddenPlayersRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreatePlayerComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CreatePlayerComment',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPlayerComments(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPlayerComments',
+            vprikol__pb2.GetPlayerCommentsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMyPlayerComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMyPlayerComment',
+            vprikol__pb2.GetMyPlayerCommentRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeletePlayerComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/DeletePlayerComment',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateCommentComplaint(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CreateCommentComplaint',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPendingComments(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPendingComments',
+            vprikol__pb2.PagingRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ModerateComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ModerateComment',
+            vprikol__pb2.ModerateCommentRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllComments(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetAllComments',
+            vprikol__pb2.GetAllCommentsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPendingComplaints(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetPendingComplaints',
+            vprikol__pb2.PagingRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ModerateComplaint(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ModerateComplaint',
+            vprikol__pb2.ModerateComplaintRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMarketplaceListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMarketplaceListings',
+            vprikol__pb2.GetMarketplaceListingsRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMarketplaceListing',
+            vprikol__pb2.GetMarketplaceListingRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMarketplaceSimilar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMarketplaceSimilar',
+            vprikol__pb2.GetMarketplaceSimilarRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/CreateMarketplaceListing',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PatchMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/PatchMarketplaceListing',
+            vprikol__pb2.ListingBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateMarketplaceListingStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/UpdateMarketplaceListingStatus',
+            vprikol__pb2.ListingBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMyMarketplaceListings(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMyMarketplaceListings',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMarketplaceModeration(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetMarketplaceModeration',
+            vprikol__pb2.GetMarketplaceModerationRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ModerateMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/ModerateMarketplaceListing',
+            vprikol__pb2.ListingBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/DeleteMarketplaceListing',
+            vprikol__pb2.ListingBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PromoteMarketplaceListing(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/PromoteMarketplaceListing',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SetMarketplaceFavorite(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/SetMarketplaceFavorite',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def TrackMarketplaceView(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/TrackMarketplaceView',
+            vprikol__pb2.TrackMarketplaceViewRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def TrackMarketplaceContactClick(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/TrackMarketplaceContactClick',
+            vprikol__pb2.JsonBodyRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetHostStats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/vprikol.v1.VprikolAPI/GetHostStats',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            vprikol__pb2.JsonResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

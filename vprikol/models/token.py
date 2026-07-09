@@ -14,6 +14,7 @@ class TokenResponse(BaseModel):
     rate_limits: Dict[str, Any] = Field(default_factory=dict)
     daily_limit: Optional[int] = None
     subscription_until: Optional[datetime.datetime]
+    token: str
     created_at: datetime.datetime
     modified_at: datetime.datetime
 
