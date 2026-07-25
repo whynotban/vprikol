@@ -3,7 +3,8 @@ from .api import (VprikolAPIError, VprikolBadRequestError, VprikolAuthError, Vpr
                   VprikolNotFoundError, VprikolConflictError, VprikolGoneError, VprikolRateLimitError,
                   VprikolValidationError, VprikolServerError)
 from .backend import VprikolBackend
-from .models import RatingType, EstateType, SSFont
+from .models import (RatingType, EstateType, SSFont, SSTextAlign, SSOutputFormat, SSSettings, SSValidateResponse,
+                     SSLineReport, SSLineIssue, SSIssueLevel, FONT_LABELS, FONTS_ORDER, DEFAULT_COMMAND_COLORS, COMMAND_LABELS)
 
 
 def __getattr__(name: str):
@@ -15,4 +16,6 @@ def __getattr__(name: str):
 
 __all__ = ["VprikolAPI", "VprikolAPIError", "VprikolBadRequestError", "VprikolAuthError", "VprikolForbiddenError",
            "VprikolNotFoundError", "VprikolConflictError", "VprikolGoneError", "VprikolRateLimitError",
-           "VprikolValidationError", "VprikolServerError", "VprikolBackend", "VprikolGrpcAPI", "RatingType", "EstateType", "SSFont"]
+           "VprikolValidationError", "VprikolServerError", "VprikolBackend", "VprikolGrpcAPI", "RatingType", "EstateType", "SSFont", "SSTextAlign", "SSOutputFormat",
+           "SSSettings", "SSValidateResponse", "SSLineReport", "SSLineIssue", "SSIssueLevel", "FONT_LABELS", "FONTS_ORDER",
+           "DEFAULT_COMMAND_COLORS", "COMMAND_LABELS"]

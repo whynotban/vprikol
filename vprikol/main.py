@@ -7,7 +7,8 @@ from pydantic import TypeAdapter
 from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNickResponse, EstateResponse, MembersResponse,
                      FindPlayerResponse, OnlineResponse, TokenResponse, RequestLogResponse, RequestStatsResponse,
                      LeadersResponse, InterviewsResponse, PlayersResponse, MapResponse, RatingType, EstateType,
-                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, SSFont,
+                     BotDetectionResponse, CheckRpManualOverridesListResponse, AIResponse, IdeasResponse,
+                     SSSettings, SSValidateResponse,
                      NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse,
                      PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse, ServerOnlineHistoryResponse,
                      EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
@@ -39,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.0.4-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.0.5-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -191,27 +192,46 @@ class VprikolAPI(VprikolHTTPClient):
         response = await self._request("GET", "rpnick", params=params)
         return RpNickResponse.model_validate(response)
 
-    async def generate_ss(self, screen: bytes, commands: List[str], text_top: bool = True, font: SSFont = SSFont.ARIAL_BOLD,
-                          text_size: float = 0.95, commands_colors: Optional[Dict[str, str]] = None) -> bytes:
+    async def validate_ss_lines(self, lines: List[str]) -> SSValidateResponse:
+        response = await self._request("POST", "ss/validate", json_body={"lines": lines})
+        return SSValidateResponse.model_validate(response)
+
+    async def generate_ss(self, screen: bytes, commands: List[str], settings: Optional[SSSettings] = None, *,
+                          filename: str = "screen.png", extra: Optional[Dict[str, Any]] = None, **overrides: Any) -> bytes:
+        settings = (settings or SSSettings()).model_copy(update=overrides) if overrides else (settings or SSSettings())
+
         form_data = aiohttp.FormData()
-        form_data.add_field("screen", screen, filename="screen.png", content_type="image/png")
+        form_data.add_field("screen", screen, filename=filename, content_type="image/png")
         for command in commands:
             form_data.add_field("commands", command)
-        form_data.add_field("text_top", str(text_top).lower())
-        form_data.add_field("font", font.value)
-        form_data.add_field("text_size", str(text_size))
-        form_data.add_field("commands_colors", orjson.dumps(commands_colors).decode() if commands_colors else "{}")
+
+        for name, value in (settings.to_api_kwargs() | (extra or {})).items():
+            if value is None:
+                continue
+            if isinstance(value, bool):
+                form_data.add_field(name, str(value).lower())
+            elif isinstance(value, dict):
+                form_data.add_field(name, orjson.dumps(value).decode())
+            else:
+                form_data.add_field(name, str(getattr(value, "value", value)))
 
         return await self._request("POST", "ss", data=form_data)
 
-    async def generate_ai_situation(self, theme_prompt: str, executor_id: int, platform: str) -> AIResponse:
-        params = {
-            "theme_prompt": theme_prompt,
-            "executor_id": str(executor_id),
-            "platform": platform,
-        }
-        response = await self._request("POST", "ai/situation", params=params)
+    async def generate_ai_situation(self, theme: str, executor_id: int, platform: str, *, nicknames: Optional[List[str]] = None,
+                                    genre: Optional[str] = None, lines_count: Optional[int] = None,
+                                    dialogue: Optional[bool] = None) -> AIResponse:
+        payload = {"theme": theme, "executor_id": executor_id, "platform": platform, "nicknames": nicknames,
+                   "genre": genre, "lines_count": lines_count, "dialogue": dialogue}
+        response = await self._request("POST", "ai/situation", json_body={key: value for key, value in payload.items() if value is not None})
         return AIResponse.model_validate(response)
+
+    async def generate_ai_ideas(self, executor_id: int, platform: str, *, place: Optional[str] = None,
+                                organization: Optional[str] = None, mood: Optional[str] = None,
+                                extra: Optional[str] = None) -> IdeasResponse:
+        payload = {"executor_id": executor_id, "platform": platform, "place": place,
+                   "organization": organization, "mood": mood, "extra": extra}
+        response = await self._request("POST", "ai/ideas", json_body={key: value for key, value in payload.items() if value is not None})
+        return IdeasResponse.model_validate(response)
 
     async def get_leaders(self, server_id: int) -> LeadersResponse:
         response = await self._request("GET", "ingame/leaders", params={"server_id": str(server_id)})
