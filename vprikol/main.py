@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.1.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.1.1-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -678,6 +678,7 @@ class VprikolAPI(VprikolHTTPClient):
     async def get_shops(self, server_id: Optional[int] = None, nickname: Optional[str] = None,
                         item_id: Optional[int] = None, min_price: Optional[int] = None,
                         max_price: Optional[int] = None, type: Optional[str] = None,
+                        mod_level: Optional[int] = None, min_mod_level: Optional[int] = None,
                         limit: int = 50, offset: int = 0) -> ShopsResponse:
         params = {
             "server_id": str(server_id) if server_id is not None else None,
@@ -686,6 +687,8 @@ class VprikolAPI(VprikolHTTPClient):
             "min_price": str(min_price) if min_price is not None else None,
             "max_price": str(max_price) if max_price is not None else None,
             "type": type,
+            "mod_level": str(mod_level) if mod_level is not None else None,
+            "min_mod_level": str(min_mod_level) if min_mod_level is not None else None,
             "limit": str(limit),
             "offset": str(offset)
         }
