@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.1.1-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.1.2-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -714,6 +714,27 @@ class VprikolAPI(VprikolHTTPClient):
         }
         response = await self._request("GET", "shops/deals", params=params)
         return MarketDealsResponse.model_validate(response)
+
+    async def get_price_table(self, server_id: int, item_id: Optional[int] = None, mod_level: Optional[int] = None,
+                              search: Optional[str] = None, min_sell_offers: int = 1, min_buy_offers: int = 0,
+                              margin_pct: int = 20, commission_pct: int = 0,
+                              sort: Literal['profit', 'profit_pct', 'volume', 'price', 'name'] = 'profit',
+                              limit: int = 100, offset: int = 0, with_offers: bool = False) -> Dict[str, Any]:
+        params = {
+            "server_id": str(server_id),
+            "item_id": str(item_id) if item_id is not None else None,
+            "mod_level": str(mod_level) if mod_level is not None else None,
+            "search": search,
+            "min_sell_offers": str(min_sell_offers),
+            "min_buy_offers": str(min_buy_offers),
+            "margin_pct": str(margin_pct),
+            "commission_pct": str(commission_pct),
+            "sort": sort,
+            "limit": str(limit),
+            "offset": str(offset),
+            "with_offers": str(with_offers).lower()
+        }
+        return await self._request("GET", "items/price-table", params=params)
 
     async def get_item_market_details(self, item_id: int, server_id: int = 1000,
                                       period: Literal['1d', '1w', '1m', '3m', '6m', '1y'] = '1m') -> ItemMarketStatsResponse:
