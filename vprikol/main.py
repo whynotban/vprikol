@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.1.3-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.1.4-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -718,9 +718,9 @@ class VprikolAPI(VprikolHTTPClient):
     async def get_price_table(self, server_id: int, item_id: Optional[int] = None, mod_level: Optional[int] = None,
                               search: Optional[str] = None, min_sell_offers: int = 3, min_buy_offers: int = 0,
                               margin_pct: int = 20, commission_pct: int = 0,
-                              sort: Literal['profit', 'profit_pct', 'volume', 'price', 'name'] = 'profit',
+                              sort: Literal['profit', 'profit_pct', 'deals', 'volume', 'price', 'name'] = 'profit',
                               limit: int = 100, offset: int = 0, with_offers: bool = False,
-                              only_with_buy: bool = False) -> Dict[str, Any]:
+                              only_with_buy: bool = False, skip_clearouts: bool = False) -> Dict[str, Any]:
         params = {
             "server_id": str(server_id),
             "item_id": str(item_id) if item_id is not None else None,
@@ -734,7 +734,8 @@ class VprikolAPI(VprikolHTTPClient):
             "limit": str(limit),
             "offset": str(offset),
             "with_offers": str(with_offers).lower(),
-            "only_with_buy": str(only_with_buy).lower()
+            "only_with_buy": str(only_with_buy).lower(),
+            "skip_clearouts": str(skip_clearouts).lower()
         }
         return await self._request("GET", "items/price-table", params=params)
 
