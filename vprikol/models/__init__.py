@@ -18,11 +18,12 @@ from .player import (CheckRpResponse, RpNickResponse, FindPlayerResponse, Online
 from .fraction import (MembersResponse, LeadersResponse, InterviewsResponse, MembersPlayer,
                       MembersRecord, FractionMemberHistoryEntry, FractionMemberHistoryResponse,
                       LeaderEntry, InterviewEntry)
-from .token import TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse
+from .token import (TokenResponse, RequestLogResponse, RequestStatsResponse, RequestLogEntry, RateLimitStatusResponse,
+                    TokenUsageEntry, TokensUsageResponse)
 from .ai import AIResponse, IdeasResponse
 from .ss import (SSTextAlign, SSOutputFormat, SSIssueLevel, SSLineIssue, SSLineReport, SSValidateResponse,
                  SSSettings, FONT_LABELS, FONTS_ORDER, DEFAULT_COMMAND_COLORS, COMMAND_LABELS)
-from .backend import (BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
+from .backend import (AnalyticsEventEntry, BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
                       TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,

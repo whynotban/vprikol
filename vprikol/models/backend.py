@@ -15,6 +15,7 @@ class BackendMeResponse(BaseModel):
     subscription_expires: Optional[datetime] = None
     notify_extra_slots: int = 0
     forum_extra_slots: int = 0
+    ds_id: Optional[int] = None
 
 
 class NotificationSubscriptionEntry(BaseModel):
@@ -126,7 +127,7 @@ class TgAuthConfirmResponse(BaseModel):
 
 
 class PrivacyToggleRequest(BaseModel):
-    platform: Literal['vk', 'tg']
+    platform: Literal['vk', 'tg', 'ds']
     user_id: int
     server_id: int
     nickname: str
@@ -147,7 +148,17 @@ class ForumThreadEntry(BaseModel):
 
 
 class AddForumThreadRequest(BaseModel):
-    platform: Literal['tg', 'vk']
+    platform: Literal['tg', 'vk', 'ds']
     platform_user_id: int
     subscription_platform_user_id: Optional[int] = None
     raw_input: str
+
+
+class AnalyticsEventEntry(BaseModel):
+    feature: str
+    action: Literal['use', 'view', 'paywall', 'checkout', 'paid', 'signup', 'error'] = 'use'
+    executor_id: Optional[int] = None
+    server_id: Optional[int] = None
+    has_subscription: bool = False
+    occurred_at: Optional[datetime] = None
+    details: dict = {}

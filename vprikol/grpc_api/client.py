@@ -467,10 +467,10 @@ class VprikolGrpcAPI:
     async def get_family_captures(self, server_id: int) -> FamilyCapturesResponse:
         return FamilyCapturesResponse.model_validate(_json_data(await self._call(self._ensure_stub().GetFamilyCaptures, pb.ServerRequest(server_id=server_id))))
 
-    async def hide_profile(self, platform: Literal["vk", "tg"], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
+    async def hide_profile(self, platform: Literal["vk", "tg", "ds"], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
         await self._call(self._ensure_stub().HideProfile, pb.PrivacyToggleRequest(platform=platform, user_id=user_id, server_id=server_id, nickname=nickname, is_superadmin=is_superadmin))
 
-    async def unhide_profile(self, platform: Literal["vk", "tg"], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
+    async def unhide_profile(self, platform: Literal["vk", "tg", "ds"], user_id: int, server_id: int, nickname: str, is_superadmin: bool = False) -> None:
         await self._call(self._ensure_stub().UnhideProfile, pb.PrivacyToggleRequest(platform=platform, user_id=user_id, server_id=server_id, nickname=nickname, is_superadmin=is_superadmin))
 
     async def get_hidden_players(self, user_id: int) -> HiddenProfilesListResponse:

@@ -223,7 +223,7 @@ class PlayerViewsResponse(BaseModel):
 
 
 class PrivacyToggleRequest(BaseModel):
-    platform: Literal['vk', 'tg']
+    platform: Literal['vk', 'tg', 'ds']
     user_id: int
     server_id: int
     nickname: str

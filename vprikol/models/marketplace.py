@@ -13,7 +13,7 @@ MarketplaceRentDurationUnit = Literal["hours", "days"]
 
 
 class MarketplaceAuthorContext(BaseModel):
-    platform: Literal["site", "tg", "vk"]
+    platform: Literal["site", "tg", "vk", "ds"]
     platform_user_id: int
     site_user_id: Optional[int] = None
     display_name: str = ""

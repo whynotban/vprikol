@@ -12,7 +12,7 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse,
                      PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse, ServerOnlineHistoryResponse,
                      EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
-                     FindStatsResponse, PlayersRequest, GameEventRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
+                     FindStatsResponse, TokensUsageResponse, PlayersRequest, GameEventRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.0.5-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.1.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -484,6 +484,11 @@ class VprikolAPI(VprikolHTTPClient):
         response = await self._request("GET", "internal/requests/stats", params=params)
         return RequestStatsResponse.model_validate(response)
 
+    async def get_tokens_usage(self, date_from: datetime.date, date_to: Optional[datetime.date] = None) -> TokensUsageResponse:
+        params = {"date_from": date_from.isoformat(), "date_to": date_to.isoformat() if date_to else None}
+        response = await self._request("GET", "internal/requests/usage", params=params)
+        return TokensUsageResponse.model_validate(response)
+
     async def get_estate_history(self, server_id: int, estate_type: EstateHistoryType, estate_id: int, limit: int = 15,
                                  offset: int = 0) -> EstateHistoryResponse:
         params = {"server_id": str(server_id), "estate_type": estate_type.value, "estate_id": str(estate_id),
@@ -496,7 +501,7 @@ class VprikolAPI(VprikolHTTPClient):
         response = await self._request("GET", "player/views", params=params)
         return PlayerViewsResponse.model_validate(response)
 
-    async def hide_profile(self, platform: Literal['vk', 'tg'], user_id: int, server_id: int, nickname: str,
+    async def hide_profile(self, platform: Literal['vk', 'tg', 'ds'], user_id: int, server_id: int, nickname: str,
                            is_superadmin: bool = False) -> None:
         body = {
             "platform": platform,
@@ -507,7 +512,7 @@ class VprikolAPI(VprikolHTTPClient):
         }
         await self._request("POST", "internal/privacy/hide", json_body=body)
 
-    async def unhide_profile(self, platform: Literal['vk', 'tg'], user_id: int, server_id: int, nickname: str,
+    async def unhide_profile(self, platform: Literal['vk', 'tg', 'ds'], user_id: int, server_id: int, nickname: str,
                              is_superadmin: bool = False) -> None:
         body = {
             "platform": platform,

@@ -46,3 +46,15 @@ class RateLimitStatusResponse(BaseModel):
     find_limit: int = 15
     bypass_antifloods: bool = False
     per_method: Dict[str, Any] = Field(default_factory=dict)
+
+
+class TokenUsageEntry(BaseModel):
+    day: datetime.date
+    token_id: int
+    project_label: str
+    method: str
+    requests: int
+
+
+class TokensUsageResponse(BaseModel):
+    entries: List[TokenUsageEntry]

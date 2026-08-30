@@ -3,7 +3,7 @@ from typing import List, Optional, Literal, Union
 from pydantic import TypeAdapter
 
 from ._http import VprikolHTTPClient
-from .models.backend import (BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
+from .models.backend import (AnalyticsEventEntry, BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
                              ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
                              TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
 from .models.items import MarketDealsResponse
@@ -15,7 +15,7 @@ FORUM_THREADS_ADAPTER = TypeAdapter(List[ForumThreadEntry])
 
 
 class VprikolBackend(VprikolHTTPClient):
-    def __init__(self, bot_token: str, platform: Literal["tg", "vk"], base_url: str = "https://backend.szx.su/",
+    def __init__(self, bot_token: str, platform: Literal["tg", "vk", "ds"], base_url: str = "https://backend.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
         self.platform = platform
@@ -54,6 +54,17 @@ class VprikolBackend(VprikolHTTPClient):
             }
         )
         return MarketDealsResponse.model_validate(response)
+
+    async def track_events(self, events: List[AnalyticsEventEntry]) -> None:
+        if not events:
+            return
+        await self._request(
+            "POST", "analytics/bot/events",
+            json_body={
+                "platform": self.platform,
+                "events": [event.model_dump(mode="json") for event in events],
+            }
+        )
 
     async def get_subscriptions(self, platform_user_id: int) -> List[NotificationSubscriptionEntry]:
         response = await self._request(
@@ -237,6 +248,18 @@ class VprikolBackend(VprikolHTTPClient):
                 "tg_id": tg_id,
                 "first_name": first_name,
                 "last_name": last_name,
+                "username": username,
+                "photo_url": photo_url
+            }
+        )
+        return TgAuthConfirmResponse.model_validate(response)
+
+    async def confirm_ds_auth(self, code: str, ds_id: int, username: str, photo_url: str = None) -> TgAuthConfirmResponse:
+        response = await self._request(
+            "POST", "auth/ds/bot/confirm",
+            json_body={
+                "code": code,
+                "ds_id": ds_id,
                 "username": username,
                 "photo_url": photo_url
             }

@@ -3,7 +3,7 @@ from .api import (VprikolAPIError, VprikolBadRequestError, VprikolAuthError, Vpr
                   VprikolNotFoundError, VprikolConflictError, VprikolGoneError, VprikolRateLimitError,
                   VprikolValidationError, VprikolServerError)
 from .backend import VprikolBackend
-from .models import (RatingType, EstateType, SSFont, SSTextAlign, SSOutputFormat, SSSettings, SSValidateResponse,
+from .models import (AnalyticsEventEntry, RatingType, EstateType, SSFont, SSTextAlign, SSOutputFormat, SSSettings, SSValidateResponse,
                      SSLineReport, SSLineIssue, SSIssueLevel, FONT_LABELS, FONTS_ORDER, DEFAULT_COMMAND_COLORS, COMMAND_LABELS)
 
 
@@ -18,4 +18,4 @@ __all__ = ["VprikolAPI", "VprikolAPIError", "VprikolBadRequestError", "VprikolAu
            "VprikolNotFoundError", "VprikolConflictError", "VprikolGoneError", "VprikolRateLimitError",
            "VprikolValidationError", "VprikolServerError", "VprikolBackend", "VprikolGrpcAPI", "RatingType", "EstateType", "SSFont", "SSTextAlign", "SSOutputFormat",
            "SSSettings", "SSValidateResponse", "SSLineReport", "SSLineIssue", "SSIssueLevel", "FONT_LABELS", "FONTS_ORDER",
-           "DEFAULT_COMMAND_COLORS", "COMMAND_LABELS"]
+           "DEFAULT_COMMAND_COLORS", "COMMAND_LABELS", "AnalyticsEventEntry"]

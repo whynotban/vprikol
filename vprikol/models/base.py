@@ -48,6 +48,7 @@ class PunishType(str, Enum):
     RMUTE = "rmute"
     BAN = "ban"
     BANIP = "banip"
+    UNBAN = "unban"
     UNJAIL = "unjail"
     UNMUTE = "unmute"
     UNRMUTE = "unrmute"
