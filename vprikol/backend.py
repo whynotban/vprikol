@@ -5,13 +5,15 @@ from pydantic import TypeAdapter
 from ._http import VprikolHTTPClient
 from .models.backend import (AnalyticsEventEntry, BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
                              ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
-                             TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
+                             NotifySlotsState, SlotPackOffer, TelegramStarsPaymentResponse, TelegramStarsConfirmResponse,
+                             TelegramStarsPreCheckoutResponse)
 from .models.items import MarketDealsResponse
 
 
 NOTIFICATION_SUBSCRIPTIONS_ADAPTER = TypeAdapter(List[NotificationSubscriptionEntry])
 MARKET_ALERTS_ADAPTER = TypeAdapter(List[MarketAlertSubscriptionEntry])
 FORUM_THREADS_ADAPTER = TypeAdapter(List[ForumThreadEntry])
+SLOT_PACK_OFFERS_ADAPTER = TypeAdapter(List[SlotPackOffer])
 
 
 class VprikolBackend(VprikolHTTPClient):
@@ -32,6 +34,13 @@ class VprikolBackend(VprikolHTTPClient):
             params={"platform": self.platform, "platform_user_id": platform_user_id}
         )
         return BackendMeResponse.model_validate(response)
+
+    async def get_notify_slots(self, platform_user_id: int) -> Optional[NotifySlotsState]:
+        return (await self.get_me(platform_user_id)).notify_slots
+
+    async def get_slot_pack_offers(self) -> List[SlotPackOffer]:
+        response = await self._request("GET", "payment/slots/offers")
+        return SLOT_PACK_OFFERS_ADAPTER.validate_python(response.get("offers", []))
 
     async def get_market_deals(self, platform_user_id: int, server_id: int, item_id: Optional[int] = None,
                                include_modded: bool = True, allow_vc_routes: bool = True, min_profit: int = 0, min_discount: int = 0,
@@ -144,12 +153,13 @@ class VprikolBackend(VprikolHTTPClient):
         return PromoActivationResponse.model_validate(response)
 
     async def create_telegram_stars_payment(self, platform_user_id: int, tariff_id: int, target_site_user_id: int = None, promo_code: str = None, username: str = None,
-                                            first_name: str = None, last_name: str = None) -> TelegramStarsPaymentResponse:
+                                            first_name: str = None, last_name: str = None, slot_pack_id: int = None) -> TelegramStarsPaymentResponse:
         response = await self._request(
             "POST", "payment/telegram-stars/create",
             json_body={
                 "platform_user_id": platform_user_id,
                 "tariff_id": tariff_id,
+                "slot_pack_id": slot_pack_id,
                 "target_site_user_id": target_site_user_id,
                 "promo_code": promo_code,
                 "username": username,

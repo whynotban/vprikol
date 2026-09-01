@@ -23,8 +23,9 @@ from .token import (TokenResponse, RequestLogResponse, RequestStatsResponse, Req
 from .ai import AIResponse, IdeasResponse
 from .ss import (SSTextAlign, SSOutputFormat, SSIssueLevel, SSLineIssue, SSLineReport, SSValidateResponse,
                  SSSettings, FONT_LABELS, FONTS_ORDER, DEFAULT_COMMAND_COLORS, COMMAND_LABELS)
-from .backend import (AnalyticsEventEntry, BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
-                      TelegramStarsPaymentResponse, TelegramStarsConfirmResponse, TelegramStarsPreCheckoutResponse)
+from .backend import (AnalyticsEventEntry, BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, NotifySlotPackEntry, NotifySlotsState,
+                      PromoActivationResponse, PromoCodeEntry, SlotPackOffer, SlotPackPeriod, TelegramStarsPaymentResponse, TelegramStarsConfirmResponse,
+                      TelegramStarsPreCheckoutResponse)
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)

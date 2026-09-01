@@ -3,6 +3,42 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
 
+class SlotPackPeriod(BaseModel):
+    tariff_id: int
+    months: int
+    amount: int
+    stars_amount: int
+    monthly_amount: int
+    monthly_per_slot: int
+
+
+class SlotPackOffer(BaseModel):
+    pack_id: int
+    slots: int
+    title: str
+    periods: List[SlotPackPeriod]
+
+
+class NotifySlotPackEntry(BaseModel):
+    id: int
+    slots: int
+    months: int
+    expires_at: datetime
+
+
+class NotifySlotsState(BaseModel):
+    base: int
+    bonus: int
+    purchased: int
+    total: int
+    used: int
+    free: int
+    subscription_active: bool
+    subscription_expires: Optional[datetime] = None
+    packs: List[NotifySlotPackEntry] = []
+    offers: List[SlotPackOffer] = []
+
+
 class BackendMeResponse(BaseModel):
     found: bool
     id: Optional[int] = None
@@ -16,6 +52,7 @@ class BackendMeResponse(BaseModel):
     notify_extra_slots: int = 0
     forum_extra_slots: int = 0
     ds_id: Optional[int] = None
+    notify_slots: Optional[NotifySlotsState] = None
 
 
 class NotificationSubscriptionEntry(BaseModel):
@@ -109,6 +146,8 @@ class TelegramStarsPaymentResponse(BaseModel):
     promo_discount_percent: int = 0
     total_discount_percent: int = 0
     description: str
+    product: str = "subscription"
+    slots: Optional[int] = None
 
 
 class TelegramStarsConfirmResponse(BaseModel):
