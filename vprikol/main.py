@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.1.7-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.2.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -232,6 +232,20 @@ class VprikolAPI(VprikolHTTPClient):
                    "organization": organization, "mood": mood, "extra": extra}
         response = await self._request("POST", "ai/ideas", json_body={key: value for key, value in payload.items() if value is not None})
         return IdeasResponse.model_validate(response)
+
+    async def generate_text(self, prompt: str) -> str:
+        response = await self._request("POST", "ai/text", json_body={"prompt": prompt})
+        return response["text"]
+
+    async def report_client_shop_snapshot(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        return await self._request("POST", "ingame/client/shops/report", json_body=payload)
+
+    async def get_client_shop_snapshots(self, server_id: int, *, shop_id: Optional[int] = None, owner_nickname: Optional[str] = None,
+                                        item_id: Optional[int] = None, type: Optional[Literal["buy", "sell"]] = None, min_price: Optional[int] = None,
+                                        max_price: Optional[int] = None, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
+        params = {"server_id": server_id, "shop_id": shop_id, "owner_nickname": owner_nickname, "item_id": item_id, "type": type,
+                  "min_price": min_price, "max_price": max_price, "limit": limit, "offset": offset}
+        return await self._request("GET", "ingame/client/shops", params=params)
 
     async def get_leaders(self, server_id: int) -> LeadersResponse:
         response = await self._request("GET", "ingame/leaders", params={"server_id": str(server_id)})
