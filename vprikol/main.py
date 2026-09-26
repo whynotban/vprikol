@@ -40,7 +40,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.2.0-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.2.1-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -731,32 +731,21 @@ class VprikolAPI(VprikolHTTPClient):
         response = await self._request("GET", "shops/deals", params=params)
         return MarketDealsResponse.model_validate(response)
 
-    async def get_price_table(self, server_id: int, item_id: Optional[int] = None, mod_level: Optional[int] = None,
-                              search: Optional[str] = None, min_sell_offers: int = 0, min_sell_sellers: int = 0,
-                              min_buy_offers: int = 0, min_confidence: int = 0,
-                              liquidity: Optional[Literal['high', 'medium', 'low', 'none']] = None,
-                              margin_pct: int = 20, commission_pct: int = 0,
-                              sort: Literal['confidence', 'price', 'profit', 'profit_pct', 'sales', 'volume', 'sellers', 'spread', 'name'] = 'confidence',
-                              limit: int = 100, offset: int = 0, with_offers: bool = False,
-                              only_with_buy: bool = False, only_with_price: bool = False) -> Dict[str, Any]:
+    async def get_price_table(self, server_id: int, search: Optional[str] = None, item_id: Optional[int] = None,
+                              mod_level: Optional[int] = None, margin_pct: int = 20, commission_pct: int = 0,
+                              sort: Literal['popular', 'price_desc', 'price_asc', 'profit', 'name'] = 'popular',
+                              limit: int = 100, offset: int = 0, with_icons: bool = True) -> Dict[str, Any]:
         params = {
             "server_id": str(server_id),
+            "search": search,
             "item_id": str(item_id) if item_id is not None else None,
             "mod_level": str(mod_level) if mod_level is not None else None,
-            "search": search,
-            "min_sell_offers": str(min_sell_offers),
-            "min_sell_sellers": str(min_sell_sellers),
-            "min_buy_offers": str(min_buy_offers),
-            "min_confidence": str(min_confidence),
-            "liquidity": liquidity,
             "margin_pct": str(margin_pct),
             "commission_pct": str(commission_pct),
             "sort": sort,
             "limit": str(limit),
             "offset": str(offset),
-            "with_offers": str(with_offers).lower(),
-            "only_with_buy": str(only_with_buy).lower(),
-            "only_with_price": str(only_with_price).lower()
+            "with_icons": str(with_icons).lower()
         }
         return await self._request("GET", "items/price-table", params=params)
 
@@ -774,20 +763,21 @@ class VprikolAPI(VprikolHTTPClient):
                   "server_id": str(server_id) if server_id is not None else None}
         return await self._request("GET", "items/sellers", params=params)
 
-    async def get_seller_history(self, nickname: str, server_id: Optional[int] = None,
-                                 side: Optional[Literal['sell', 'buy']] = None, item_id: Optional[int] = None,
-                                 days: int = 30, limit: int = 100, offset: int = 0, top_items: int = 25) -> Dict[str, Any]:
+    async def get_market_trades(self, server_id: Optional[int] = None, nickname: Optional[str] = None,
+                                action: Optional[Literal['sold', 'bought']] = None, item: Optional[str] = None,
+                                date_from: Optional[datetime.datetime] = None, date_to: Optional[datetime.datetime] = None,
+                                limit: int = 50, offset: int = 0) -> Dict[str, Any]:
         params = {
-            "nickname": nickname,
             "server_id": str(server_id) if server_id is not None else None,
-            "side": side,
-            "item_id": str(item_id) if item_id is not None else None,
-            "days": str(days),
+            "nickname": nickname,
+            "action": action,
+            "item": item,
+            "date_from": date_from.isoformat() if date_from else None,
+            "date_to": date_to.isoformat() if date_to else None,
             "limit": str(limit),
-            "offset": str(offset),
-            "top_items": str(top_items)
+            "offset": str(offset)
         }
-        return await self._request("GET", "shops/seller-history", params=params)
+        return await self._request("GET", "shops/trades", params=params)
 
     async def get_top_sellers(self, server_id: Optional[int] = None, side: Optional[Literal['sell', 'buy']] = None,
                               days: int = 7, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
