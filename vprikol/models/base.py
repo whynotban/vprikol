@@ -55,6 +55,9 @@ class PunishType(str, Enum):
     APUNISH = "apunish"
     APUNISHOFF = "apunishoff"
     UNAPUNISH = "unapunish"
+    UNWARN = "unwarn"
+    EVENTBAN = "eventban"
+    GUNBAN = "gunban"
 
 
 class SSFont(str, Enum):
