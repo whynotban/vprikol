@@ -77,6 +77,20 @@ class ShopItem(BaseModel):
     custom_type: Optional[str] = None
     slot_id: Optional[int] = None
     slot_name: Optional[str] = None
+    mod_level_max: Optional[int] = None
+    rarity: Optional[str] = None
+    is_trash: bool = False
+    wear_percent: Optional[int] = None
+    quality_score: Optional[int] = None
+    color: Optional[str] = None
+    durability: Optional[int] = None
+    durability_max: Optional[int] = None
+    set_name: Optional[str] = None
+    no_wear: bool = False
+    built_in_traits: List[str] = []
+    equip_bonuses: List[str] = []
+    transfer_from: Optional[str] = None
+    transfer_universal: bool = False
 
 
 class ShopEntry(BaseModel):
@@ -87,6 +101,7 @@ class ShopEntry(BaseModel):
     updated_at: Optional[datetime.datetime] = None
     updated_state: Optional[UpdateFreshnessState] = None
     updated_label: Optional[str] = None
+    source: str = "scanner"
     items_sell: List[ShopItem]
     items_buy: List[ShopItem]
 
