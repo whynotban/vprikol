@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field
 
 class TokenResponse(BaseModel):
@@ -26,6 +26,8 @@ class RequestLogEntry(BaseModel):
     http_method: str
     params: Dict[str, Any]
     ip_address: str
+    status_code: Optional[int] = None
+    duration_ms: Optional[int] = None
     created_at: datetime.datetime
 
 
@@ -58,3 +60,64 @@ class TokenUsageEntry(BaseModel):
 
 class TokensUsageResponse(BaseModel):
     entries: List[TokenUsageEntry]
+
+
+RequestJournalKind = Literal["all", "errors", "client_errors", "slow"]
+
+
+class RequestJournalEntry(BaseModel):
+    id: int
+    request_id: Optional[str] = None
+    token_id: int
+    project_label: str = ""
+    api_method: Optional[str] = None
+    http_method: str
+    params: Dict[str, Any] = Field(default_factory=dict)
+    ip_address: str
+    status_code: Optional[int] = None
+    duration_ms: Optional[int] = None
+    created_at: datetime.datetime
+
+
+class RequestJournalResponse(BaseModel):
+    entries: List[RequestJournalEntry]
+    next_before_id: Optional[int] = None
+
+
+class RequestsTimelinePoint(BaseModel):
+    bucket: datetime.datetime
+    total: int
+    errors: int
+    client_errors: int
+    p95_ms: Optional[int] = None
+
+
+class RequestsMethodSummary(BaseModel):
+    api_method: str
+    total: int
+    errors: int
+    client_errors: int
+    avg_ms: Optional[int] = None
+    p95_ms: Optional[int] = None
+
+
+class RequestsTokenSummary(BaseModel):
+    token_id: int
+    project_label: str
+    total: int
+    errors: int
+    client_errors: int
+
+
+class RequestsOverviewResponse(BaseModel):
+    hours: int
+    total: int
+    errors: int
+    client_errors: int
+    slow: int
+    slow_threshold_ms: int
+    p50_ms: Optional[int] = None
+    p95_ms: Optional[int] = None
+    timeline: List[RequestsTimelinePoint]
+    methods: List[RequestsMethodSummary]
+    tokens: List[RequestsTokenSummary]

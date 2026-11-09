@@ -12,7 +12,8 @@ from .models import (ServerStatusResponse, RatingResponse, CheckRpResponse, RpNi
                      NicknameHistoryEntry, MoneyHistoryEntry, EstateHistoryResponse, EstateHistoryType, AdminsResponse,
                      PlayerViewsResponse, PlayerSessionsResponse, PlayerCalendarResponse, ServerOnlineHistoryResponse,
                      EXPCalcResponse, MapZonesResponse, CurrencyResponse, PunishType, PunishHistoryResponse,
-                     FindStatsResponse, TokensUsageResponse, PlayersRequest, GameEventRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
+                     FindStatsResponse, TokensUsageResponse, RequestJournalKind, RequestJournalEntry, RequestJournalResponse, RequestsOverviewResponse,
+                     PlayersRequest, GameEventRequest, PlayerExtendedEntry, IngameAdminData, IngameLeaderData,
                      IngameJudgeData, IngameMapData, IngameInterviewData, FractionSalariesRequest, IngameMemberEntry,
                      PunishRequest, CurrencyRequest, RankSalaryEntry, ItemsResponse, ItemsHistoryResponse,
                      AllServersStatusResponse, GhettoRatingResponse, GhettoCapturesResponse, FamilyTopResponse,
@@ -40,7 +41,7 @@ class VprikolAPI(VprikolHTTPClient):
     def __init__(self, token: Optional[str] = None, base_url: str = "https://api.szx.su/",
                  timeout: Optional[Union[aiohttp.ClientTimeout, int, float]] = None, session: Optional[aiohttp.ClientSession] = None,
                  connector: Optional[aiohttp.BaseConnector] = None, retry_count: int = 0, retry_backoff: float = 0.25):
-        self.headers = {"User-Agent": "vprikol-python-lib-7.2.3-release"}
+        self.headers = {"User-Agent": "vprikol-python-lib-7.3.0-release"}
         if token:
             self.headers["VP-API-Token"] = token
         super().__init__(base_url, self.headers, session=session, timeout=timeout, connector=connector,
@@ -502,6 +503,23 @@ class VprikolAPI(VprikolHTTPClient):
         params = {"date_from": date_from.isoformat(), "date_to": date_to.isoformat() if date_to else None}
         response = await self._request("GET", "internal/requests/usage", params=params)
         return TokensUsageResponse.model_validate(response)
+
+    async def get_requests_journal(self, kind: RequestJournalKind = "all", token_id: Optional[int] = None, api_method: Optional[str] = None,
+                                   ip_address: Optional[str] = None, status_code: Optional[int] = None, date_from: Optional[datetime.datetime] = None,
+                                   date_to: Optional[datetime.datetime] = None, before_id: Optional[int] = None, limit: int = 50) -> RequestJournalResponse:
+        params = {"kind": kind, "token_id": str(token_id) if token_id is not None else None, "api_method": api_method, "ip_address": ip_address,
+                  "status_code": str(status_code) if status_code is not None else None, "date_from": date_from.isoformat() if date_from else None,
+                  "date_to": date_to.isoformat() if date_to else None, "before_id": str(before_id) if before_id is not None else None, "limit": str(limit)}
+        response = await self._request("GET", "internal/requests/journal", params=params)
+        return RequestJournalResponse.model_validate(response)
+
+    async def get_requests_overview(self, hours: int = 24) -> RequestsOverviewResponse:
+        response = await self._request("GET", "internal/requests/overview", params={"hours": str(hours)})
+        return RequestsOverviewResponse.model_validate(response)
+
+    async def get_request_by_id(self, request_id: str) -> RequestJournalEntry:
+        response = await self._request("GET", f"internal/requests/by-id/{request_id}")
+        return RequestJournalEntry.model_validate(response)
 
     async def get_estate_history(self, server_id: int, estate_type: EstateHistoryType, estate_id: int, limit: int = 15,
                                  offset: int = 0) -> EstateHistoryResponse:
