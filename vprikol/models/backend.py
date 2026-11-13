@@ -265,3 +265,5 @@ class SupportTicketSync(BaseModel):
     ticket_id: int
     url: str
     status: str
+    agent: Optional[str] = None
+    agent_vk_id: Optional[int] = None
