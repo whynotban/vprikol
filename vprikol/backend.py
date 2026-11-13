@@ -6,7 +6,7 @@ from ._http import VprikolHTTPClient
 from .models.backend import (AnalyticsEventEntry, BackendMeResponse, MarketAlertSubscriptionEntry, NotificationSubscriptionEntry, TgAuthConfirmResponse, DndSettings,
                              ForumThreadEntry, BroadcastAudienceResponse, PromoActivationResponse, PromoCodeEntry,
                              NotifySlotsState, SlotPackOffer, TelegramStarsPaymentResponse, TelegramStarsConfirmResponse,
-                             TelegramStarsPreCheckoutResponse)
+                             TelegramStarsPreCheckoutResponse, SupportMessagePayload, SupportTicketCreateRequest, SupportTicketSync)
 from .models.items import MarketDealsResponse
 
 
@@ -275,3 +275,25 @@ class VprikolBackend(VprikolHTTPClient):
             }
         )
         return TgAuthConfirmResponse.model_validate(response)
+
+    async def create_support_ticket(self, request: SupportTicketCreateRequest) -> SupportTicketSync:
+        response = await self._request("POST", f"support/bot/{self.platform}/tickets", json_body=request.model_dump(mode="json"))
+        return SupportTicketSync.model_validate(response)
+
+    async def get_support_ticket(self, ref: str) -> SupportTicketSync:
+        return SupportTicketSync.model_validate(await self._request("GET", f"support/bot/{self.platform}/tickets/{ref}"))
+
+    async def add_support_message(self, ref: str, role: Literal["user", "staff"], author_id: int, text: Optional[str],
+                                  external_id: Optional[int] = None, payload: Optional[SupportMessagePayload] = None) -> SupportTicketSync:
+        response = await self._request("POST", f"support/bot/{self.platform}/tickets/{ref}/messages", json_body={
+            "role": role, "author_vk_id": author_id, "external_id": external_id, "text": text,
+            "payload": (payload or SupportMessagePayload()).model_dump(mode="json"),
+        })
+        return SupportTicketSync.model_validate(response)
+
+    async def send_support_event(self, ref: str, event: Literal["assign", "release", "escalate", "close", "cancel", "rate"],
+                                 actor_id: Optional[int] = None, actor_name: Optional[str] = None, rating: Optional[int] = None) -> SupportTicketSync:
+        response = await self._request("POST", f"support/bot/{self.platform}/tickets/{ref}/events", json_body={
+            "event": event, "actor_vk_id": actor_id, "actor_name": actor_name, "rating": rating,
+        })
+        return SupportTicketSync.model_validate(response)

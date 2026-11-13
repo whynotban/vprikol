@@ -201,3 +201,67 @@ class AnalyticsEventEntry(BaseModel):
     has_subscription: bool = False
     occurred_at: Optional[datetime] = None
     details: dict = {}
+
+
+SupportAttachmentKind = Literal['photo', 'sticker', 'graffiti', 'doc', 'video', 'audio', 'audio_message', 'link', 'wall', 'gift', 'poll', 'market', 'other']
+
+
+class SupportAttachment(BaseModel):
+    kind: SupportAttachmentKind = 'other'
+    url: Optional[str] = None
+    preview_url: Optional[str] = None
+    title: Optional[str] = None
+
+
+class SupportQuote(BaseModel):
+    author_name: Optional[str] = None
+    text: Optional[str] = None
+    attachments: List[SupportAttachment] = Field(default_factory=list)
+
+
+class SupportMessagePayload(BaseModel):
+    author_name: Optional[str] = None
+    author_avatar: Optional[str] = None
+    attachments: List[SupportAttachment] = Field(default_factory=list)
+    reply: Optional[SupportQuote] = None
+    forwarded: List[SupportQuote] = Field(default_factory=list)
+    buttons: List[str] = Field(default_factory=list)
+    action: Optional[str] = None
+
+
+class SupportHistoryItem(BaseModel):
+    external_id: int
+    author_role: Literal['user', 'bot', 'member']
+    author_id: int
+    author_name: Optional[str] = None
+    author_avatar: Optional[str] = None
+    text: Optional[str] = None
+    sent_at: datetime
+    payload: SupportMessagePayload = Field(default_factory=SupportMessagePayload)
+
+
+class SupportTicketAuthor(BaseModel):
+    vk_id: int
+    name: str
+    avatar_url: Optional[str] = None
+
+
+class SupportTicketCreateRequest(BaseModel):
+    ref: str
+    peer_id: int
+    author: SupportTicketAuthor
+    category: str
+    text: str
+    external_message_id: Optional[int] = None
+    payload: SupportMessagePayload = Field(default_factory=SupportMessagePayload)
+    chat_title: Optional[str] = None
+    invite_link: Optional[str] = None
+    dialog_url: Optional[str] = None
+    is_escalated: bool = False
+    history: List[SupportHistoryItem] = Field(default_factory=list)
+
+
+class SupportTicketSync(BaseModel):
+    ticket_id: int
+    url: str
+    status: str

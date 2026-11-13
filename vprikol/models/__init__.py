@@ -26,7 +26,8 @@ from .ss import (SSTextAlign, SSOutputFormat, SSIssueLevel, SSLineIssue, SSLineR
                  SSSettings, FONT_LABELS, FONTS_ORDER, DEFAULT_COMMAND_COLORS, COMMAND_LABELS)
 from .backend import (AnalyticsEventEntry, BackendMeResponse, NotificationSubscriptionEntry, BroadcastAudienceResponse, NotifySlotPackEntry, NotifySlotsState,
                       PromoActivationResponse, PromoCodeEntry, SlotPackOffer, SlotPackPeriod, TelegramStarsPaymentResponse, TelegramStarsConfirmResponse,
-                      TelegramStarsPreCheckoutResponse)
+                      TelegramStarsPreCheckoutResponse, SupportAttachment, SupportQuote, SupportMessagePayload, SupportHistoryItem, SupportTicketAuthor,
+                      SupportTicketCreateRequest, SupportTicketSync)
 from .items import (ItemsResponse, ItemEntry, ItemsHistoryResponse, ItemHistoryEntry, MarketItemStats,
                     MarketHistoryPoint, ShopItem, ShopEntry, ShopsResponse, ItemMarketStatsResponse,
                     MarketDealEntry, MarketDealsResponse)
