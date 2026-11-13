@@ -49,6 +49,7 @@ class BackendMeResponse(BaseModel):
     vk_id: Optional[int] = None
     site_url: str
     subscription_expires: Optional[datetime] = None
+    lite_expires: Optional[datetime] = None
     notify_extra_slots: int = 0
     forum_extra_slots: int = 0
     ds_id: Optional[int] = None
